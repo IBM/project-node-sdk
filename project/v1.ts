@@ -137,11 +137,7 @@ class ProjectV1 extends BaseService {
       'location': _params.location,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'createProject'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'createProject');
 
     const parameters = {
       options: {
@@ -197,11 +193,7 @@ class ProjectV1 extends BaseService {
       'complete': _params.complete,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'listProjects'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'listProjects');
 
     const parameters = {
       options: {
@@ -256,11 +248,7 @@ class ProjectV1 extends BaseService {
       'project_id': _params.projectId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'getProject'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'getProject');
 
     const parameters = {
       options: {
@@ -311,11 +299,7 @@ class ProjectV1 extends BaseService {
       'project_id': _params.projectId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'updateProject'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'updateProject');
 
     const parameters = {
       options: {
@@ -371,11 +355,7 @@ class ProjectV1 extends BaseService {
       'project_id': _params.projectId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'deleteProject'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'deleteProject');
 
     const parameters = {
       options: {
@@ -385,13 +365,7 @@ class ProjectV1 extends BaseService {
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(
-          true,
-          sdkHeaders,
-          {
-          },
-          _params.headers
-        ),
+        headers: extend(true, sdkHeaders, {}, _params.headers),
       }),
     };
 
@@ -423,7 +397,17 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.ProjectConfig>> {
     const _params = { ...params };
     const _requiredParams = ['projectId', 'name', 'locatorId'];
-    const _validParams = ['projectId', 'name', 'locatorId', 'id', 'labels', 'description', 'input', 'setting', 'headers'];
+    const _validParams = [
+      'projectId',
+      'name',
+      'locatorId',
+      'id',
+      'labels',
+      'description',
+      'input',
+      'setting',
+      'headers',
+    ];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
@@ -443,11 +427,7 @@ class ProjectV1 extends BaseService {
       'project_id': _params.projectId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'createConfig'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'createConfig');
 
     const parameters = {
       options: {
@@ -504,11 +484,7 @@ class ProjectV1 extends BaseService {
       'project_id': _params.projectId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'listConfigs'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'listConfigs');
 
     const parameters = {
       options: {
@@ -566,11 +542,7 @@ class ProjectV1 extends BaseService {
       'config_id': _params.configId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'getConfig'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'getConfig');
 
     const parameters = {
       options: {
@@ -628,11 +600,7 @@ class ProjectV1 extends BaseService {
       'config_id': _params.configId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'updateConfig'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'updateConfig');
 
     const parameters = {
       options: {
@@ -694,11 +662,7 @@ class ProjectV1 extends BaseService {
       'config_id': _params.configId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'deleteConfig'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'deleteConfig');
 
     const parameters = {
       options: {
@@ -750,11 +714,7 @@ class ProjectV1 extends BaseService {
       'config_id': _params.configId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'getConfigDiff'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'getConfigDiff');
 
     const parameters = {
       options: {
@@ -814,11 +774,7 @@ class ProjectV1 extends BaseService {
       'config_id': _params.configId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'forceMerge'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'forceMerge');
 
     const parameters = {
       options: {
@@ -884,11 +840,7 @@ class ProjectV1 extends BaseService {
       'action': _params.action,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'createDraftAction'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'createDraftAction');
 
     const parameters = {
       options: {
@@ -935,7 +887,14 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.ProjectConfig>> {
     const _params = { ...params };
     const _requiredParams = ['projectId', 'configId'];
-    const _validParams = ['projectId', 'configId', 'xAuthRefreshToken', 'version', 'complete', 'headers'];
+    const _validParams = [
+      'projectId',
+      'configId',
+      'xAuthRefreshToken',
+      'version',
+      'complete',
+      'headers',
+    ];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
@@ -951,11 +910,7 @@ class ProjectV1 extends BaseService {
       'config_id': _params.configId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'checkConfig'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'checkConfig');
 
     const parameters = {
       options: {
@@ -1012,11 +967,7 @@ class ProjectV1 extends BaseService {
       'config_id': _params.configId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'installConfig'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'installConfig');
 
     const parameters = {
       options: {
@@ -1068,11 +1019,7 @@ class ProjectV1 extends BaseService {
       'config_id': _params.configId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'uninstallConfig'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'uninstallConfig');
 
     const parameters = {
       options: {
@@ -1081,13 +1028,7 @@ class ProjectV1 extends BaseService {
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(
-          true,
-          sdkHeaders,
-          {
-          },
-          _params.headers
-        ),
+        headers: extend(true, sdkHeaders, {}, _params.headers),
       }),
     };
 
@@ -1132,11 +1073,7 @@ class ProjectV1 extends BaseService {
       'action': _params.action,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'getSchematicsJob'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'getSchematicsJob');
 
     const parameters = {
       options: {
@@ -1192,11 +1129,7 @@ class ProjectV1 extends BaseService {
       'config_id': _params.configId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'getCostEstimate'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'getCostEstimate');
 
     const parameters = {
       options: {
@@ -1253,11 +1186,7 @@ class ProjectV1 extends BaseService {
       'project_id': _params.projectId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'postNotification'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'postNotification');
 
     const parameters = {
       options: {
@@ -1307,11 +1236,7 @@ class ProjectV1 extends BaseService {
       'project_id': _params.projectId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'getNotifications'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'getNotifications');
 
     const parameters = {
       options: {
@@ -1365,11 +1290,7 @@ class ProjectV1 extends BaseService {
       'project_id': _params.projectId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'deleteNotification'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'deleteNotification');
 
     const parameters = {
       options: {
@@ -1378,13 +1299,7 @@ class ProjectV1 extends BaseService {
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(
-          true,
-          sdkHeaders,
-          {
-          },
-          _params.headers
-        ),
+        headers: extend(true, sdkHeaders, {}, _params.headers),
       }),
     };
 
@@ -1472,11 +1387,7 @@ class ProjectV1 extends BaseService {
       'info': _params.info,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'getHealth'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'getHealth');
 
     const parameters = {
       options: {
@@ -1542,7 +1453,18 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.CreateResult>> {
     const _params = { ...params };
     const _requiredParams = ['instanceId', 'serviceId', 'planId'];
-    const _validParams = ['instanceId', 'serviceId', 'planId', 'context', 'parameters', 'previousValues', 'xBrokerApiVersion', 'xBrokerApiOriginatingIdentity', 'acceptsIncomplete', 'headers'];
+    const _validParams = [
+      'instanceId',
+      'serviceId',
+      'planId',
+      'context',
+      'parameters',
+      'previousValues',
+      'xBrokerApiVersion',
+      'xBrokerApiOriginatingIdentity',
+      'acceptsIncomplete',
+      'headers',
+    ];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
@@ -1623,7 +1545,15 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.DeleteResult>> {
     const _params = { ...params };
     const _requiredParams = ['instanceId', 'planId', 'serviceId'];
-    const _validParams = ['instanceId', 'planId', 'serviceId', 'xBrokerApiVersion', 'xBrokerApiOriginatingIdentity', 'acceptsIncomplete', 'headers'];
+    const _validParams = [
+      'instanceId',
+      'planId',
+      'serviceId',
+      'xBrokerApiVersion',
+      'xBrokerApiOriginatingIdentity',
+      'acceptsIncomplete',
+      'headers',
+    ];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
@@ -1639,11 +1569,7 @@ class ProjectV1 extends BaseService {
       'instance_id': _params.instanceId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'deleteServiceInstance'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'deleteServiceInstance');
 
     const parameters = {
       options: {
@@ -1692,7 +1618,14 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.UpdateResult>> {
     const _params = { ...params };
     const _requiredParams = ['instanceId', 'jsonPatchOperation'];
-    const _validParams = ['instanceId', 'jsonPatchOperation', 'xBrokerApiVersion', 'xBrokerApiOriginatingIdentity', 'acceptsIncomplete', 'headers'];
+    const _validParams = [
+      'instanceId',
+      'jsonPatchOperation',
+      'xBrokerApiVersion',
+      'xBrokerApiOriginatingIdentity',
+      'acceptsIncomplete',
+      'headers',
+    ];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
@@ -1707,11 +1640,7 @@ class ProjectV1 extends BaseService {
       'instance_id': _params.instanceId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'updateServiceInstance'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'updateServiceInstance');
 
     const parameters = {
       options: {
@@ -1758,7 +1687,14 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.GetLastOperationResult>> {
     const _params = { ...params };
     const _requiredParams = ['instanceId'];
-    const _validParams = ['instanceId', 'xBrokerApiVersion', 'operation', 'planId', 'serviceId', 'headers'];
+    const _validParams = [
+      'instanceId',
+      'xBrokerApiVersion',
+      'operation',
+      'planId',
+      'serviceId',
+      'headers',
+    ];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
@@ -1774,11 +1710,7 @@ class ProjectV1 extends BaseService {
       'instance_id': _params.instanceId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'getLastOperation'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'getLastOperation');
 
     const parameters = {
       options: {
@@ -1829,7 +1761,16 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.BrokerResult>> {
     const _params = { ...params };
     const _requiredParams = ['instanceId', 'enabled'];
-    const _validParams = ['instanceId', 'enabled', 'initiatorId', 'reasonCode', 'planId', 'previousValues', 'xBrokerApiVersion', 'headers'];
+    const _validParams = [
+      'instanceId',
+      'enabled',
+      'initiatorId',
+      'reasonCode',
+      'planId',
+      'previousValues',
+      'xBrokerApiVersion',
+      'headers',
+    ];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
@@ -1903,11 +1844,7 @@ class ProjectV1 extends BaseService {
       'instance_id': _params.instanceId,
     };
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'getServiceInstance'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'getServiceInstance');
 
     const parameters = {
       options: {
@@ -1952,11 +1889,7 @@ class ProjectV1 extends BaseService {
       return Promise.reject(_validationErrors);
     }
 
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'getCatalog'
-    );
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'getCatalog');
 
     const parameters = {
       options: {
@@ -2002,7 +1935,14 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.PostEventNotificationsIntegrationResponse>> {
     const _params = { ...params };
     const _requiredParams = ['projectId', 'instanceCrn'];
-    const _validParams = ['projectId', 'instanceCrn', 'description', 'eventNotificationsSourceName', 'enabled', 'headers'];
+    const _validParams = [
+      'projectId',
+      'instanceCrn',
+      'description',
+      'eventNotificationsSourceName',
+      'enabled',
+      'headers',
+    ];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
@@ -2138,13 +2078,7 @@ class ProjectV1 extends BaseService {
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(
-          true,
-          sdkHeaders,
-          {
-          },
-          _params.headers
-        ),
+        headers: extend(true, sdkHeaders, {}, _params.headers),
       }),
     };
 
@@ -3266,6 +3200,7 @@ namespace ProjectV1 {
    */
   export class ProjectsPager {
     protected _hasNext: boolean;
+
     protected pageContext: any;
 
     protected client: ProjectV1;
@@ -3280,10 +3215,7 @@ namespace ProjectV1 {
      * @constructor
      * @returns {ProjectsPager}
      */
-    constructor(
-      client: ProjectV1,
-      params?: ProjectV1.ListProjectsParams
-    ) {
+    constructor(client: ProjectV1, params?: ProjectV1.ListProjectsParams) {
       if (params && params.start) {
         throw new Error(`the params.start field should not be set`);
       }
@@ -3319,7 +3251,7 @@ namespace ProjectV1 {
 
       let next = null;
       if (result && result.next) {
-        next = result.next.start
+        next = result.next.start;
       }
       this.pageContext.next = next;
       if (!this.pageContext.next) {

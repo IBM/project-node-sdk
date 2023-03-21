@@ -19,8 +19,8 @@ const sdkCorePackage = require('ibm-cloud-sdk-core');
 
 const { NoAuthAuthenticator, unitTestUtils } = sdkCorePackage;
 
-const ProjectV1 = require('../../dist/project/v1');
 const nock = require('nock');
+const ProjectV1 = require('../../dist/project/v1');
 
 /* eslint-disable no-await-in-loop */
 
@@ -59,7 +59,6 @@ const getAuthenticatorMock = jest.spyOn(sdkCorePackage, 'getAuthenticatorFromEnv
 getAuthenticatorMock.mockImplementation(() => new NoAuthAuthenticator());
 
 describe('ProjectV1', () => {
-
   beforeEach(() => {
     mock_createRequest();
   });
@@ -70,7 +69,7 @@ describe('ProjectV1', () => {
     }
     getAuthenticatorMock.mockClear();
   });
-  
+
   describe('the newInstance method', () => {
     test('should use defaults when options not provided', () => {
       const testInstance = ProjectV1.newInstance();
@@ -143,7 +142,8 @@ describe('ProjectV1', () => {
         name: 'common-variables',
         labels: ['testString'],
         description: 'testString',
-        locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+        locator_id:
+          '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
         input: [inputVariableInputModel],
         setting: [configSettingItemsModel],
       };
@@ -322,9 +322,9 @@ describe('ProjectV1', () => {
       beforeEach(() => {
         unmock_createRequest();
         const scope = nock(serviceUrl)
-          .get(uri => uri.includes(path))
+          .get((uri) => uri.includes(path))
           .reply(200, mockPagerResponse1)
-          .get(uri => uri.includes(path))
+          .get((uri) => uri.includes(path))
           .reply(200, mockPagerResponse2);
       });
 
@@ -657,10 +657,12 @@ describe('ProjectV1', () => {
         // Construct the params object for operation createConfig
         const projectId = 'testString';
         const name = 'env-stage';
-        const locatorId = '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global';
+        const locatorId =
+          '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global';
         const id = 'testString';
         const labels = ['env:stage', 'governance:test', 'build:0'];
-        const description = 'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.';
+        const description =
+          'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.';
         const input = [inputVariableInputModel];
         const setting = [configSettingItemsModel];
         const createConfigParams = {
@@ -717,7 +719,8 @@ describe('ProjectV1', () => {
         // parameters
         const projectId = 'testString';
         const name = 'env-stage';
-        const locatorId = '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global';
+        const locatorId =
+          '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const createConfigParams = {
@@ -875,7 +878,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{config_id}', 'GET');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{config_id}',
+          'GET'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -980,7 +987,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{config_id}', 'PATCH');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{config_id}',
+          'PATCH'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json-patch+json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1077,7 +1088,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{config_id}', 'DELETE');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{config_id}',
+          'DELETE'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1168,7 +1183,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{config_id}/diff', 'GET');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{config_id}/diff',
+          'GET'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1261,7 +1280,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{config_id}/draft/force_merge', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{config_id}/draft/force_merge',
+          'POST'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1358,7 +1381,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{config_id}/draft/{action}', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{config_id}/draft/{action}',
+          'POST'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1458,7 +1485,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{config_id}/check', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{config_id}/check',
+          'POST'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1552,7 +1583,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{config_id}/install', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{config_id}/install',
+          'POST'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1642,7 +1677,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{config_id}/uninstall', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{config_id}/uninstall',
+          'POST'
+        );
         const expectedAccept = undefined;
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1735,7 +1774,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{config_id}/job/{action}', 'GET');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{config_id}/job/{action}',
+          'GET'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1830,7 +1873,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{config_id}/cost_estimate', 'GET');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{config_id}/cost_estimate',
+          'GET'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -2091,7 +2138,8 @@ describe('ProjectV1', () => {
           projectId,
         };
 
-        const deleteNotificationResult = projectService.deleteNotification(deleteNotificationParams);
+        const deleteNotificationResult =
+          projectService.deleteNotification(deleteNotificationParams);
 
         // all methods should return a Promise
         expectToBePromise(deleteNotificationResult);
@@ -2189,7 +2237,9 @@ describe('ProjectV1', () => {
           pulsarCatalogEvents,
         };
 
-        const receivePulsarCatalogEventsResult = projectService.receivePulsarCatalogEvents(receivePulsarCatalogEventsParams);
+        const receivePulsarCatalogEventsResult = projectService.receivePulsarCatalogEvents(
+          receivePulsarCatalogEventsParams
+        );
 
         // all methods should return a Promise
         expectToBePromise(receivePulsarCatalogEventsResult);
@@ -2332,7 +2382,8 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       function __replaceServiceInstanceTest() {
         // Construct the params object for operation replaceServiceInstance
-        const instanceId = 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
+        const instanceId =
+          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
         const serviceId = 'testString';
         const planId = 'testString';
         const context = ['testString'];
@@ -2353,7 +2404,9 @@ describe('ProjectV1', () => {
           acceptsIncomplete,
         };
 
-        const replaceServiceInstanceResult = projectService.replaceServiceInstance(replaceServiceInstanceParams);
+        const replaceServiceInstanceResult = projectService.replaceServiceInstance(
+          replaceServiceInstanceParams
+        );
 
         // all methods should return a Promise
         expectToBePromise(replaceServiceInstanceResult);
@@ -2368,7 +2421,11 @@ describe('ProjectV1', () => {
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         checkUserHeader(createRequestMock, 'X-Broker-Api-Version', xBrokerApiVersion);
-        checkUserHeader(createRequestMock, 'X-Broker-Api-Originating-Identity', xBrokerApiOriginatingIdentity);
+        checkUserHeader(
+          createRequestMock,
+          'X-Broker-Api-Originating-Identity',
+          xBrokerApiOriginatingIdentity
+        );
         expect(mockRequestOptions.body.service_id).toEqual(serviceId);
         expect(mockRequestOptions.body.plan_id).toEqual(planId);
         expect(mockRequestOptions.body.context).toEqual(context);
@@ -2395,7 +2452,8 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
-        const instanceId = 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
+        const instanceId =
+          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
         const serviceId = 'testString';
         const planId = 'testString';
         const userAccept = 'fake/accept';
@@ -2444,7 +2502,8 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       function __deleteServiceInstanceTest() {
         // Construct the params object for operation deleteServiceInstance
-        const instanceId = 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
+        const instanceId =
+          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
         const planId = 'cb54391b-3316-4943-a5a6-a541678c1924';
         const serviceId = 'cb54391b-3316-4943-a5a6-a541678c1924';
         const xBrokerApiVersion = '1.0';
@@ -2459,7 +2518,9 @@ describe('ProjectV1', () => {
           acceptsIncomplete,
         };
 
-        const deleteServiceInstanceResult = projectService.deleteServiceInstance(deleteServiceInstanceParams);
+        const deleteServiceInstanceResult = projectService.deleteServiceInstance(
+          deleteServiceInstanceParams
+        );
 
         // all methods should return a Promise
         expectToBePromise(deleteServiceInstanceResult);
@@ -2474,7 +2535,11 @@ describe('ProjectV1', () => {
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         checkUserHeader(createRequestMock, 'X-Broker-Api-Version', xBrokerApiVersion);
-        checkUserHeader(createRequestMock, 'X-Broker-Api-Originating-Identity', xBrokerApiOriginatingIdentity);
+        checkUserHeader(
+          createRequestMock,
+          'X-Broker-Api-Originating-Identity',
+          xBrokerApiOriginatingIdentity
+        );
         expect(mockRequestOptions.qs.plan_id).toEqual(planId);
         expect(mockRequestOptions.qs.service_id).toEqual(serviceId);
         expect(mockRequestOptions.qs.accepts_incomplete).toEqual(acceptsIncomplete);
@@ -2498,7 +2563,8 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
-        const instanceId = 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
+        const instanceId =
+          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
         const planId = 'cb54391b-3316-4943-a5a6-a541678c1924';
         const serviceId = 'cb54391b-3316-4943-a5a6-a541678c1924';
         const userAccept = 'fake/accept';
@@ -2557,7 +2623,8 @@ describe('ProjectV1', () => {
 
       function __updateServiceInstanceTest() {
         // Construct the params object for operation updateServiceInstance
-        const instanceId = 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
+        const instanceId =
+          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
         const jsonPatchOperation = [jsonPatchOperationModel];
         const xBrokerApiVersion = '1.0';
         const xBrokerApiOriginatingIdentity = 'ibmcloud eyJpYW1fbWQiOiJJQk2pZC03MEdOUjcxN2lFIn0=';
@@ -2570,7 +2637,9 @@ describe('ProjectV1', () => {
           acceptsIncomplete,
         };
 
-        const updateServiceInstanceResult = projectService.updateServiceInstance(updateServiceInstanceParams);
+        const updateServiceInstanceResult = projectService.updateServiceInstance(
+          updateServiceInstanceParams
+        );
 
         // all methods should return a Promise
         expectToBePromise(updateServiceInstanceResult);
@@ -2585,7 +2654,11 @@ describe('ProjectV1', () => {
         const expectedContentType = 'application/json-patch+json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         checkUserHeader(createRequestMock, 'X-Broker-Api-Version', xBrokerApiVersion);
-        checkUserHeader(createRequestMock, 'X-Broker-Api-Originating-Identity', xBrokerApiOriginatingIdentity);
+        checkUserHeader(
+          createRequestMock,
+          'X-Broker-Api-Originating-Identity',
+          xBrokerApiOriginatingIdentity
+        );
         expect(mockRequestOptions.body).toEqual(jsonPatchOperation);
         expect(mockRequestOptions.qs.accepts_incomplete).toEqual(acceptsIncomplete);
         expect(mockRequestOptions.path.instance_id).toEqual(instanceId);
@@ -2608,7 +2681,8 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
-        const instanceId = 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
+        const instanceId =
+          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
         const jsonPatchOperation = [jsonPatchOperationModel];
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
@@ -2655,7 +2729,8 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       function __getLastOperationTest() {
         // Construct the params object for operation getLastOperation
-        const instanceId = 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
+        const instanceId =
+          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
         const xBrokerApiVersion = '1.0';
         const operation = 'ABCD';
         const planId = 'cb54391b-3316-4943-a5a6-a541678c1924';
@@ -2678,7 +2753,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v2/service_instances/{instance_id}/last_operation', 'GET');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v2/service_instances/{instance_id}/last_operation',
+          'GET'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -2706,7 +2785,8 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
-        const instanceId = 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
+        const instanceId =
+          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const getLastOperationParams = {
@@ -2751,7 +2831,8 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       function __replaceServiceInstanceStateTest() {
         // Construct the params object for operation replaceServiceInstanceState
-        const instanceId = 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
+        const instanceId =
+          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
         const enabled = true;
         const initiatorId = 'testString';
         const reasonCode = { foo: 'bar' };
@@ -2768,7 +2849,9 @@ describe('ProjectV1', () => {
           xBrokerApiVersion,
         };
 
-        const replaceServiceInstanceStateResult = projectService.replaceServiceInstanceState(replaceServiceInstanceStateParams);
+        const replaceServiceInstanceStateResult = projectService.replaceServiceInstanceState(
+          replaceServiceInstanceStateParams
+        );
 
         // all methods should return a Promise
         expectToBePromise(replaceServiceInstanceStateResult);
@@ -2808,7 +2891,8 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
-        const instanceId = 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
+        const instanceId =
+          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
         const enabled = true;
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
@@ -2855,14 +2939,16 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       function __getServiceInstanceTest() {
         // Construct the params object for operation getServiceInstance
-        const instanceId = 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
+        const instanceId =
+          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
         const xBrokerApiVersion = '1.0';
         const getServiceInstanceParams = {
           instanceId,
           xBrokerApiVersion,
         };
 
-        const getServiceInstanceResult = projectService.getServiceInstance(getServiceInstanceParams);
+        const getServiceInstanceResult =
+          projectService.getServiceInstance(getServiceInstanceParams);
 
         // all methods should return a Promise
         expectToBePromise(getServiceInstanceResult);
@@ -2897,7 +2983,8 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
-        const instanceId = 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
+        const instanceId =
+          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const getServiceInstanceParams = {
@@ -3019,7 +3106,8 @@ describe('ProjectV1', () => {
           enabled,
         };
 
-        const postEventNotificationsIntegrationResult = projectService.postEventNotificationsIntegration(postEventNotificationsIntegrationParams);
+        const postEventNotificationsIntegrationResult =
+          projectService.postEventNotificationsIntegration(postEventNotificationsIntegrationParams);
 
         // all methods should return a Promise
         expectToBePromise(postEventNotificationsIntegrationResult);
@@ -3029,13 +3117,19 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/integrations/event_notifications', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/integrations/event_notifications',
+          'POST'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.body.instance_crn).toEqual(instanceCrn);
         expect(mockRequestOptions.body.description).toEqual(description);
-        expect(mockRequestOptions.body.event_notifications_source_name).toEqual(eventNotificationsSourceName);
+        expect(mockRequestOptions.body.event_notifications_source_name).toEqual(
+          eventNotificationsSourceName
+        );
         expect(mockRequestOptions.body.enabled).toEqual(enabled);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
       }
@@ -3109,7 +3203,8 @@ describe('ProjectV1', () => {
           projectId,
         };
 
-        const getEventNotificationsIntegrationResult = projectService.getEventNotificationsIntegration(getEventNotificationsIntegrationParams);
+        const getEventNotificationsIntegrationResult =
+          projectService.getEventNotificationsIntegration(getEventNotificationsIntegrationParams);
 
         // all methods should return a Promise
         expectToBePromise(getEventNotificationsIntegrationResult);
@@ -3119,7 +3214,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/integrations/event_notifications', 'GET');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/integrations/event_notifications',
+          'GET'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -3193,7 +3292,10 @@ describe('ProjectV1', () => {
           projectId,
         };
 
-        const deleteEventNotificationsIntegrationResult = projectService.deleteEventNotificationsIntegration(deleteEventNotificationsIntegrationParams);
+        const deleteEventNotificationsIntegrationResult =
+          projectService.deleteEventNotificationsIntegration(
+            deleteEventNotificationsIntegrationParams
+          );
 
         // all methods should return a Promise
         expectToBePromise(deleteEventNotificationsIntegrationResult);
@@ -3203,7 +3305,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/integrations/event_notifications', 'DELETE');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/integrations/event_notifications',
+          'DELETE'
+        );
         const expectedAccept = undefined;
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -3238,7 +3344,9 @@ describe('ProjectV1', () => {
           },
         };
 
-        projectService.deleteEventNotificationsIntegration(deleteEventNotificationsIntegrationParams);
+        projectService.deleteEventNotificationsIntegration(
+          deleteEventNotificationsIntegrationParams
+        );
         checkMediaHeaders(createRequestMock, userAccept, userContentType);
       });
     });
@@ -3281,7 +3389,9 @@ describe('ProjectV1', () => {
           ibmendefaultshort,
         };
 
-        const postTestEventNotificationResult = projectService.postTestEventNotification(postTestEventNotificationParams);
+        const postTestEventNotificationResult = projectService.postTestEventNotification(
+          postTestEventNotificationParams
+        );
 
         // all methods should return a Promise
         expectToBePromise(postTestEventNotificationResult);
@@ -3291,7 +3401,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/integrations/event_notifications/test', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/integrations/event_notifications/test',
+          'POST'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
