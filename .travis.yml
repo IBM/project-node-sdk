@@ -12,6 +12,7 @@ node_js:
 
 # remove the "echo" command from the "before_install" section below.
 before_install:
+- openssl aes-256-cbc -K $encrypted_26573fff6203_key -iv $encrypted_26573fff6203_iv -in project_v1.env.enc -out project_v1.env -d
 - echo -e "machine github.ibm.com\n  login $GITHUB_OAUTH_TOKEN" > ~/.netrc
 - npm i -g npm@8
 - npm --version
