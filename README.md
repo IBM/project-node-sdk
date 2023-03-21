@@ -1,10 +1,10 @@
-[![Build Status](https://travis.ibm.com/CloudEngineering/node-sdk-template.svg?token=eW5FVD71iyte6tTby8gr&branch=main)](https://travis.ibm.com/CloudEngineering/node-sdk-template)
+[![Build Status](https://travis-ci.com/ibmcloud/project-node-sdk.svg?token=eW5FVD71iyte6tTby8gr&branch=main)](https://travis.ibm.com/ibmcloud/project-node-sdk)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 <!--
-[![npm-version](https://img.shields.io/npm/v/CloudEngineering/node-sdk-template.svg)](https://www.npmjs.com/package/node-sdk-template)
+[![npm-version](https://img.shields.io/npm/v/ibmcloud/project-node-sdk.svg)](https://www.npmjs.com/package/project)
 -->
-# IBM Cloud MySDK Node.js SDK
-Node.js client library to interact with various [MySDK APIs](https://cloud.ibm.com/apidocs?category=<service-category>).
+# Project Node.js SDK
+Node.js client library to interact with various [project APIs](https://cloud.ibm.com/apidocs?category=platform-services).
 
 Disclaimer: this SDK is being released initially as a **pre-release** version.
 Changes might occur which impact applications that use this SDK.
@@ -38,12 +38,12 @@ Changes might occur which impact applications that use this SDK.
 <!-- --------------------------------------------------------------- -->
 ## Overview
 
-The IBM Cloud MySDK Node.js SDK allows developers to programmatically interact with the following
+The IBM Cloud project Node.js SDK allows developers to programmatically interact with the following
 IBM Cloud services:
 
 Service Name | Import Path
 --- | ---
-[Example Service](https://cloud.ibm.com/apidocs/example-service) | mysdk/example-service/v1
+<!-- [Example Service](https://cloud.ibm.com/apidocs/example-service) | project/example-service/v1 -->
 
 ## Prerequisites
 * You need an [IBM Cloud][ibm-cloud-onboarding] account.
@@ -54,7 +54,7 @@ Service Name | Import Path
 ## Installation
 
 ```sh
-npm install mysdk
+npm install project
 ```
 
 ## Using the SDK
@@ -69,7 +69,7 @@ please ask a question at
 
 ## Issues
 If you encounter an issue with the SDK, you are welcome to submit
-a [bug report](<github-repo-url>/issues).
+a [bug report](https://github.ibm.com/ibmcloud/project-node-sdk/issues).
 Before that, please search for similar issues. It's possible someone has
 already encountered this issue.
 

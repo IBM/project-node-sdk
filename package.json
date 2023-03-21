@@ -1,10 +1,10 @@
 {
-  "name": "mysdk",
+  "name": "project",
   "version": "0.0.1",
-  "description": "IBM Cloud Node SDK",
+  "description": "Project Node.js SDK",
   "repository": {
     "type": "git",
-    "url": "https://github.ibm.com/CloudEngineering/node-sdk-template"
+    "url": "https://github.ibm.com/ibmcloud/project-node-sdk"
   },
   "keywords": [
     "ibm"
