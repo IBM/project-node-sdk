@@ -76,7 +76,7 @@ describe('ProjectV1_integration', () => {
     };
 
     const params = {
-      name: 'acme-microservice-1',
+      name: 'acme-microservice',
       description: 'A microservice to deploy on top of ACME infrastructure.',
       configs: [projectConfigInputModel],
       resourceGroup: 'Default',
