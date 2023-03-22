@@ -54,7 +54,7 @@ Service Name | Import Path
 ## Installation
 
 ```sh
-npm install project-node-client
+npm install @ibm-cloud/project-node-client
 ```
 
 ## Using the SDK
