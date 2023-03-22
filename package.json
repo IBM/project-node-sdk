@@ -1,5 +1,5 @@
 {
-  "name": "project",
+  "name": "@ibm-cloud/project-node-client",
   "version": "0.0.1",
   "description": "Project Node.js SDK",
   "repository": {

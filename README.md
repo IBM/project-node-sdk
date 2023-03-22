@@ -4,7 +4,7 @@
 [![npm-version](https://img.shields.io/npm/v/ibmcloud/project-node-sdk.svg)](https://www.npmjs.com/package/project)
 -->
 # Project Node.js SDK
-Node.js client library to interact with various [project APIs](https://cloud.ibm.com/apidocs?category=platform-services).
+Node.js client library to interact with various [project APIs](https://test.cloud.ibm.com/apidocs/projects).
 
 Disclaimer: this SDK is being released initially as a **pre-release** version.
 Changes might occur which impact applications that use this SDK.
@@ -43,7 +43,7 @@ IBM Cloud services:
 
 Service Name | Import Path
 --- | ---
-<!-- [Example Service](https://cloud.ibm.com/apidocs/example-service) | project/example-service/v1 -->
+<!-- [Project](https://test.cloud.ibm.com/apidocs/projects) | project/v1 -->
 
 ## Prerequisites
 * You need an [IBM Cloud][ibm-cloud-onboarding] account.
@@ -54,7 +54,7 @@ Service Name | Import Path
 ## Installation
 
 ```sh
-npm install project
+npm install project-node-client
 ```
 
 ## Using the SDK
