@@ -17,8 +17,8 @@
 /* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
 
-const ProjectV1 = require('../../dist/project/v1');
 const { readExternalSources } = require('ibm-cloud-sdk-core');
+const ProjectV1 = require('../../dist/project/v1');
 const authHelper = require('../resources/auth-helper.js');
 
 // testcase timeout value (200s).
@@ -46,7 +46,7 @@ describe('ProjectV1_integration', () => {
 
     const config = readExternalSources(ProjectV1.DEFAULT_SERVICE_NAME);
     expect(config).not.toBeNull();
-  
+
     projectService.enableRetries();
   });
 
@@ -70,7 +70,8 @@ describe('ProjectV1_integration', () => {
       name: 'common-variables',
       labels: ['env:stage', 'governance:test', 'build:0'],
       description: 'testString',
-      locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+      locator_id:
+        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
       input: [inputVariableInputModel],
       setting: [configSettingItemsModel],
     };
@@ -107,8 +108,7 @@ describe('ProjectV1_integration', () => {
     const params = {
       projectId: projectIdLink,
       name: 'env-stage',
-      locatorId:
-        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+      locatorId: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
       labels: ['env:stage', 'governance:test', 'build:0'],
       description:
         'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.',
@@ -192,7 +192,6 @@ describe('ProjectV1_integration', () => {
     expect(res.result).toBeDefined();
   });
 
-
   test('listConfigs()', async () => {
     const params = {
       projectId: projectIdLink,
@@ -225,9 +224,9 @@ describe('ProjectV1_integration', () => {
 
     // JsonPatchOperation
     const jsonPatchOperationModel = {
-      "name": "new-config-name",
-      "type": "terraform_templatef",
-     };
+      'name': 'new-config-name',
+      'type': 'terraform_templatef',
+    };
 
     const params = {
       projectId: projectIdLink,
@@ -423,7 +422,8 @@ describe('ProjectV1_integration', () => {
 
   test.skip('replaceServiceInstance()', async () => {
     const params = {
-      instanceId: 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+      instanceId:
+        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       serviceId: 'testString',
       planId: 'testString',
       context: ['testString'],
@@ -445,12 +445,13 @@ describe('ProjectV1_integration', () => {
 
     // JsonPatchOperation
     const jsonPatchOperationModel = {
-      "name": "new-instance-name",
-      "type": "terraform_templatef",
+      'name': 'new-instance-name',
+      'type': 'terraform_templatef',
     };
 
     const params = {
-      instanceId: 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+      instanceId:
+        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       jsonPatchOperation: [jsonPatchOperationModel],
       xBrokerApiVersion: '1.0',
       xBrokerApiOriginatingIdentity: 'ibmcloud eyJpYW1fbWQiOiJJQk2pZC03MEdOUjcxN2lFIn0=',
@@ -465,7 +466,8 @@ describe('ProjectV1_integration', () => {
 
   test.skip('getLastOperation()', async () => {
     const params = {
-      instanceId: 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+      instanceId:
+        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       xBrokerApiVersion: '1.0',
       operation: 'ABCD',
       planId: 'cb54391b-3316-4943-a5a6-a541678c1924',
@@ -480,7 +482,8 @@ describe('ProjectV1_integration', () => {
 
   test.skip('replaceServiceInstanceState()', async () => {
     const params = {
-      instanceId: 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+      instanceId:
+        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       enabled: true,
       initiatorId: 'testString',
       reasonCode: { foo: 'bar' },
@@ -497,7 +500,8 @@ describe('ProjectV1_integration', () => {
 
   test.skip('getServiceInstance()', async () => {
     const params = {
-      instanceId: 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+      instanceId:
+        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       xBrokerApiVersion: '1.0',
     };
 
@@ -607,7 +611,8 @@ describe('ProjectV1_integration', () => {
 
   test.skip('deleteServiceInstance()', async () => {
     const params = {
-      instanceId: 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+      instanceId:
+        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       planId: 'cb54391b-3316-4943-a5a6-a541678c1924',
       serviceId: 'cb54391b-3316-4943-a5a6-a541678c1924',
       xBrokerApiVersion: '1.0',

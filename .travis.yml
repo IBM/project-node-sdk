@@ -1,17 +1,12 @@
-dist: jammy
-
-# Remove this if using external Travis
 group: bionic
 
 language: node_js
 
 node_js:
-- 14
-- 16
-- 18
+  - 14
+  - 16
+# - 18
 
-
-# remove the "echo" command from the "before_install" section below.
 before_install:
 - npm i -g npm@8
 - npm --version
@@ -22,10 +17,3 @@ script:
 - npm run lint
 - npm run check-packages
 
-deploy:
-- provider: script
-  skip_cleanup: true
-  script: npx semantic-release
-  on:
-    node: 14
-    branch: main

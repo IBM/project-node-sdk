@@ -88,7 +88,8 @@ describe('ProjectV1', () => {
     // ProjectConfigInput
     const projectConfigInputModel = {
       name: 'common-variables',
-      locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+      locator_id:
+        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
     };
 
     const params = {
@@ -182,6 +183,17 @@ describe('ProjectV1', () => {
       expect(true).toBeFalsy();
     });
 
+    // InputVariableInput
+    const inputVariableInputModel = {
+      name: 'testString',
+    };
+
+    // ConfigSettingItems
+    const configSettingItemsModel = {
+      name: 'testString',
+      value: 'testString',
+    };
+
     originalLog('updateProject() result:');
     // begin-update_project
 
@@ -242,7 +254,8 @@ describe('ProjectV1', () => {
       name: 'env-stage',
       locatorId: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
       labels: ['env:stage', 'governance:test', 'build:0'],
-      description: 'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.',
+      description:
+        'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.',
       input: [inputVariableInputModel],
       setting: [configSettingItemsModel],
     };
@@ -334,8 +347,8 @@ describe('ProjectV1', () => {
 
     // JsonPatchOperation
     const jsonPatchOperationModel = {
-      "name": "new-config-name",
-      "type": "terraform_templatef",
+      'name': 'new-config-name',
+      'type': 'terraform_templatef',
     };
 
     const params = {
@@ -732,7 +745,8 @@ describe('ProjectV1', () => {
     // begin-replace_service_instance
 
     const params = {
-      instanceId: 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+      instanceId:
+        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       serviceId: 'testString',
       planId: 'testString',
       xBrokerApiVersion: '1.0',
@@ -768,12 +782,13 @@ describe('ProjectV1', () => {
 
     // JsonPatchOperation
     const jsonPatchOperationModel = {
-      "name": "new-instance-name",
-      "type": "terraform_templatef",
+      'name': 'new-instance-name',
+      'type': 'terraform_templatef',
     };
 
     const params = {
-      instanceId: 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+      instanceId:
+        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       jsonPatchOperation: [jsonPatchOperationModel],
       xBrokerApiVersion: '1.0',
       xBrokerApiOriginatingIdentity: 'ibmcloud eyJpYW1fbWQiOiJJQk2pZC03MEdOUjcxN2lFIn0=',
@@ -805,7 +820,8 @@ describe('ProjectV1', () => {
     // begin-get_last_operation
 
     const params = {
-      instanceId: 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+      instanceId:
+        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       xBrokerApiVersion: '1.0',
       operation: 'ABCD',
       planId: 'cb54391b-3316-4943-a5a6-a541678c1924',
@@ -837,7 +853,8 @@ describe('ProjectV1', () => {
     // begin-replace_service_instance_state
 
     const params = {
-      instanceId: 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+      instanceId:
+        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       enabled: true,
       xBrokerApiVersion: '1.0',
     };
@@ -867,7 +884,8 @@ describe('ProjectV1', () => {
     // begin-get_service_instance
 
     const params = {
-      instanceId: 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+      instanceId:
+        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       xBrokerApiVersion: '1.0',
     };
 
@@ -1118,7 +1136,8 @@ describe('ProjectV1', () => {
     // begin-delete_service_instance
 
     const params = {
-      instanceId: 'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+      instanceId:
+        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       planId: 'cb54391b-3316-4943-a5a6-a541678c1924',
       serviceId: 'cb54391b-3316-4943-a5a6-a541678c1924',
       xBrokerApiVersion: '1.0',
