@@ -43,7 +43,7 @@ IBM Cloud services:
 
 Service Name | Import Path
 --- | ---
-<!-- [Project](https://test.cloud.ibm.com/apidocs/projects) | project/v1 -->
+[Project](https://test.cloud.ibm.com/apidocs/projects) | project/v1 
 
 ## Prerequisites
 * You need an [IBM Cloud][ibm-cloud-onboarding] account.
