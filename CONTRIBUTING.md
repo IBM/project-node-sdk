@@ -12,4 +12,3 @@ already encountered this issue.
 # General Information
 For general guidance on contributing to this project, please see
 [this link](https://github.com/IBM/ibm-cloud-sdk-common/blob/main/CONTRIBUTING_nodejs.md)
-
