@@ -1,11 +1,11 @@
-group: bionic
+dist: jammy
 
 language: node_js
 
 node_js:
   - 14
   - 16
-# - 18
+  - 18
 
 before_install:
 - npm i -g npm@8
