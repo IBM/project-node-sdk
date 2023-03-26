@@ -4,7 +4,7 @@
   "description": "Project Node.js SDK",
   "repository": {
     "type": "git",
-    "url": "https://github.ibm.com/ibmcloud/project-node-sdk"
+    "url": "https://github.com/IBM/project-node-sdk"
   },
   "keywords": [
     "ibm"
