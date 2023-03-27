@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/IBM/project-node-sdk/compare/v1.0.0...v1.0.1) (2023-03-27)
+
+
+### Bug Fixes
+
+* update travis badges in README.md ([6aefc85](https://github.com/IBM/project-node-sdk/commit/6aefc85ffeefe9660b6c67ec4b9be0c25e18b0d7))
+
 # 1.0.0 (2023-03-27)
 
 
