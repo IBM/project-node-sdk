@@ -53,35 +53,36 @@ describe('ProjectV1_integration', () => {
   test('createProject()', async () => {
     // Request models needed by this operation.
 
-    // InputVariableInput
-    const inputVariableInputModel = {
-      name: 'testString',
+    // ProjectConfigInputVariable
+    const projectConfigInputVariableModel = {
+      name: 'configVar1',
+      value: 'configValue1',
     };
 
-    // ConfigSettingItems
-    const configSettingItemsModel = {
-      name: 'testString',
-      value: 'testString',
+    // ProjectConfigSettingCollection
+    const projectConfigSettingCollectionModel = {
+      name: 'setting1',
+      value: 'value1',
     };
 
-    // ProjectConfigInput
-    const projectConfigInputModel = {
+    // ProjectConfigPrototype
+    const projectConfigPrototypeModel = {
       id: 'testString',
       name: 'common-variables',
       labels: ['env:stage', 'governance:test', 'build:0'],
       description: 'testString',
       locator_id:
         '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
-      input: [inputVariableInputModel],
-      setting: [configSettingItemsModel],
+      input: [projectConfigInputVariableModel],
+      setting: [projectConfigSettingCollectionModel],
     };
 
     const params = {
-      name: 'acme-microservice',
-      description: 'A microservice to deploy on top of ACME infrastructure.',
-      configs: [projectConfigInputModel],
       resourceGroup: 'Default',
       location: 'us-south',
+      name: 'acme-microservice',
+      description: 'A microservice to deploy on top of ACME infrastructure.',
+      configs: [projectConfigPrototypeModel],
     };
 
     const res = await projectService.createProject(params);
@@ -94,13 +95,14 @@ describe('ProjectV1_integration', () => {
   test('createConfig()', async () => {
     // Request models needed by this operation.
 
-    // InputVariableInput
-    const inputVariableInputModel = {
+    // ProjectConfigInputVariable
+    const projectConfigInputVariableModel = {
       name: 'account_id',
+      value: '$configs[].name["account-stage"].input.account_id',
     };
 
-    // ConfigSettingItems
-    const configSettingItemsModel = {
+    // ProjectConfigSettingCollection
+    const projectConfigSettingCollectionModel = {
       name: 'IBMCLOUD_TOOLCHAIN_ENDPOINT',
       value: 'https://api.us-south.devops.dev.cloud.ibm.com',
     };
@@ -112,8 +114,8 @@ describe('ProjectV1_integration', () => {
       labels: ['env:stage', 'governance:test', 'build:0'],
       description:
         'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.',
-      input: [inputVariableInputModel],
-      setting: [configSettingItemsModel],
+      input: [projectConfigInputVariableModel],
+      setting: [projectConfigSettingCollectionModel],
     };
 
     const res = await projectService.createConfig(params);
@@ -162,7 +164,7 @@ describe('ProjectV1_integration', () => {
 
   test('getProject()', async () => {
     const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
       excludeConfigs: false,
       complete: false,
     };
@@ -178,11 +180,14 @@ describe('ProjectV1_integration', () => {
 
     // JsonPatchOperation
     const jsonPatchOperationModel = {
-      name: 'newName',
+      op: 'add',
+      path: 'testString',
+      from: 'testString',
+      value: 'testString',
     };
 
     const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
       jsonPatchOperation: [jsonPatchOperationModel],
     };
 
@@ -208,7 +213,7 @@ describe('ProjectV1_integration', () => {
   test('getConfig()', async () => {
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
       version: 'draft',
       complete: false,
     };
@@ -224,13 +229,15 @@ describe('ProjectV1_integration', () => {
 
     // JsonPatchOperation
     const jsonPatchOperationModel = {
-      'name': 'new-config-name',
-      'type': 'terraform_templatef',
+      op: 'add',
+      path: 'testString',
+      from: 'testString',
+      value: 'testString',
     };
 
     const params = {
-      projectId: projectIdLink,
-      configId: configIdLink,
+      projectId: 'testString',
+      id: 'testString',
       projectConfig: [jsonPatchOperationModel],
       complete: false,
     };
@@ -244,7 +251,7 @@ describe('ProjectV1_integration', () => {
   test('getConfigDiff()', async () => {
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
     };
 
     const res = await projectService.getConfigDiff(params);
@@ -253,30 +260,29 @@ describe('ProjectV1_integration', () => {
     expect(res.result).toBeDefined();
   });
 
-  test('forceMerge()', async () => {
+  test('forceApprove()', async () => {
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
       comment: 'Approving the changes',
       complete: false,
     };
 
-    const res = await projectService.forceMerge(params);
+    const res = await projectService.forceApprove(params);
     expect(res).toBeDefined();
     expect(res.status).toBe(201);
     expect(res.result).toBeDefined();
   });
 
-  test('createDraftAction()', async () => {
+  test('approve()', async () => {
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
-      action: 'merge',
+      id: configIdLink,
       comment: 'Approving the changes',
       complete: false,
     };
 
-    const res = await projectService.createDraftAction(params);
+    const res = await projectService.approve(params);
     expect(res).toBeDefined();
     expect(res.status).toBe(201);
     expect(res.result).toBeDefined();
@@ -285,10 +291,10 @@ describe('ProjectV1_integration', () => {
   test('checkConfig()', async () => {
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
-      xAuthRefreshToken: 'testString',
-      version: 'active',
+      id: configIdLink,
+      xAuthRefreshToken: 'token',
       complete: false,
+      version: 'active',
     };
 
     const res = await projectService.checkConfig(params);
@@ -300,7 +306,7 @@ describe('ProjectV1_integration', () => {
   test('installConfig()', async () => {
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
       complete: false,
     };
 
@@ -313,7 +319,7 @@ describe('ProjectV1_integration', () => {
   test('uninstallConfig()', async () => {
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
     };
 
     const res = await projectService.uninstallConfig(params);
@@ -322,10 +328,10 @@ describe('ProjectV1_integration', () => {
     expect(res.result).toBeDefined();
   });
 
-  test.skip('getSchematicsJob()', async () => {
+  test('getSchematicsJob()', async () => {
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
       action: 'plan',
       since: 38,
     };
@@ -336,14 +342,25 @@ describe('ProjectV1_integration', () => {
     expect(res.result).toBeDefined();
   });
 
-  test.skip('getCostEstimate()', async () => {
+  test('getCostEstimate()', async () => {
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
       version: 'active',
     };
 
     const res = await projectService.getCostEstimate(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(200);
+    expect(res.result).toBeDefined();
+  });
+
+  test('postCrnToken()', async () => {
+    const params = {
+      id: projectIdLink,
+    };
+
+    const res = await projectService.postCrnToken(params);
     expect(res).toBeDefined();
     expect(res.status).toBe(200);
     expect(res.result).toBeDefined();
@@ -363,7 +380,7 @@ describe('ProjectV1_integration', () => {
     };
 
     const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
       notifications: [notificationEventModel],
     };
 
@@ -375,7 +392,7 @@ describe('ProjectV1_integration', () => {
 
   test('getNotifications()', async () => {
     const params = {
-      projectId: projectIdLink,
+      id: 'testString',
     };
 
     const res = await projectService.getNotifications(params);
@@ -384,147 +401,9 @@ describe('ProjectV1_integration', () => {
     expect(res.result).toBeDefined();
   });
 
-  test('receivePulsarCatalogEvents()', async () => {
-    // Request models needed by this operation.
-
-    // PulsarEventItems
-    const pulsarEventItemsModel = {
-      event_type: 'testString',
-      timestamp: '2019-01-01T12:00:00.000Z',
-      publisher: 'testString',
-      account_id: 'testString',
-      version: 'testString',
-      event_properties: { foo: 'bar' },
-      event_id: 'testString',
-      foo: 'testString',
-    };
-
+  test('postEventNotificationsIntegration()', async () => {
     const params = {
-      pulsarCatalogEvents: [pulsarEventItemsModel],
-    };
-
-    const res = await projectService.receivePulsarCatalogEvents(params);
-    expect(res).toBeDefined();
-    expect(res.status).toBe(202);
-    expect(res.result).toBeDefined();
-  });
-
-  test('getHealth()', async () => {
-    const params = {
-      info: false,
-    };
-
-    const res = await projectService.getHealth(params);
-    expect(res).toBeDefined();
-    expect(res.status).toBe(200);
-    expect(res.result).toBeDefined();
-  });
-
-  test.skip('replaceServiceInstance()', async () => {
-    const params = {
-      instanceId:
-        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
-      serviceId: 'testString',
-      planId: 'testString',
-      context: ['testString'],
-      parameters: { foo: 'bar' },
-      previousValues: ['testString'],
-      xBrokerApiVersion: '1.0',
-      xBrokerApiOriginatingIdentity: 'ibmcloud eyJpYW1fbWQiOiJJQk2pZC03MEdOUjcxN2lFIn0=',
-      acceptsIncomplete: false,
-    };
-
-    const res = await projectService.replaceServiceInstance(params);
-    expect(res).toBeDefined();
-    expect(res.status).toBe(200);
-    expect(res.result).toBeDefined();
-  });
-
-  test.skip('updateServiceInstance()', async () => {
-    // Request models needed by this operation.
-
-    // JsonPatchOperation
-    const jsonPatchOperationModel = {
-      'name': 'new-instance-name',
-      'type': 'terraform_templatef',
-    };
-
-    const params = {
-      instanceId:
-        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
-      jsonPatchOperation: [jsonPatchOperationModel],
-      xBrokerApiVersion: '1.0',
-      xBrokerApiOriginatingIdentity: 'ibmcloud eyJpYW1fbWQiOiJJQk2pZC03MEdOUjcxN2lFIn0=',
-      acceptsIncomplete: false,
-    };
-
-    const res = await projectService.updateServiceInstance(params);
-    expect(res).toBeDefined();
-    expect(res.status).toBe(200);
-    expect(res.result).toBeDefined();
-  });
-
-  test.skip('getLastOperation()', async () => {
-    const params = {
-      instanceId:
-        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
-      xBrokerApiVersion: '1.0',
-      operation: 'ABCD',
-      planId: 'cb54391b-3316-4943-a5a6-a541678c1924',
-      serviceId: 'cb54391b-3316-4943-a5a6-a541678c1924',
-    };
-
-    const res = await projectService.getLastOperation(params);
-    expect(res).toBeDefined();
-    expect(res.status).toBe(200);
-    expect(res.result).toBeDefined();
-  });
-
-  test.skip('replaceServiceInstanceState()', async () => {
-    const params = {
-      instanceId:
-        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
-      enabled: true,
-      initiatorId: 'testString',
-      reasonCode: { foo: 'bar' },
-      planId: 'testString',
-      previousValues: ['testString'],
-      xBrokerApiVersion: '1.0',
-    };
-
-    const res = await projectService.replaceServiceInstanceState(params);
-    expect(res).toBeDefined();
-    expect(res.status).toBe(200);
-    expect(res.result).toBeDefined();
-  });
-
-  test.skip('getServiceInstance()', async () => {
-    const params = {
-      instanceId:
-        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
-      xBrokerApiVersion: '1.0',
-    };
-
-    const res = await projectService.getServiceInstance(params);
-    expect(res).toBeDefined();
-    expect(res.status).toBe(200);
-    expect(res.result).toBeDefined();
-  });
-
-  test.skip('getCatalog()', async () => {
-    const params = {
-      xBrokerApiVersion: '1.0',
-    };
-
-    const res = await projectService.getCatalog(params);
-    expect(res).toBeDefined();
-    expect(res.status).toBe(200);
-    expect(res.result).toBeDefined();
-  });
-
-  test.skip('postEventNotificationsIntegration()', async () => {
-    const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
       instanceCrn: 'CRN of event notifications instance',
       description: 'A sample project source.',
       eventNotificationsSourceName: 'project 1 source name for event notifications',
@@ -537,9 +416,9 @@ describe('ProjectV1_integration', () => {
     expect(res.result).toBeDefined();
   });
 
-  test.skip('getEventNotificationsIntegration()', async () => {
+  test('getEventNotificationsIntegration()', async () => {
     const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
     };
 
     const res = await projectService.getEventNotificationsIntegration(params);
@@ -548,9 +427,9 @@ describe('ProjectV1_integration', () => {
     expect(res.result).toBeDefined();
   });
 
-  test.skip('postTestEventNotification()', async () => {
+  test('postTestEventNotification()', async () => {
     const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
       ibmendefaultlong: 'long test notification message',
       ibmendefaultshort: 'Test notification',
     };
@@ -564,7 +443,7 @@ describe('ProjectV1_integration', () => {
   test('deleteConfig()', async () => {
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
       draftOnly: false,
       destroy: false,
     };
@@ -575,20 +454,9 @@ describe('ProjectV1_integration', () => {
     expect(res.result).toBeDefined();
   });
 
-  test.skip('deleteNotification()', async () => {
+  test('deleteEventNotificationsIntegration()', async () => {
     const params = {
-      projectId: projectIdLink,
-    };
-
-    const res = await projectService.deleteNotification(params);
-    expect(res).toBeDefined();
-    expect(res.status).toBe(204);
-    expect(res.result).toBeDefined();
-  });
-
-  test.skip('deleteEventNotificationsIntegration()', async () => {
-    const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
     };
 
     const res = await projectService.deleteEventNotificationsIntegration(params);
@@ -596,33 +464,15 @@ describe('ProjectV1_integration', () => {
     expect(res.status).toBe(204);
     expect(res.result).toBeDefined();
   });
-
   test('deleteProject()', async () => {
     const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
       destroy: false,
     };
 
     const res = await projectService.deleteProject(params);
     expect(res).toBeDefined();
     expect(res.status).toBe(204);
-    expect(res.result).toBeDefined();
-  });
-
-  test.skip('deleteServiceInstance()', async () => {
-    const params = {
-      instanceId:
-        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
-      planId: 'cb54391b-3316-4943-a5a6-a541678c1924',
-      serviceId: 'cb54391b-3316-4943-a5a6-a541678c1924',
-      xBrokerApiVersion: '1.0',
-      xBrokerApiOriginatingIdentity: 'ibmcloud eyJpYW1fbWQiOiJJQk2pZC03MEdOUjcxN2lFIn0=',
-      acceptsIncomplete: false,
-    };
-
-    const res = await projectService.deleteServiceInstance(params);
-    expect(res).toBeDefined();
-    expect(res.status).toBe(200);
     expect(res.result).toBeDefined();
   });
 });

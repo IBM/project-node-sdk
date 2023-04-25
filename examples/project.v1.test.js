@@ -56,8 +56,8 @@ describe('ProjectV1', () => {
   let projectService;
 
   // Variables to hold link values
-  let projectIdLink;
   let configIdLink;
+  let projectIdLink;
 
   // To access additional configuration values, uncomment this line and extract the values from config
   // const config = readExternalSources(ProjectV1.DEFAULT_SERVICE_NAME);
@@ -85,8 +85,8 @@ describe('ProjectV1', () => {
 
     // Request models needed by this operation.
 
-    // ProjectConfigInput
-    const projectConfigInputModel = {
+    // ProjectConfigPrototype
+    const projectConfigPrototypeModel = {
       name: 'common-variables',
       locator_id:
         '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
@@ -95,7 +95,9 @@ describe('ProjectV1', () => {
     const params = {
       name: 'acme-microservice',
       description: 'A microservice to deploy on top of ACME infrastructure.',
-      configs: [projectConfigInputModel],
+      configs: [projectConfigPrototypeModel],
+      resourceGroup: 'Default',
+      location: 'us-south',
     };
 
     let res;
@@ -159,7 +161,7 @@ describe('ProjectV1', () => {
     // begin-get_project
 
     const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
     };
 
     let res;
@@ -183,17 +185,6 @@ describe('ProjectV1', () => {
       expect(true).toBeFalsy();
     });
 
-    // InputVariableInput
-    const inputVariableInputModel = {
-      name: 'testString',
-    };
-
-    // ConfigSettingItems
-    const configSettingItemsModel = {
-      name: 'testString',
-      value: 'testString',
-    };
-
     originalLog('updateProject() result:');
     // begin-update_project
 
@@ -201,14 +192,12 @@ describe('ProjectV1', () => {
 
     // JsonPatchOperation
     const jsonPatchOperationModel = {
-      Labels: ['env:stage', 'governance:test', 'build:0'],
-      Description: 'new',
-      Input: [inputVariableInputModel],
-      Setting: [configSettingItemsModel],
+      op: 'add',
+      path: 'testString',
     };
 
     const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
       jsonPatchOperation: [jsonPatchOperationModel],
     };
 
@@ -238,13 +227,14 @@ describe('ProjectV1', () => {
 
     // Request models needed by this operation.
 
-    // InputVariableInput
-    const inputVariableInputModel = {
+    // ProjectConfigInputVariable
+    const projectConfigInputVariableModel = {
       name: 'account_id',
+      value: '$configs[].name["account-stage"].input.account_id',
     };
 
-    // ConfigSettingItems
-    const configSettingItemsModel = {
+    // ProjectConfigSettingCollection
+    const projectConfigSettingCollectionModel = {
       name: 'IBMCLOUD_TOOLCHAIN_ENDPOINT',
       value: 'https://api.us-south.devops.dev.cloud.ibm.com',
     };
@@ -256,8 +246,8 @@ describe('ProjectV1', () => {
       labels: ['env:stage', 'governance:test', 'build:0'],
       description:
         'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.',
-      input: [inputVariableInputModel],
-      setting: [configSettingItemsModel],
+      input: [projectConfigInputVariableModel],
+      setting: [projectConfigSettingCollectionModel],
     };
 
     let res;
@@ -316,7 +306,7 @@ describe('ProjectV1', () => {
 
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
     };
 
     let res;
@@ -347,13 +337,13 @@ describe('ProjectV1', () => {
 
     // JsonPatchOperation
     const jsonPatchOperationModel = {
-      'name': 'new-config-name',
-      'type': 'terraform_templatef',
+      op: 'add',
+      path: 'testString',
     };
 
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
       projectConfig: [jsonPatchOperationModel],
     };
 
@@ -383,7 +373,7 @@ describe('ProjectV1', () => {
 
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
     };
 
     let res;
@@ -397,7 +387,7 @@ describe('ProjectV1', () => {
     // end-get_config_diff
   });
 
-  test('forceMerge request example', async () => {
+  test('forceApprove request example', async () => {
     consoleLogMock.mockImplementation((output) => {
       originalLog(output);
     });
@@ -407,27 +397,27 @@ describe('ProjectV1', () => {
       expect(true).toBeFalsy();
     });
 
-    originalLog('forceMerge() result:');
-    // begin-force_merge
+    originalLog('forceApprove() result:');
+    // begin-force_approve
 
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
       comment: 'Approving the changes',
     };
 
     let res;
     try {
-      res = await projectService.forceMerge(params);
+      res = await projectService.forceApprove(params);
       console.log(JSON.stringify(res.result, null, 2));
     } catch (err) {
       console.warn(err);
     }
 
-    // end-force_merge
+    // end-force_approve
   });
 
-  test('createDraftAction request example', async () => {
+  test('approve request example', async () => {
     consoleLogMock.mockImplementation((output) => {
       originalLog(output);
     });
@@ -437,25 +427,24 @@ describe('ProjectV1', () => {
       expect(true).toBeFalsy();
     });
 
-    originalLog('createDraftAction() result:');
-    // begin-create_draft_action
+    originalLog('approve() result:');
+    // begin-approve
 
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
-      action: 'merge',
+      id: configIdLink,
       comment: 'Approving the changes',
     };
 
     let res;
     try {
-      res = await projectService.createDraftAction(params);
+      res = await projectService.approve(params);
       console.log(JSON.stringify(res.result, null, 2));
     } catch (err) {
       console.warn(err);
     }
 
-    // end-create_draft_action
+    // end-approve
   });
 
   test('checkConfig request example', async () => {
@@ -473,7 +462,7 @@ describe('ProjectV1', () => {
 
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
     };
 
     let res;
@@ -502,7 +491,7 @@ describe('ProjectV1', () => {
 
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
     };
 
     let res;
@@ -530,7 +519,7 @@ describe('ProjectV1', () => {
 
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
     };
 
     try {
@@ -557,7 +546,7 @@ describe('ProjectV1', () => {
 
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
       action: 'plan',
     };
 
@@ -587,7 +576,7 @@ describe('ProjectV1', () => {
 
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
     };
 
     let res;
@@ -627,7 +616,7 @@ describe('ProjectV1', () => {
     };
 
     const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
       notifications: [notificationEventModel],
     };
 
@@ -656,7 +645,7 @@ describe('ProjectV1', () => {
     // begin-get_notifications
 
     const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
     };
 
     let res;
@@ -668,264 +657,6 @@ describe('ProjectV1', () => {
     }
 
     // end-get_notifications
-  });
-
-  test('receivePulsarCatalogEvents request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    // begin-receive_pulsar_catalog_events
-
-    // Request models needed by this operation.
-
-    // PulsarEventItems
-    const pulsarEventItemsModel = {
-      event_type: 'testString',
-      timestamp: '2019-01-01T12:00:00.000Z',
-      publisher: 'testString',
-      account_id: 'testString',
-      version: 'testString',
-      foo: 'testString',
-    };
-
-    const params = {
-      pulsarCatalogEvents: [pulsarEventItemsModel],
-    };
-
-    try {
-      await projectService.receivePulsarCatalogEvents(params);
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-receive_pulsar_catalog_events
-  });
-
-  test('getHealth request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('getHealth() result:');
-    // begin-get_health
-
-    let res;
-    try {
-      res = await projectService.getHealth({});
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-get_health
-  });
-
-  test('replaceServiceInstance request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('replaceServiceInstance() result:');
-    // begin-replace_service_instance
-
-    const params = {
-      instanceId:
-        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
-      serviceId: 'testString',
-      planId: 'testString',
-      xBrokerApiVersion: '1.0',
-      xBrokerApiOriginatingIdentity: 'ibmcloud eyJpYW1fbWQiOiJJQk2pZC03MEdOUjcxN2lFIn0=',
-      acceptsIncomplete: false,
-    };
-
-    let res;
-    try {
-      res = await projectService.replaceServiceInstance(params);
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-replace_service_instance
-  });
-
-  test('updateServiceInstance request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('updateServiceInstance() result:');
-    // begin-update_service_instance
-
-    // Request models needed by this operation.
-
-    // JsonPatchOperation
-    const jsonPatchOperationModel = {
-      'name': 'new-instance-name',
-      'type': 'terraform_templatef',
-    };
-
-    const params = {
-      instanceId:
-        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
-      jsonPatchOperation: [jsonPatchOperationModel],
-      xBrokerApiVersion: '1.0',
-      xBrokerApiOriginatingIdentity: 'ibmcloud eyJpYW1fbWQiOiJJQk2pZC03MEdOUjcxN2lFIn0=',
-      acceptsIncomplete: false,
-    };
-
-    let res;
-    try {
-      res = await projectService.updateServiceInstance(params);
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-update_service_instance
-  });
-
-  test('getLastOperation request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('getLastOperation() result:');
-    // begin-get_last_operation
-
-    const params = {
-      instanceId:
-        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
-      xBrokerApiVersion: '1.0',
-      operation: 'ABCD',
-      planId: 'cb54391b-3316-4943-a5a6-a541678c1924',
-      serviceId: 'cb54391b-3316-4943-a5a6-a541678c1924',
-    };
-
-    let res;
-    try {
-      res = await projectService.getLastOperation(params);
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-get_last_operation
-  });
-
-  test('replaceServiceInstanceState request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('replaceServiceInstanceState() result:');
-    // begin-replace_service_instance_state
-
-    const params = {
-      instanceId:
-        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
-      enabled: true,
-      xBrokerApiVersion: '1.0',
-    };
-
-    let res;
-    try {
-      res = await projectService.replaceServiceInstanceState(params);
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-replace_service_instance_state
-  });
-
-  test('getServiceInstance request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('getServiceInstance() result:');
-    // begin-get_service_instance
-
-    const params = {
-      instanceId:
-        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
-      xBrokerApiVersion: '1.0',
-    };
-
-    let res;
-    try {
-      res = await projectService.getServiceInstance(params);
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-get_service_instance
-  });
-
-  test('getCatalog request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('getCatalog() result:');
-    // begin-get_catalog
-
-    const params = {
-      xBrokerApiVersion: '1.0',
-    };
-
-    let res;
-    try {
-      res = await projectService.getCatalog(params);
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-get_catalog
   });
 
   test('postEventNotificationsIntegration request example', async () => {
@@ -942,7 +673,7 @@ describe('ProjectV1', () => {
     // begin-post_event_notifications_integration
 
     const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
       instanceCrn: 'CRN of event notifications instance',
       description: 'A sample project source.',
       eventNotificationsSourceName: 'project 1 source name for event notifications',
@@ -974,7 +705,7 @@ describe('ProjectV1', () => {
     // begin-get_event_notifications_integration
 
     const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
     };
 
     let res;
@@ -1002,7 +733,7 @@ describe('ProjectV1', () => {
     // begin-post_test_event_notification
 
     const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
       ibmendefaultlong: 'long test notification message',
       ibmendefaultshort: 'Test notification',
     };
@@ -1033,7 +764,7 @@ describe('ProjectV1', () => {
 
     const params = {
       projectId: projectIdLink,
-      configId: configIdLink,
+      id: configIdLink,
     };
 
     let res;
@@ -1045,31 +776,6 @@ describe('ProjectV1', () => {
     }
 
     // end-delete_config
-  });
-
-  test('deleteNotification request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    // begin-delete_notification
-
-    const params = {
-      projectId: projectIdLink,
-    };
-
-    try {
-      await projectService.deleteNotification(params);
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-delete_notification
   });
 
   test('deleteEventNotificationsIntegration request example', async () => {
@@ -1085,7 +791,7 @@ describe('ProjectV1', () => {
     // begin-delete_event_notifications_integration
 
     const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
     };
 
     try {
@@ -1110,7 +816,7 @@ describe('ProjectV1', () => {
     // begin-delete_project
 
     const params = {
-      projectId: projectIdLink,
+      id: projectIdLink,
     };
 
     try {
@@ -1120,39 +826,5 @@ describe('ProjectV1', () => {
     }
 
     // end-delete_project
-  });
-
-  test('deleteServiceInstance request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('deleteServiceInstance() result:');
-    // begin-delete_service_instance
-
-    const params = {
-      instanceId:
-        'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
-      planId: 'cb54391b-3316-4943-a5a6-a541678c1924',
-      serviceId: 'cb54391b-3316-4943-a5a6-a541678c1924',
-      xBrokerApiVersion: '1.0',
-      xBrokerApiOriginatingIdentity: 'ibmcloud eyJpYW1fbWQiOiJJQk2pZC03MEdOUjcxN2lFIn0=',
-      acceptsIncomplete: false,
-    };
-
-    let res;
-    try {
-      res = await projectService.deleteServiceInstance(params);
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-delete_service_instance
   });
 });
