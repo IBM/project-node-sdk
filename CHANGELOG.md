@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/IBM/project-node-sdk/compare/v1.0.1...v1.0.2) (2023-04-25)
+
+
+### Bug Fixes
+
+* **Project V1:** re-gen service after recent API changes ([#6](https://github.com/IBM/project-node-sdk/issues/6)) ([6712330](https://github.com/IBM/project-node-sdk/commit/67123304e5c2f3ce7e17506f41f7dddabe622a5e))
+
 ## [1.0.1](https://github.com/IBM/project-node-sdk/compare/v1.0.0...v1.0.1) (2023-03-27)
 
 
