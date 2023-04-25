@@ -35,7 +35,7 @@ const {
 
 const projectServiceOptions = {
   authenticator: new NoAuthAuthenticator(),
-  url: 'https://projects.api.test.cloud.ibm.com',
+  url: 'https://projects.api.cloud.ibm.com',
 };
 
 const projectService = new ProjectV1(projectServiceOptions);
@@ -125,42 +125,43 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       // Request models needed by this operation.
 
-      // InputVariableInput
-      const inputVariableInputModel = {
-        name: 'testString',
-      };
-
-      // ConfigSettingItems
-      const configSettingItemsModel = {
+      // ProjectConfigInputVariable
+      const projectConfigInputVariableModel = {
         name: 'testString',
         value: 'testString',
       };
 
-      // ProjectConfigInput
-      const projectConfigInputModel = {
+      // ProjectConfigSettingCollection
+      const projectConfigSettingCollectionModel = {
+        name: 'testString',
+        value: 'testString',
+      };
+
+      // ProjectConfigPrototype
+      const projectConfigPrototypeModel = {
         id: 'testString',
         name: 'common-variables',
         labels: ['testString'],
         description: 'testString',
         locator_id:
           '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
-        input: [inputVariableInputModel],
-        setting: [configSettingItemsModel],
+        input: [projectConfigInputVariableModel],
+        setting: [projectConfigSettingCollectionModel],
       };
 
       function __createProjectTest() {
         // Construct the params object for operation createProject
+        const resourceGroup = 'testString';
+        const location = 'testString';
         const name = 'acme-microservice';
         const description = 'A microservice to deploy on top of ACME infrastructure.';
-        const configs = [projectConfigInputModel];
-        const resourceGroup = 'Default';
-        const location = 'us-south';
+        const configs = [projectConfigPrototypeModel];
         const createProjectParams = {
+          resourceGroup,
+          location,
           name,
           description,
           configs,
-          resourceGroup,
-          location,
         };
 
         const createProjectResult = projectService.createProject(createProjectParams);
@@ -201,10 +202,14 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
+        const resourceGroup = 'testString';
+        const location = 'testString';
         const name = 'acme-microservice';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const createProjectParams = {
+          resourceGroup,
+          location,
           name,
           headers: {
             Accept: userAccept,
@@ -366,11 +371,11 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       function __getProjectTest() {
         // Construct the params object for operation getProject
-        const projectId = 'testString';
+        const id = 'testString';
         const excludeConfigs = false;
         const complete = false;
         const getProjectParams = {
-          projectId,
+          id,
           excludeConfigs,
           complete,
         };
@@ -385,13 +390,13 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}', 'GET');
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{id}', 'GET');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.qs.exclude_configs).toEqual(excludeConfigs);
         expect(mockRequestOptions.qs.complete).toEqual(complete);
-        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -411,11 +416,11 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
-        const projectId = 'testString';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const getProjectParams = {
-          projectId,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
@@ -466,10 +471,10 @@ describe('ProjectV1', () => {
 
       function __updateProjectTest() {
         // Construct the params object for operation updateProject
-        const projectId = 'testString';
+        const id = 'testString';
         const jsonPatchOperation = [jsonPatchOperationModel];
         const updateProjectParams = {
-          projectId,
+          id,
           jsonPatchOperation,
         };
 
@@ -483,12 +488,12 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}', 'PATCH');
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{id}', 'PATCH');
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json-patch+json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.body).toEqual(jsonPatchOperation);
-        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -508,12 +513,12 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
-        const projectId = 'testString';
+        const id = 'testString';
         const jsonPatchOperation = [jsonPatchOperationModel];
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const updateProjectParams = {
-          projectId,
+          id,
           jsonPatchOperation,
           headers: {
             Accept: userAccept,
@@ -555,10 +560,10 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       function __deleteProjectTest() {
         // Construct the params object for operation deleteProject
-        const projectId = 'testString';
+        const id = 'testString';
         const destroy = false;
         const deleteProjectParams = {
-          projectId,
+          id,
           destroy,
         };
 
@@ -572,12 +577,12 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}', 'DELETE');
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{id}', 'DELETE');
         const expectedAccept = undefined;
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.qs.destroy).toEqual(destroy);
-        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -597,11 +602,11 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
-        const projectId = 'testString';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const deleteProjectParams = {
-          projectId,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
@@ -642,13 +647,14 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       // Request models needed by this operation.
 
-      // InputVariableInput
-      const inputVariableInputModel = {
+      // ProjectConfigInputVariable
+      const projectConfigInputVariableModel = {
         name: 'account_id',
+        value: '$configs[].name["account-stage"].input.account_id',
       };
 
-      // ConfigSettingItems
-      const configSettingItemsModel = {
+      // ProjectConfigSettingCollection
+      const projectConfigSettingCollectionModel = {
         name: 'IBMCLOUD_TOOLCHAIN_ENDPOINT',
         value: 'https://api.us-south.devops.dev.cloud.ibm.com',
       };
@@ -663,8 +669,8 @@ describe('ProjectV1', () => {
         const labels = ['env:stage', 'governance:test', 'build:0'];
         const description =
           'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.';
-        const input = [inputVariableInputModel];
-        const setting = [configSettingItemsModel];
+        const input = [projectConfigInputVariableModel];
+        const setting = [projectConfigSettingCollectionModel];
         const createConfigParams = {
           projectId,
           name,
@@ -858,12 +864,12 @@ describe('ProjectV1', () => {
       function __getConfigTest() {
         // Construct the params object for operation getConfig
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const version = 'active';
         const complete = false;
         const getConfigParams = {
           projectId,
-          configId,
+          id,
           version,
           complete,
         };
@@ -878,18 +884,14 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{config_id}',
-          'GET'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}', 'GET');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.qs.version).toEqual(version);
         expect(mockRequestOptions.qs.complete).toEqual(complete);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
-        expect(mockRequestOptions.path.config_id).toEqual(configId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -910,12 +912,12 @@ describe('ProjectV1', () => {
       test('should prioritize user-given headers', () => {
         // parameters
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const getConfigParams = {
           projectId,
-          configId,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
@@ -967,12 +969,12 @@ describe('ProjectV1', () => {
       function __updateConfigTest() {
         // Construct the params object for operation updateConfig
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const projectConfig = [jsonPatchOperationModel];
         const complete = false;
         const updateConfigParams = {
           projectId,
-          configId,
+          id,
           projectConfig,
           complete,
         };
@@ -987,18 +989,14 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{config_id}',
-          'PATCH'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}', 'PATCH');
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json-patch+json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.body).toEqual(projectConfig);
         expect(mockRequestOptions.qs.complete).toEqual(complete);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
-        expect(mockRequestOptions.path.config_id).toEqual(configId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -1019,13 +1017,13 @@ describe('ProjectV1', () => {
       test('should prioritize user-given headers', () => {
         // parameters
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const projectConfig = [jsonPatchOperationModel];
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const updateConfigParams = {
           projectId,
-          configId,
+          id,
           projectConfig,
           headers: {
             Accept: userAccept,
@@ -1068,12 +1066,12 @@ describe('ProjectV1', () => {
       function __deleteConfigTest() {
         // Construct the params object for operation deleteConfig
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const draftOnly = false;
         const destroy = false;
         const deleteConfigParams = {
           projectId,
-          configId,
+          id,
           draftOnly,
           destroy,
         };
@@ -1088,18 +1086,14 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{config_id}',
-          'DELETE'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}', 'DELETE');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.qs.draft_only).toEqual(draftOnly);
         expect(mockRequestOptions.qs.destroy).toEqual(destroy);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
-        expect(mockRequestOptions.path.config_id).toEqual(configId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -1120,12 +1114,12 @@ describe('ProjectV1', () => {
       test('should prioritize user-given headers', () => {
         // parameters
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const deleteConfigParams = {
           projectId,
-          configId,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
@@ -1167,10 +1161,10 @@ describe('ProjectV1', () => {
       function __getConfigDiffTest() {
         // Construct the params object for operation getConfigDiff
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const getConfigDiffParams = {
           projectId,
-          configId,
+          id,
         };
 
         const getConfigDiffResult = projectService.getConfigDiff(getConfigDiffParams);
@@ -1183,16 +1177,12 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{config_id}/diff',
-          'GET'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/diff', 'GET');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
-        expect(mockRequestOptions.path.config_id).toEqual(configId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -1213,12 +1203,12 @@ describe('ProjectV1', () => {
       test('should prioritize user-given headers', () => {
         // parameters
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const getConfigDiffParams = {
           projectId,
-          configId,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
@@ -1255,25 +1245,25 @@ describe('ProjectV1', () => {
     });
   });
 
-  describe('forceMerge', () => {
+  describe('forceApprove', () => {
     describe('positive tests', () => {
-      function __forceMergeTest() {
-        // Construct the params object for operation forceMerge
+      function __forceApproveTest() {
+        // Construct the params object for operation forceApprove
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const comment = 'Approving the changes';
         const complete = false;
-        const forceMergeParams = {
+        const forceApproveParams = {
           projectId,
-          configId,
+          id,
           comment,
           complete,
         };
 
-        const forceMergeResult = projectService.forceMerge(forceMergeParams);
+        const forceApproveResult = projectService.forceApprove(forceApproveParams);
 
         // all methods should return a Promise
-        expectToBePromise(forceMergeResult);
+        expectToBePromise(forceApproveResult);
 
         // assert that create request was called
         expect(createRequestMock).toHaveBeenCalledTimes(1);
@@ -1282,7 +1272,7 @@ describe('ProjectV1', () => {
 
         checkUrlAndMethod(
           mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{config_id}/draft/force_merge',
+          '/v1/projects/{project_id}/configs/{id}/force_approve',
           'POST'
         );
         const expectedAccept = 'application/json';
@@ -1291,40 +1281,40 @@ describe('ProjectV1', () => {
         expect(mockRequestOptions.body.comment).toEqual(comment);
         expect(mockRequestOptions.qs.complete).toEqual(complete);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
-        expect(mockRequestOptions.path.config_id).toEqual(configId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
         // baseline test
-        __forceMergeTest();
+        __forceApproveTest();
 
         // enable retries and test again
         createRequestMock.mockClear();
         projectService.enableRetries();
-        __forceMergeTest();
+        __forceApproveTest();
 
         // disable retries and test again
         createRequestMock.mockClear();
         projectService.disableRetries();
-        __forceMergeTest();
+        __forceApproveTest();
       });
 
       test('should prioritize user-given headers', () => {
         // parameters
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
-        const forceMergeParams = {
+        const forceApproveParams = {
           projectId,
-          configId,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
           },
         };
 
-        projectService.forceMerge(forceMergeParams);
+        projectService.forceApprove(forceApproveParams);
         checkMediaHeaders(createRequestMock, userAccept, userContentType);
       });
     });
@@ -1333,7 +1323,7 @@ describe('ProjectV1', () => {
       test('should enforce required parameters', async () => {
         let err;
         try {
-          await projectService.forceMerge({});
+          await projectService.forceApprove({});
         } catch (e) {
           err = e;
         }
@@ -1344,7 +1334,7 @@ describe('ProjectV1', () => {
       test('should reject promise when required params are not given', async () => {
         let err;
         try {
-          await projectService.forceMerge();
+          await projectService.forceApprove();
         } catch (e) {
           err = e;
         }
@@ -1354,27 +1344,25 @@ describe('ProjectV1', () => {
     });
   });
 
-  describe('createDraftAction', () => {
+  describe('approve', () => {
     describe('positive tests', () => {
-      function __createDraftActionTest() {
-        // Construct the params object for operation createDraftAction
+      function __approveTest() {
+        // Construct the params object for operation approve
         const projectId = 'testString';
-        const configId = 'testString';
-        const action = 'merge';
+        const id = 'testString';
         const comment = 'Approving the changes';
         const complete = false;
-        const createDraftActionParams = {
+        const approveParams = {
           projectId,
-          configId,
-          action,
+          id,
           comment,
           complete,
         };
 
-        const createDraftActionResult = projectService.createDraftAction(createDraftActionParams);
+        const approveResult = projectService.approve(approveParams);
 
         // all methods should return a Promise
-        expectToBePromise(createDraftActionResult);
+        expectToBePromise(approveResult);
 
         // assert that create request was called
         expect(createRequestMock).toHaveBeenCalledTimes(1);
@@ -1383,7 +1371,7 @@ describe('ProjectV1', () => {
 
         checkUrlAndMethod(
           mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{config_id}/draft/{action}',
+          '/v1/projects/{project_id}/configs/{id}/approve',
           'POST'
         );
         const expectedAccept = 'application/json';
@@ -1392,43 +1380,40 @@ describe('ProjectV1', () => {
         expect(mockRequestOptions.body.comment).toEqual(comment);
         expect(mockRequestOptions.qs.complete).toEqual(complete);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
-        expect(mockRequestOptions.path.config_id).toEqual(configId);
-        expect(mockRequestOptions.path.action).toEqual(action);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
         // baseline test
-        __createDraftActionTest();
+        __approveTest();
 
         // enable retries and test again
         createRequestMock.mockClear();
         projectService.enableRetries();
-        __createDraftActionTest();
+        __approveTest();
 
         // disable retries and test again
         createRequestMock.mockClear();
         projectService.disableRetries();
-        __createDraftActionTest();
+        __approveTest();
       });
 
       test('should prioritize user-given headers', () => {
         // parameters
         const projectId = 'testString';
-        const configId = 'testString';
-        const action = 'merge';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
-        const createDraftActionParams = {
+        const approveParams = {
           projectId,
-          configId,
-          action,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
           },
         };
 
-        projectService.createDraftAction(createDraftActionParams);
+        projectService.approve(approveParams);
         checkMediaHeaders(createRequestMock, userAccept, userContentType);
       });
     });
@@ -1437,7 +1422,7 @@ describe('ProjectV1', () => {
       test('should enforce required parameters', async () => {
         let err;
         try {
-          await projectService.createDraftAction({});
+          await projectService.approve({});
         } catch (e) {
           err = e;
         }
@@ -1448,7 +1433,7 @@ describe('ProjectV1', () => {
       test('should reject promise when required params are not given', async () => {
         let err;
         try {
-          await projectService.createDraftAction();
+          await projectService.approve();
         } catch (e) {
           err = e;
         }
@@ -1463,16 +1448,16 @@ describe('ProjectV1', () => {
       function __checkConfigTest() {
         // Construct the params object for operation checkConfig
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const xAuthRefreshToken = 'testString';
-        const version = 'active';
         const complete = false;
+        const version = 'active';
         const checkConfigParams = {
           projectId,
-          configId,
+          id,
           xAuthRefreshToken,
-          version,
           complete,
+          version,
         };
 
         const checkConfigResult = projectService.checkConfig(checkConfigParams);
@@ -1487,17 +1472,17 @@ describe('ProjectV1', () => {
 
         checkUrlAndMethod(
           mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{config_id}/check',
+          '/v1/projects/{project_id}/configs/{id}/check',
           'POST'
         );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         checkUserHeader(createRequestMock, 'X-Auth-Refresh-Token', xAuthRefreshToken);
-        expect(mockRequestOptions.qs.version).toEqual(version);
         expect(mockRequestOptions.qs.complete).toEqual(complete);
+        expect(mockRequestOptions.qs.version).toEqual(version);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
-        expect(mockRequestOptions.path.config_id).toEqual(configId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -1518,12 +1503,12 @@ describe('ProjectV1', () => {
       test('should prioritize user-given headers', () => {
         // parameters
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const checkConfigParams = {
           projectId,
-          configId,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
@@ -1565,11 +1550,11 @@ describe('ProjectV1', () => {
       function __installConfigTest() {
         // Construct the params object for operation installConfig
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const complete = false;
         const installConfigParams = {
           projectId,
-          configId,
+          id,
           complete,
         };
 
@@ -1585,7 +1570,7 @@ describe('ProjectV1', () => {
 
         checkUrlAndMethod(
           mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{config_id}/install',
+          '/v1/projects/{project_id}/configs/{id}/install',
           'POST'
         );
         const expectedAccept = 'application/json';
@@ -1593,7 +1578,7 @@ describe('ProjectV1', () => {
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.qs.complete).toEqual(complete);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
-        expect(mockRequestOptions.path.config_id).toEqual(configId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -1614,12 +1599,12 @@ describe('ProjectV1', () => {
       test('should prioritize user-given headers', () => {
         // parameters
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const installConfigParams = {
           projectId,
-          configId,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
@@ -1661,10 +1646,10 @@ describe('ProjectV1', () => {
       function __uninstallConfigTest() {
         // Construct the params object for operation uninstallConfig
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const uninstallConfigParams = {
           projectId,
-          configId,
+          id,
         };
 
         const uninstallConfigResult = projectService.uninstallConfig(uninstallConfigParams);
@@ -1679,14 +1664,14 @@ describe('ProjectV1', () => {
 
         checkUrlAndMethod(
           mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{config_id}/uninstall',
+          '/v1/projects/{project_id}/configs/{id}/uninstall',
           'POST'
         );
         const expectedAccept = undefined;
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
-        expect(mockRequestOptions.path.config_id).toEqual(configId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -1707,12 +1692,12 @@ describe('ProjectV1', () => {
       test('should prioritize user-given headers', () => {
         // parameters
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const uninstallConfigParams = {
           projectId,
-          configId,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
@@ -1754,12 +1739,12 @@ describe('ProjectV1', () => {
       function __getSchematicsJobTest() {
         // Construct the params object for operation getSchematicsJob
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const action = 'plan';
         const since = 38;
         const getSchematicsJobParams = {
           projectId,
-          configId,
+          id,
           action,
           since,
         };
@@ -1776,7 +1761,7 @@ describe('ProjectV1', () => {
 
         checkUrlAndMethod(
           mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{config_id}/job/{action}',
+          '/v1/projects/{project_id}/configs/{id}/job/{action}',
           'GET'
         );
         const expectedAccept = 'application/json';
@@ -1784,7 +1769,7 @@ describe('ProjectV1', () => {
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.qs.since).toEqual(since);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
-        expect(mockRequestOptions.path.config_id).toEqual(configId);
+        expect(mockRequestOptions.path.id).toEqual(id);
         expect(mockRequestOptions.path.action).toEqual(action);
       }
 
@@ -1806,13 +1791,13 @@ describe('ProjectV1', () => {
       test('should prioritize user-given headers', () => {
         // parameters
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const action = 'plan';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const getSchematicsJobParams = {
           projectId,
-          configId,
+          id,
           action,
           headers: {
             Accept: userAccept,
@@ -1855,11 +1840,11 @@ describe('ProjectV1', () => {
       function __getCostEstimateTest() {
         // Construct the params object for operation getCostEstimate
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const version = 'active';
         const getCostEstimateParams = {
           projectId,
-          configId,
+          id,
           version,
         };
 
@@ -1875,7 +1860,7 @@ describe('ProjectV1', () => {
 
         checkUrlAndMethod(
           mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{config_id}/cost_estimate',
+          '/v1/projects/{project_id}/configs/{id}/cost_estimate',
           'GET'
         );
         const expectedAccept = 'application/json';
@@ -1883,7 +1868,7 @@ describe('ProjectV1', () => {
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.qs.version).toEqual(version);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
-        expect(mockRequestOptions.path.config_id).toEqual(configId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -1904,12 +1889,12 @@ describe('ProjectV1', () => {
       test('should prioritize user-given headers', () => {
         // parameters
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const getCostEstimateParams = {
           projectId,
-          configId,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
@@ -1946,6 +1931,90 @@ describe('ProjectV1', () => {
     });
   });
 
+  describe('postCrnToken', () => {
+    describe('positive tests', () => {
+      function __postCrnTokenTest() {
+        // Construct the params object for operation postCrnToken
+        const id = 'testString';
+        const postCrnTokenParams = {
+          id,
+        };
+
+        const postCrnTokenResult = projectService.postCrnToken(postCrnTokenParams);
+
+        // all methods should return a Promise
+        expectToBePromise(postCrnTokenResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{id}/token', 'POST');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.path.id).toEqual(id);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __postCrnTokenTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __postCrnTokenTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __postCrnTokenTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const id = 'testString';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const postCrnTokenParams = {
+          id,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.postCrnToken(postCrnTokenParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.postCrnToken({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.postCrnToken();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
   describe('postNotification', () => {
     describe('positive tests', () => {
       // Request models needed by this operation.
@@ -1962,10 +2031,10 @@ describe('ProjectV1', () => {
 
       function __postNotificationTest() {
         // Construct the params object for operation postNotification
-        const projectId = 'testString';
+        const id = 'testString';
         const notifications = [notificationEventModel];
         const postNotificationParams = {
-          projectId,
+          id,
           notifications,
         };
 
@@ -1979,12 +2048,12 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/event', 'POST');
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{id}/event', 'POST');
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.body.notifications).toEqual(notifications);
-        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -2004,11 +2073,11 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
-        const projectId = 'testString';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const postNotificationParams = {
-          projectId,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
@@ -2049,9 +2118,9 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       function __getNotificationsTest() {
         // Construct the params object for operation getNotifications
-        const projectId = 'testString';
+        const id = 'testString';
         const getNotificationsParams = {
-          projectId,
+          id,
         };
 
         const getNotificationsResult = projectService.getNotifications(getNotificationsParams);
@@ -2064,11 +2133,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/event', 'GET');
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{id}/event', 'GET');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -2088,11 +2157,11 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
-        const projectId = 'testString';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const getNotificationsParams = {
-          projectId,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
@@ -2129,977 +2198,17 @@ describe('ProjectV1', () => {
     });
   });
 
-  describe('deleteNotification', () => {
-    describe('positive tests', () => {
-      function __deleteNotificationTest() {
-        // Construct the params object for operation deleteNotification
-        const projectId = 'testString';
-        const deleteNotificationParams = {
-          projectId,
-        };
-
-        const deleteNotificationResult =
-          projectService.deleteNotification(deleteNotificationParams);
-
-        // all methods should return a Promise
-        expectToBePromise(deleteNotificationResult);
-
-        // assert that create request was called
-        expect(createRequestMock).toHaveBeenCalledTimes(1);
-
-        const mockRequestOptions = getOptions(createRequestMock);
-
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/event', 'DELETE');
-        const expectedAccept = undefined;
-        const expectedContentType = undefined;
-        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(mockRequestOptions.path.project_id).toEqual(projectId);
-      }
-
-      test('should pass the right params to createRequest with enable and disable retries', () => {
-        // baseline test
-        __deleteNotificationTest();
-
-        // enable retries and test again
-        createRequestMock.mockClear();
-        projectService.enableRetries();
-        __deleteNotificationTest();
-
-        // disable retries and test again
-        createRequestMock.mockClear();
-        projectService.disableRetries();
-        __deleteNotificationTest();
-      });
-
-      test('should prioritize user-given headers', () => {
-        // parameters
-        const projectId = 'testString';
-        const userAccept = 'fake/accept';
-        const userContentType = 'fake/contentType';
-        const deleteNotificationParams = {
-          projectId,
-          headers: {
-            Accept: userAccept,
-            'Content-Type': userContentType,
-          },
-        };
-
-        projectService.deleteNotification(deleteNotificationParams);
-        checkMediaHeaders(createRequestMock, userAccept, userContentType);
-      });
-    });
-
-    describe('negative tests', () => {
-      test('should enforce required parameters', async () => {
-        let err;
-        try {
-          await projectService.deleteNotification({});
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-
-      test('should reject promise when required params are not given', async () => {
-        let err;
-        try {
-          await projectService.deleteNotification();
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-    });
-  });
-
-  describe('receivePulsarCatalogEvents', () => {
-    describe('positive tests', () => {
-      // Request models needed by this operation.
-
-      // PulsarEventItems
-      const pulsarEventItemsModel = {
-        event_type: 'testString',
-        timestamp: '2019-01-01T12:00:00.000Z',
-        publisher: 'testString',
-        account_id: 'testString',
-        version: 'testString',
-        event_properties: { foo: 'bar' },
-        event_id: 'testString',
-        foo: 'testString',
-      };
-
-      function __receivePulsarCatalogEventsTest() {
-        // Construct the params object for operation receivePulsarCatalogEvents
-        const pulsarCatalogEvents = [pulsarEventItemsModel];
-        const receivePulsarCatalogEventsParams = {
-          pulsarCatalogEvents,
-        };
-
-        const receivePulsarCatalogEventsResult = projectService.receivePulsarCatalogEvents(
-          receivePulsarCatalogEventsParams
-        );
-
-        // all methods should return a Promise
-        expectToBePromise(receivePulsarCatalogEventsResult);
-
-        // assert that create request was called
-        expect(createRequestMock).toHaveBeenCalledTimes(1);
-
-        const mockRequestOptions = getOptions(createRequestMock);
-
-        checkUrlAndMethod(mockRequestOptions, '/v1/pulsar/catalog_events', 'POST');
-        const expectedAccept = undefined;
-        const expectedContentType = 'application/json';
-        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(mockRequestOptions.body).toEqual(pulsarCatalogEvents);
-      }
-
-      test('should pass the right params to createRequest with enable and disable retries', () => {
-        // baseline test
-        __receivePulsarCatalogEventsTest();
-
-        // enable retries and test again
-        createRequestMock.mockClear();
-        projectService.enableRetries();
-        __receivePulsarCatalogEventsTest();
-
-        // disable retries and test again
-        createRequestMock.mockClear();
-        projectService.disableRetries();
-        __receivePulsarCatalogEventsTest();
-      });
-
-      test('should prioritize user-given headers', () => {
-        // parameters
-        const pulsarCatalogEvents = [pulsarEventItemsModel];
-        const userAccept = 'fake/accept';
-        const userContentType = 'fake/contentType';
-        const receivePulsarCatalogEventsParams = {
-          pulsarCatalogEvents,
-          headers: {
-            Accept: userAccept,
-            'Content-Type': userContentType,
-          },
-        };
-
-        projectService.receivePulsarCatalogEvents(receivePulsarCatalogEventsParams);
-        checkMediaHeaders(createRequestMock, userAccept, userContentType);
-      });
-    });
-
-    describe('negative tests', () => {
-      test('should enforce required parameters', async () => {
-        let err;
-        try {
-          await projectService.receivePulsarCatalogEvents({});
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-
-      test('should reject promise when required params are not given', async () => {
-        let err;
-        try {
-          await projectService.receivePulsarCatalogEvents();
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-    });
-  });
-
-  describe('getHealth', () => {
-    describe('positive tests', () => {
-      function __getHealthTest() {
-        // Construct the params object for operation getHealth
-        const info = false;
-        const getHealthParams = {
-          info,
-        };
-
-        const getHealthResult = projectService.getHealth(getHealthParams);
-
-        // all methods should return a Promise
-        expectToBePromise(getHealthResult);
-
-        // assert that create request was called
-        expect(createRequestMock).toHaveBeenCalledTimes(1);
-
-        const mockRequestOptions = getOptions(createRequestMock);
-
-        checkUrlAndMethod(mockRequestOptions, '/v1/health', 'GET');
-        const expectedAccept = 'application/json';
-        const expectedContentType = undefined;
-        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(mockRequestOptions.qs.info).toEqual(info);
-      }
-
-      test('should pass the right params to createRequest with enable and disable retries', () => {
-        // baseline test
-        __getHealthTest();
-
-        // enable retries and test again
-        createRequestMock.mockClear();
-        projectService.enableRetries();
-        __getHealthTest();
-
-        // disable retries and test again
-        createRequestMock.mockClear();
-        projectService.disableRetries();
-        __getHealthTest();
-      });
-
-      test('should prioritize user-given headers', () => {
-        // parameters
-        const userAccept = 'fake/accept';
-        const userContentType = 'fake/contentType';
-        const getHealthParams = {
-          headers: {
-            Accept: userAccept,
-            'Content-Type': userContentType,
-          },
-        };
-
-        projectService.getHealth(getHealthParams);
-        checkMediaHeaders(createRequestMock, userAccept, userContentType);
-      });
-
-      test('should not have any problems when no parameters are passed in', () => {
-        // invoke the method with no parameters
-        projectService.getHealth({});
-        checkForSuccessfulExecution(createRequestMock);
-      });
-    });
-  });
-
-  describe('replaceServiceInstance', () => {
-    describe('positive tests', () => {
-      function __replaceServiceInstanceTest() {
-        // Construct the params object for operation replaceServiceInstance
-        const instanceId =
-          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
-        const serviceId = 'testString';
-        const planId = 'testString';
-        const context = ['testString'];
-        const parameters = { foo: 'bar' };
-        const previousValues = ['testString'];
-        const xBrokerApiVersion = '1.0';
-        const xBrokerApiOriginatingIdentity = 'ibmcloud eyJpYW1fbWQiOiJJQk2pZC03MEdOUjcxN2lFIn0=';
-        const acceptsIncomplete = false;
-        const replaceServiceInstanceParams = {
-          instanceId,
-          serviceId,
-          planId,
-          context,
-          parameters,
-          previousValues,
-          xBrokerApiVersion,
-          xBrokerApiOriginatingIdentity,
-          acceptsIncomplete,
-        };
-
-        const replaceServiceInstanceResult = projectService.replaceServiceInstance(
-          replaceServiceInstanceParams
-        );
-
-        // all methods should return a Promise
-        expectToBePromise(replaceServiceInstanceResult);
-
-        // assert that create request was called
-        expect(createRequestMock).toHaveBeenCalledTimes(1);
-
-        const mockRequestOptions = getOptions(createRequestMock);
-
-        checkUrlAndMethod(mockRequestOptions, '/v2/service_instances/{instance_id}', 'PUT');
-        const expectedAccept = 'application/json';
-        const expectedContentType = 'application/json';
-        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        checkUserHeader(createRequestMock, 'X-Broker-Api-Version', xBrokerApiVersion);
-        checkUserHeader(
-          createRequestMock,
-          'X-Broker-Api-Originating-Identity',
-          xBrokerApiOriginatingIdentity
-        );
-        expect(mockRequestOptions.body.service_id).toEqual(serviceId);
-        expect(mockRequestOptions.body.plan_id).toEqual(planId);
-        expect(mockRequestOptions.body.context).toEqual(context);
-        expect(mockRequestOptions.body.parameters).toEqual(parameters);
-        expect(mockRequestOptions.body.previous_values).toEqual(previousValues);
-        expect(mockRequestOptions.qs.accepts_incomplete).toEqual(acceptsIncomplete);
-        expect(mockRequestOptions.path.instance_id).toEqual(instanceId);
-      }
-
-      test('should pass the right params to createRequest with enable and disable retries', () => {
-        // baseline test
-        __replaceServiceInstanceTest();
-
-        // enable retries and test again
-        createRequestMock.mockClear();
-        projectService.enableRetries();
-        __replaceServiceInstanceTest();
-
-        // disable retries and test again
-        createRequestMock.mockClear();
-        projectService.disableRetries();
-        __replaceServiceInstanceTest();
-      });
-
-      test('should prioritize user-given headers', () => {
-        // parameters
-        const instanceId =
-          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
-        const serviceId = 'testString';
-        const planId = 'testString';
-        const userAccept = 'fake/accept';
-        const userContentType = 'fake/contentType';
-        const replaceServiceInstanceParams = {
-          instanceId,
-          serviceId,
-          planId,
-          headers: {
-            Accept: userAccept,
-            'Content-Type': userContentType,
-          },
-        };
-
-        projectService.replaceServiceInstance(replaceServiceInstanceParams);
-        checkMediaHeaders(createRequestMock, userAccept, userContentType);
-      });
-    });
-
-    describe('negative tests', () => {
-      test('should enforce required parameters', async () => {
-        let err;
-        try {
-          await projectService.replaceServiceInstance({});
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-
-      test('should reject promise when required params are not given', async () => {
-        let err;
-        try {
-          await projectService.replaceServiceInstance();
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-    });
-  });
-
-  describe('deleteServiceInstance', () => {
-    describe('positive tests', () => {
-      function __deleteServiceInstanceTest() {
-        // Construct the params object for operation deleteServiceInstance
-        const instanceId =
-          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
-        const planId = 'cb54391b-3316-4943-a5a6-a541678c1924';
-        const serviceId = 'cb54391b-3316-4943-a5a6-a541678c1924';
-        const xBrokerApiVersion = '1.0';
-        const xBrokerApiOriginatingIdentity = 'ibmcloud eyJpYW1fbWQiOiJJQk2pZC03MEdOUjcxN2lFIn0=';
-        const acceptsIncomplete = false;
-        const deleteServiceInstanceParams = {
-          instanceId,
-          planId,
-          serviceId,
-          xBrokerApiVersion,
-          xBrokerApiOriginatingIdentity,
-          acceptsIncomplete,
-        };
-
-        const deleteServiceInstanceResult = projectService.deleteServiceInstance(
-          deleteServiceInstanceParams
-        );
-
-        // all methods should return a Promise
-        expectToBePromise(deleteServiceInstanceResult);
-
-        // assert that create request was called
-        expect(createRequestMock).toHaveBeenCalledTimes(1);
-
-        const mockRequestOptions = getOptions(createRequestMock);
-
-        checkUrlAndMethod(mockRequestOptions, '/v2/service_instances/{instance_id}', 'DELETE');
-        const expectedAccept = 'application/json';
-        const expectedContentType = undefined;
-        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        checkUserHeader(createRequestMock, 'X-Broker-Api-Version', xBrokerApiVersion);
-        checkUserHeader(
-          createRequestMock,
-          'X-Broker-Api-Originating-Identity',
-          xBrokerApiOriginatingIdentity
-        );
-        expect(mockRequestOptions.qs.plan_id).toEqual(planId);
-        expect(mockRequestOptions.qs.service_id).toEqual(serviceId);
-        expect(mockRequestOptions.qs.accepts_incomplete).toEqual(acceptsIncomplete);
-        expect(mockRequestOptions.path.instance_id).toEqual(instanceId);
-      }
-
-      test('should pass the right params to createRequest with enable and disable retries', () => {
-        // baseline test
-        __deleteServiceInstanceTest();
-
-        // enable retries and test again
-        createRequestMock.mockClear();
-        projectService.enableRetries();
-        __deleteServiceInstanceTest();
-
-        // disable retries and test again
-        createRequestMock.mockClear();
-        projectService.disableRetries();
-        __deleteServiceInstanceTest();
-      });
-
-      test('should prioritize user-given headers', () => {
-        // parameters
-        const instanceId =
-          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
-        const planId = 'cb54391b-3316-4943-a5a6-a541678c1924';
-        const serviceId = 'cb54391b-3316-4943-a5a6-a541678c1924';
-        const userAccept = 'fake/accept';
-        const userContentType = 'fake/contentType';
-        const deleteServiceInstanceParams = {
-          instanceId,
-          planId,
-          serviceId,
-          headers: {
-            Accept: userAccept,
-            'Content-Type': userContentType,
-          },
-        };
-
-        projectService.deleteServiceInstance(deleteServiceInstanceParams);
-        checkMediaHeaders(createRequestMock, userAccept, userContentType);
-      });
-    });
-
-    describe('negative tests', () => {
-      test('should enforce required parameters', async () => {
-        let err;
-        try {
-          await projectService.deleteServiceInstance({});
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-
-      test('should reject promise when required params are not given', async () => {
-        let err;
-        try {
-          await projectService.deleteServiceInstance();
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-    });
-  });
-
-  describe('updateServiceInstance', () => {
-    describe('positive tests', () => {
-      // Request models needed by this operation.
-
-      // JsonPatchOperation
-      const jsonPatchOperationModel = {
-        op: 'add',
-        path: 'testString',
-        from: 'testString',
-        value: 'testString',
-      };
-
-      function __updateServiceInstanceTest() {
-        // Construct the params object for operation updateServiceInstance
-        const instanceId =
-          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
-        const jsonPatchOperation = [jsonPatchOperationModel];
-        const xBrokerApiVersion = '1.0';
-        const xBrokerApiOriginatingIdentity = 'ibmcloud eyJpYW1fbWQiOiJJQk2pZC03MEdOUjcxN2lFIn0=';
-        const acceptsIncomplete = false;
-        const updateServiceInstanceParams = {
-          instanceId,
-          jsonPatchOperation,
-          xBrokerApiVersion,
-          xBrokerApiOriginatingIdentity,
-          acceptsIncomplete,
-        };
-
-        const updateServiceInstanceResult = projectService.updateServiceInstance(
-          updateServiceInstanceParams
-        );
-
-        // all methods should return a Promise
-        expectToBePromise(updateServiceInstanceResult);
-
-        // assert that create request was called
-        expect(createRequestMock).toHaveBeenCalledTimes(1);
-
-        const mockRequestOptions = getOptions(createRequestMock);
-
-        checkUrlAndMethod(mockRequestOptions, '/v2/service_instances/{instance_id}', 'PATCH');
-        const expectedAccept = 'application/json';
-        const expectedContentType = 'application/json-patch+json';
-        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        checkUserHeader(createRequestMock, 'X-Broker-Api-Version', xBrokerApiVersion);
-        checkUserHeader(
-          createRequestMock,
-          'X-Broker-Api-Originating-Identity',
-          xBrokerApiOriginatingIdentity
-        );
-        expect(mockRequestOptions.body).toEqual(jsonPatchOperation);
-        expect(mockRequestOptions.qs.accepts_incomplete).toEqual(acceptsIncomplete);
-        expect(mockRequestOptions.path.instance_id).toEqual(instanceId);
-      }
-
-      test('should pass the right params to createRequest with enable and disable retries', () => {
-        // baseline test
-        __updateServiceInstanceTest();
-
-        // enable retries and test again
-        createRequestMock.mockClear();
-        projectService.enableRetries();
-        __updateServiceInstanceTest();
-
-        // disable retries and test again
-        createRequestMock.mockClear();
-        projectService.disableRetries();
-        __updateServiceInstanceTest();
-      });
-
-      test('should prioritize user-given headers', () => {
-        // parameters
-        const instanceId =
-          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
-        const jsonPatchOperation = [jsonPatchOperationModel];
-        const userAccept = 'fake/accept';
-        const userContentType = 'fake/contentType';
-        const updateServiceInstanceParams = {
-          instanceId,
-          jsonPatchOperation,
-          headers: {
-            Accept: userAccept,
-            'Content-Type': userContentType,
-          },
-        };
-
-        projectService.updateServiceInstance(updateServiceInstanceParams);
-        checkMediaHeaders(createRequestMock, userAccept, userContentType);
-      });
-    });
-
-    describe('negative tests', () => {
-      test('should enforce required parameters', async () => {
-        let err;
-        try {
-          await projectService.updateServiceInstance({});
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-
-      test('should reject promise when required params are not given', async () => {
-        let err;
-        try {
-          await projectService.updateServiceInstance();
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-    });
-  });
-
-  describe('getLastOperation', () => {
-    describe('positive tests', () => {
-      function __getLastOperationTest() {
-        // Construct the params object for operation getLastOperation
-        const instanceId =
-          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
-        const xBrokerApiVersion = '1.0';
-        const operation = 'ABCD';
-        const planId = 'cb54391b-3316-4943-a5a6-a541678c1924';
-        const serviceId = 'cb54391b-3316-4943-a5a6-a541678c1924';
-        const getLastOperationParams = {
-          instanceId,
-          xBrokerApiVersion,
-          operation,
-          planId,
-          serviceId,
-        };
-
-        const getLastOperationResult = projectService.getLastOperation(getLastOperationParams);
-
-        // all methods should return a Promise
-        expectToBePromise(getLastOperationResult);
-
-        // assert that create request was called
-        expect(createRequestMock).toHaveBeenCalledTimes(1);
-
-        const mockRequestOptions = getOptions(createRequestMock);
-
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v2/service_instances/{instance_id}/last_operation',
-          'GET'
-        );
-        const expectedAccept = 'application/json';
-        const expectedContentType = undefined;
-        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        checkUserHeader(createRequestMock, 'X-Broker-Api-Version', xBrokerApiVersion);
-        expect(mockRequestOptions.qs.operation).toEqual(operation);
-        expect(mockRequestOptions.qs.plan_id).toEqual(planId);
-        expect(mockRequestOptions.qs.service_id).toEqual(serviceId);
-        expect(mockRequestOptions.path.instance_id).toEqual(instanceId);
-      }
-
-      test('should pass the right params to createRequest with enable and disable retries', () => {
-        // baseline test
-        __getLastOperationTest();
-
-        // enable retries and test again
-        createRequestMock.mockClear();
-        projectService.enableRetries();
-        __getLastOperationTest();
-
-        // disable retries and test again
-        createRequestMock.mockClear();
-        projectService.disableRetries();
-        __getLastOperationTest();
-      });
-
-      test('should prioritize user-given headers', () => {
-        // parameters
-        const instanceId =
-          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
-        const userAccept = 'fake/accept';
-        const userContentType = 'fake/contentType';
-        const getLastOperationParams = {
-          instanceId,
-          headers: {
-            Accept: userAccept,
-            'Content-Type': userContentType,
-          },
-        };
-
-        projectService.getLastOperation(getLastOperationParams);
-        checkMediaHeaders(createRequestMock, userAccept, userContentType);
-      });
-    });
-
-    describe('negative tests', () => {
-      test('should enforce required parameters', async () => {
-        let err;
-        try {
-          await projectService.getLastOperation({});
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-
-      test('should reject promise when required params are not given', async () => {
-        let err;
-        try {
-          await projectService.getLastOperation();
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-    });
-  });
-
-  describe('replaceServiceInstanceState', () => {
-    describe('positive tests', () => {
-      function __replaceServiceInstanceStateTest() {
-        // Construct the params object for operation replaceServiceInstanceState
-        const instanceId =
-          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
-        const enabled = true;
-        const initiatorId = 'testString';
-        const reasonCode = { foo: 'bar' };
-        const planId = 'testString';
-        const previousValues = ['testString'];
-        const xBrokerApiVersion = '1.0';
-        const replaceServiceInstanceStateParams = {
-          instanceId,
-          enabled,
-          initiatorId,
-          reasonCode,
-          planId,
-          previousValues,
-          xBrokerApiVersion,
-        };
-
-        const replaceServiceInstanceStateResult = projectService.replaceServiceInstanceState(
-          replaceServiceInstanceStateParams
-        );
-
-        // all methods should return a Promise
-        expectToBePromise(replaceServiceInstanceStateResult);
-
-        // assert that create request was called
-        expect(createRequestMock).toHaveBeenCalledTimes(1);
-
-        const mockRequestOptions = getOptions(createRequestMock);
-
-        checkUrlAndMethod(mockRequestOptions, '/bluemix_v1/service_instances/{instance_id}', 'PUT');
-        const expectedAccept = 'application/json';
-        const expectedContentType = 'application/json';
-        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        checkUserHeader(createRequestMock, 'X-Broker-Api-Version', xBrokerApiVersion);
-        expect(mockRequestOptions.body.enabled).toEqual(enabled);
-        expect(mockRequestOptions.body.initiator_id).toEqual(initiatorId);
-        expect(mockRequestOptions.body.reason_code).toEqual(reasonCode);
-        expect(mockRequestOptions.body.plan_id).toEqual(planId);
-        expect(mockRequestOptions.body.previous_values).toEqual(previousValues);
-        expect(mockRequestOptions.path.instance_id).toEqual(instanceId);
-      }
-
-      test('should pass the right params to createRequest with enable and disable retries', () => {
-        // baseline test
-        __replaceServiceInstanceStateTest();
-
-        // enable retries and test again
-        createRequestMock.mockClear();
-        projectService.enableRetries();
-        __replaceServiceInstanceStateTest();
-
-        // disable retries and test again
-        createRequestMock.mockClear();
-        projectService.disableRetries();
-        __replaceServiceInstanceStateTest();
-      });
-
-      test('should prioritize user-given headers', () => {
-        // parameters
-        const instanceId =
-          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
-        const enabled = true;
-        const userAccept = 'fake/accept';
-        const userContentType = 'fake/contentType';
-        const replaceServiceInstanceStateParams = {
-          instanceId,
-          enabled,
-          headers: {
-            Accept: userAccept,
-            'Content-Type': userContentType,
-          },
-        };
-
-        projectService.replaceServiceInstanceState(replaceServiceInstanceStateParams);
-        checkMediaHeaders(createRequestMock, userAccept, userContentType);
-      });
-    });
-
-    describe('negative tests', () => {
-      test('should enforce required parameters', async () => {
-        let err;
-        try {
-          await projectService.replaceServiceInstanceState({});
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-
-      test('should reject promise when required params are not given', async () => {
-        let err;
-        try {
-          await projectService.replaceServiceInstanceState();
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-    });
-  });
-
-  describe('getServiceInstance', () => {
-    describe('positive tests', () => {
-      function __getServiceInstanceTest() {
-        // Construct the params object for operation getServiceInstance
-        const instanceId =
-          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
-        const xBrokerApiVersion = '1.0';
-        const getServiceInstanceParams = {
-          instanceId,
-          xBrokerApiVersion,
-        };
-
-        const getServiceInstanceResult =
-          projectService.getServiceInstance(getServiceInstanceParams);
-
-        // all methods should return a Promise
-        expectToBePromise(getServiceInstanceResult);
-
-        // assert that create request was called
-        expect(createRequestMock).toHaveBeenCalledTimes(1);
-
-        const mockRequestOptions = getOptions(createRequestMock);
-
-        checkUrlAndMethod(mockRequestOptions, '/bluemix_v1/service_instances/{instance_id}', 'GET');
-        const expectedAccept = 'application/json';
-        const expectedContentType = undefined;
-        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        checkUserHeader(createRequestMock, 'X-Broker-Api-Version', xBrokerApiVersion);
-        expect(mockRequestOptions.path.instance_id).toEqual(instanceId);
-      }
-
-      test('should pass the right params to createRequest with enable and disable retries', () => {
-        // baseline test
-        __getServiceInstanceTest();
-
-        // enable retries and test again
-        createRequestMock.mockClear();
-        projectService.enableRetries();
-        __getServiceInstanceTest();
-
-        // disable retries and test again
-        createRequestMock.mockClear();
-        projectService.disableRetries();
-        __getServiceInstanceTest();
-      });
-
-      test('should prioritize user-given headers', () => {
-        // parameters
-        const instanceId =
-          'crn:v1:staging:public:project:global:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::';
-        const userAccept = 'fake/accept';
-        const userContentType = 'fake/contentType';
-        const getServiceInstanceParams = {
-          instanceId,
-          headers: {
-            Accept: userAccept,
-            'Content-Type': userContentType,
-          },
-        };
-
-        projectService.getServiceInstance(getServiceInstanceParams);
-        checkMediaHeaders(createRequestMock, userAccept, userContentType);
-      });
-    });
-
-    describe('negative tests', () => {
-      test('should enforce required parameters', async () => {
-        let err;
-        try {
-          await projectService.getServiceInstance({});
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-
-      test('should reject promise when required params are not given', async () => {
-        let err;
-        try {
-          await projectService.getServiceInstance();
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-    });
-  });
-
-  describe('getCatalog', () => {
-    describe('positive tests', () => {
-      function __getCatalogTest() {
-        // Construct the params object for operation getCatalog
-        const xBrokerApiVersion = '1.0';
-        const getCatalogParams = {
-          xBrokerApiVersion,
-        };
-
-        const getCatalogResult = projectService.getCatalog(getCatalogParams);
-
-        // all methods should return a Promise
-        expectToBePromise(getCatalogResult);
-
-        // assert that create request was called
-        expect(createRequestMock).toHaveBeenCalledTimes(1);
-
-        const mockRequestOptions = getOptions(createRequestMock);
-
-        checkUrlAndMethod(mockRequestOptions, '/v2/catalog', 'GET');
-        const expectedAccept = 'application/json';
-        const expectedContentType = undefined;
-        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        checkUserHeader(createRequestMock, 'X-Broker-Api-Version', xBrokerApiVersion);
-      }
-
-      test('should pass the right params to createRequest with enable and disable retries', () => {
-        // baseline test
-        __getCatalogTest();
-
-        // enable retries and test again
-        createRequestMock.mockClear();
-        projectService.enableRetries();
-        __getCatalogTest();
-
-        // disable retries and test again
-        createRequestMock.mockClear();
-        projectService.disableRetries();
-        __getCatalogTest();
-      });
-
-      test('should prioritize user-given headers', () => {
-        // parameters
-        const userAccept = 'fake/accept';
-        const userContentType = 'fake/contentType';
-        const getCatalogParams = {
-          headers: {
-            Accept: userAccept,
-            'Content-Type': userContentType,
-          },
-        };
-
-        projectService.getCatalog(getCatalogParams);
-        checkMediaHeaders(createRequestMock, userAccept, userContentType);
-      });
-
-      test('should not have any problems when no parameters are passed in', () => {
-        // invoke the method with no parameters
-        projectService.getCatalog({});
-        checkForSuccessfulExecution(createRequestMock);
-      });
-    });
-  });
-
   describe('postEventNotificationsIntegration', () => {
     describe('positive tests', () => {
       function __postEventNotificationsIntegrationTest() {
         // Construct the params object for operation postEventNotificationsIntegration
-        const projectId = 'testString';
+        const id = 'testString';
         const instanceCrn = 'CRN of event notifications instance';
         const description = 'A sample project source.';
         const eventNotificationsSourceName = 'project 1 source name for event notifications';
         const enabled = true;
         const postEventNotificationsIntegrationParams = {
-          projectId,
+          id,
           instanceCrn,
           description,
           eventNotificationsSourceName,
@@ -3117,11 +2226,7 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/integrations/event_notifications',
-          'POST'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{id}/event_notifications', 'POST');
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -3131,7 +2236,7 @@ describe('ProjectV1', () => {
           eventNotificationsSourceName
         );
         expect(mockRequestOptions.body.enabled).toEqual(enabled);
-        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -3151,12 +2256,12 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
-        const projectId = 'testString';
+        const id = 'testString';
         const instanceCrn = 'CRN of event notifications instance';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const postEventNotificationsIntegrationParams = {
-          projectId,
+          id,
           instanceCrn,
           headers: {
             Accept: userAccept,
@@ -3198,9 +2303,9 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       function __getEventNotificationsIntegrationTest() {
         // Construct the params object for operation getEventNotificationsIntegration
-        const projectId = 'testString';
+        const id = 'testString';
         const getEventNotificationsIntegrationParams = {
-          projectId,
+          id,
         };
 
         const getEventNotificationsIntegrationResult =
@@ -3214,15 +2319,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/integrations/event_notifications',
-          'GET'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{id}/event_notifications', 'GET');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -3242,11 +2343,11 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
-        const projectId = 'testString';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const getEventNotificationsIntegrationParams = {
-          projectId,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
@@ -3287,9 +2388,9 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       function __deleteEventNotificationsIntegrationTest() {
         // Construct the params object for operation deleteEventNotificationsIntegration
-        const projectId = 'testString';
+        const id = 'testString';
         const deleteEventNotificationsIntegrationParams = {
-          projectId,
+          id,
         };
 
         const deleteEventNotificationsIntegrationResult =
@@ -3305,15 +2406,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/integrations/event_notifications',
-          'DELETE'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{id}/event_notifications', 'DELETE');
         const expectedAccept = undefined;
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -3333,11 +2430,11 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
-        const projectId = 'testString';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const deleteEventNotificationsIntegrationParams = {
-          projectId,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
@@ -3380,11 +2477,11 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       function __postTestEventNotificationTest() {
         // Construct the params object for operation postTestEventNotification
-        const projectId = 'testString';
+        const id = 'testString';
         const ibmendefaultlong = 'long test notification message';
         const ibmendefaultshort = 'Test notification';
         const postTestEventNotificationParams = {
-          projectId,
+          id,
           ibmendefaultlong,
           ibmendefaultshort,
         };
@@ -3401,17 +2498,13 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/integrations/event_notifications/test',
-          'POST'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{id}/event_notifications/test', 'POST');
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.body.ibmendefaultlong).toEqual(ibmendefaultlong);
         expect(mockRequestOptions.body.ibmendefaultshort).toEqual(ibmendefaultshort);
-        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -3431,11 +2524,11 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
-        const projectId = 'testString';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const postTestEventNotificationParams = {
-          projectId,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
