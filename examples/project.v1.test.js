@@ -88,16 +88,15 @@ describe('ProjectV1', () => {
     // ProjectConfigPrototype
     const projectConfigPrototypeModel = {
       name: 'common-variables',
-      locator_id:
-        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+      locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
     };
 
     const params = {
+      resourceGroup: 'Default',
+      location: 'us-south',
       name: 'acme-microservice',
       description: 'A microservice to deploy on top of ACME infrastructure.',
       configs: [projectConfigPrototypeModel],
-      resourceGroup: 'Default',
-      location: 'us-south',
     };
 
     let res;
@@ -111,6 +110,56 @@ describe('ProjectV1', () => {
     // end-create_project
     const responseBody = res.result;
     projectIdLink = responseBody.id;
+  });
+
+  test('createConfig request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('createConfig() result:');
+    // begin-create_config
+
+    // Request models needed by this operation.
+
+    // ProjectConfigInputVariable
+    const projectConfigInputVariableModel = {
+      name: 'account_id',
+      value: '$configs[].name[\"account-stage\"].input.account_id',
+    };
+
+    // ProjectConfigSettingCollection
+    const projectConfigSettingCollectionModel = {
+      name: 'IBMCLOUD_TOOLCHAIN_ENDPOINT',
+      value: 'https://api.us-south.devops.dev.cloud.ibm.com',
+    };
+
+    const params = {
+      projectId: projectIdLink,
+      name: 'env-stage',
+      locatorId: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+      labels: ['env:stage', 'governance:test', 'build:0'],
+      description: 'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.',
+      input: [projectConfigInputVariableModel],
+      setting: [projectConfigSettingCollectionModel],
+    };
+
+    let res;
+    try {
+      res = await projectService.createConfig(params);
+      console.log(JSON.stringify(res.result, null, 2));
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-create_config
+    const responseBody = res.result;
+    configIdLink = responseBody.id;
   });
 
   test('listProjects request example', async () => {
@@ -128,7 +177,6 @@ describe('ProjectV1', () => {
 
     const params = {
       limit: 10,
-      complete: false,
     };
 
     const allResults = [];
@@ -173,94 +221,6 @@ describe('ProjectV1', () => {
     }
 
     // end-get_project
-  });
-
-  test('updateProject request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('updateProject() result:');
-    // begin-update_project
-
-    // Request models needed by this operation.
-
-    // JsonPatchOperation
-    const jsonPatchOperationModel = {
-      op: 'add',
-      path: 'testString',
-    };
-
-    const params = {
-      id: projectIdLink,
-      jsonPatchOperation: [jsonPatchOperationModel],
-    };
-
-    let res;
-    try {
-      res = await projectService.updateProject(params);
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-update_project
-  });
-
-  test('createConfig request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('createConfig() result:');
-    // begin-create_config
-
-    // Request models needed by this operation.
-
-    // ProjectConfigInputVariable
-    const projectConfigInputVariableModel = {
-      name: 'account_id',
-      value: '$configs[].name["account-stage"].input.account_id',
-    };
-
-    // ProjectConfigSettingCollection
-    const projectConfigSettingCollectionModel = {
-      name: 'IBMCLOUD_TOOLCHAIN_ENDPOINT',
-      value: 'https://api.us-south.devops.dev.cloud.ibm.com',
-    };
-
-    const params = {
-      projectId: projectIdLink,
-      name: 'env-stage',
-      locatorId: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
-      labels: ['env:stage', 'governance:test', 'build:0'],
-      description:
-        'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.',
-      input: [projectConfigInputVariableModel],
-      setting: [projectConfigSettingCollectionModel],
-    };
-
-    let res;
-    try {
-      res = await projectService.createConfig(params);
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-create_config
-    const responseBody = res.result;
-    configIdLink = responseBody.id;
   });
 
   test('listConfigs request example', async () => {
@@ -335,16 +295,16 @@ describe('ProjectV1', () => {
 
     // Request models needed by this operation.
 
-    // JsonPatchOperation
-    const jsonPatchOperationModel = {
-      op: 'add',
-      path: 'testString',
+    // ProjectConfigInputVariable
+    const projectConfigInputVariableModel = {
+      name: 'account_id',
+      value: '$configs[].name[\"account-stage\"].input.account_id',
     };
 
     const params = {
       projectId: projectIdLink,
       id: configIdLink,
-      projectConfig: [jsonPatchOperationModel],
+      input: [projectConfigInputVariableModel],
     };
 
     let res;
@@ -356,65 +316,6 @@ describe('ProjectV1', () => {
     }
 
     // end-update_config
-  });
-
-  test('getConfigDiff request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('getConfigDiff() result:');
-    // begin-get_config_diff
-
-    const params = {
-      projectId: projectIdLink,
-      id: configIdLink,
-    };
-
-    let res;
-    try {
-      res = await projectService.getConfigDiff(params);
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-get_config_diff
-  });
-
-  test('forceApprove request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('forceApprove() result:');
-    // begin-force_approve
-
-    const params = {
-      projectId: projectIdLink,
-      id: configIdLink,
-      comment: 'Approving the changes',
-    };
-
-    let res;
-    try {
-      res = await projectService.forceApprove(params);
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-force_approve
   });
 
   test('approve request example', async () => {
@@ -531,7 +432,7 @@ describe('ProjectV1', () => {
     // end-uninstall_config
   });
 
-  test('getSchematicsJob request example', async () => {
+  test('listConfigDrafts request example', async () => {
     consoleLogMock.mockImplementation((output) => {
       originalLog(output);
     });
@@ -541,27 +442,26 @@ describe('ProjectV1', () => {
       expect(true).toBeFalsy();
     });
 
-    originalLog('getSchematicsJob() result:');
-    // begin-get_schematics_job
+    originalLog('listConfigDrafts() result:');
+    // begin-list_config_drafts
 
     const params = {
       projectId: projectIdLink,
-      id: configIdLink,
-      action: 'plan',
+      configId: 'testString',
     };
 
     let res;
     try {
-      res = await projectService.getSchematicsJob(params);
+      res = await projectService.listConfigDrafts(params);
       console.log(JSON.stringify(res.result, null, 2));
     } catch (err) {
       console.warn(err);
     }
 
-    // end-get_schematics_job
+    // end-list_config_drafts
   });
 
-  test('getCostEstimate request example', async () => {
+  test('getConfigDraft request example', async () => {
     consoleLogMock.mockImplementation((output) => {
       originalLog(output);
     });
@@ -571,182 +471,24 @@ describe('ProjectV1', () => {
       expect(true).toBeFalsy();
     });
 
-    originalLog('getCostEstimate() result:');
-    // begin-get_cost_estimate
+    originalLog('getConfigDraft() result:');
+    // begin-get_config_draft
 
     const params = {
       projectId: projectIdLink,
-      id: configIdLink,
+      configId: 'testString',
+      version: 38,
     };
 
     let res;
     try {
-      res = await projectService.getCostEstimate(params);
+      res = await projectService.getConfigDraft(params);
       console.log(JSON.stringify(res.result, null, 2));
     } catch (err) {
       console.warn(err);
     }
 
-    // end-get_cost_estimate
-  });
-
-  test('postNotification request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('postNotification() result:');
-    // begin-post_notification
-
-    // Request models needed by this operation.
-
-    // NotificationEvent
-    const notificationEventModel = {
-      event: 'project.create.failed',
-      target: '234234324-3444-4556-224232432',
-      source: 'id.of.project.service.instance',
-      triggered_by: 'user-iam-id',
-      action_url: 'actionable/url',
-      data: { field1: 1 },
-    };
-
-    const params = {
-      id: projectIdLink,
-      notifications: [notificationEventModel],
-    };
-
-    let res;
-    try {
-      res = await projectService.postNotification(params);
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-post_notification
-  });
-
-  test('getNotifications request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('getNotifications() result:');
-    // begin-get_notifications
-
-    const params = {
-      id: projectIdLink,
-    };
-
-    let res;
-    try {
-      res = await projectService.getNotifications(params);
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-get_notifications
-  });
-
-  test('postEventNotificationsIntegration request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('postEventNotificationsIntegration() result:');
-    // begin-post_event_notifications_integration
-
-    const params = {
-      id: projectIdLink,
-      instanceCrn: 'CRN of event notifications instance',
-      description: 'A sample project source.',
-      eventNotificationsSourceName: 'project 1 source name for event notifications',
-      enabled: true,
-    };
-
-    let res;
-    try {
-      res = await projectService.postEventNotificationsIntegration(params);
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-post_event_notifications_integration
-  });
-
-  test('getEventNotificationsIntegration request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('getEventNotificationsIntegration() result:');
-    // begin-get_event_notifications_integration
-
-    const params = {
-      id: projectIdLink,
-    };
-
-    let res;
-    try {
-      res = await projectService.getEventNotificationsIntegration(params);
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-get_event_notifications_integration
-  });
-
-  test('postTestEventNotification request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('postTestEventNotification() result:');
-    // begin-post_test_event_notification
-
-    const params = {
-      id: projectIdLink,
-      ibmendefaultlong: 'long test notification message',
-      ibmendefaultshort: 'Test notification',
-    };
-
-    let res;
-    try {
-      res = await projectService.postTestEventNotification(params);
-      console.log(JSON.stringify(res.result, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-post_test_event_notification
+    // end-get_config_draft
   });
 
   test('deleteConfig request example', async () => {
@@ -776,31 +518,6 @@ describe('ProjectV1', () => {
     }
 
     // end-delete_config
-  });
-
-  test('deleteEventNotificationsIntegration request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    // begin-delete_event_notifications_integration
-
-    const params = {
-      id: projectIdLink,
-    };
-
-    try {
-      await projectService.deleteEventNotificationsIntegration(params);
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-delete_event_notifications_integration
   });
 
   test('deleteProject request example', async () => {
