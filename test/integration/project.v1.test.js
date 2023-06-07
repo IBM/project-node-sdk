@@ -17,8 +17,8 @@
 /* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
 
-const ProjectV1 = require('../../dist/project/v1');
 const { readExternalSources } = require('ibm-cloud-sdk-core');
+const ProjectV1 = require('../../dist/project/v1');
 const authHelper = require('../resources/auth-helper.js');
 
 // testcase timeout value (200s).
@@ -46,7 +46,7 @@ describe('ProjectV1_integration', () => {
 
     const config = readExternalSources(ProjectV1.DEFAULT_SERVICE_NAME);
     expect(config).not.toBeNull();
-  
+
     projectService.enableRetries();
   });
 
@@ -95,7 +95,8 @@ describe('ProjectV1_integration', () => {
       description: 'testString',
       authorizations: projectConfigAuthModel,
       compliance_profile: projectConfigComplianceProfileModel,
-      locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+      locator_id:
+        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
       input: [projectConfigInputVariableModel],
       setting: [projectConfigSettingCollectionModel],
     };
@@ -144,7 +145,7 @@ describe('ProjectV1_integration', () => {
     // ProjectConfigInputVariable
     const projectConfigInputVariableModel = {
       name: 'account_id',
-      value: '$configs[].name[\"account-stage\"].input.account_id',
+      value: '$configs[].name["account-stage"].input.account_id',
     };
 
     // ProjectConfigSettingCollection
@@ -159,7 +160,8 @@ describe('ProjectV1_integration', () => {
       locatorId: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
       id: 'testString',
       labels: ['env:stage', 'governance:test', 'build:0'],
-      description: 'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.',
+      description:
+        'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.',
       authorizations: projectConfigAuthModel,
       complianceProfile: projectConfigComplianceProfileModel,
       input: [projectConfigInputVariableModel],
@@ -248,7 +250,7 @@ describe('ProjectV1_integration', () => {
     // ProjectConfigInputVariable
     const projectConfigInputVariableModel = {
       name: 'account_id',
-      value: '$configs[].name[\"account-stage\"].input.account_id',
+      value: '$configs[].name["account-stage"].input.account_id',
     };
 
     // ProjectConfigSettingCollection

@@ -88,7 +88,8 @@ describe('ProjectV1', () => {
     // ProjectConfigPrototype
     const projectConfigPrototypeModel = {
       name: 'common-variables',
-      locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+      locator_id:
+        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
     };
 
     const params = {
@@ -130,7 +131,7 @@ describe('ProjectV1', () => {
     // ProjectConfigInputVariable
     const projectConfigInputVariableModel = {
       name: 'account_id',
-      value: '$configs[].name[\"account-stage\"].input.account_id',
+      value: '$configs[].name["account-stage"].input.account_id',
     };
 
     // ProjectConfigSettingCollection
@@ -144,7 +145,8 @@ describe('ProjectV1', () => {
       name: 'env-stage',
       locatorId: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
       labels: ['env:stage', 'governance:test', 'build:0'],
-      description: 'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.',
+      description:
+        'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.',
       input: [projectConfigInputVariableModel],
       setting: [projectConfigSettingCollectionModel],
     };
@@ -298,7 +300,7 @@ describe('ProjectV1', () => {
     // ProjectConfigInputVariable
     const projectConfigInputVariableModel = {
       name: 'account_id',
-      value: '$configs[].name[\"account-stage\"].input.account_id',
+      value: '$configs[].name["account-stage"].input.account_id',
     };
 
     const params = {

@@ -19,8 +19,8 @@ const sdkCorePackage = require('ibm-cloud-sdk-core');
 
 const { NoAuthAuthenticator, unitTestUtils } = sdkCorePackage;
 
-const ProjectV1 = require('../../dist/project/v1');
 const nock = require('nock');
+const ProjectV1 = require('../../dist/project/v1');
 
 /* eslint-disable no-await-in-loop */
 
@@ -59,7 +59,6 @@ const getAuthenticatorMock = jest.spyOn(sdkCorePackage, 'getAuthenticatorFromEnv
 getAuthenticatorMock.mockImplementation(() => new NoAuthAuthenticator());
 
 describe('ProjectV1', () => {
-
   beforeEach(() => {
     mock_createRequest();
   });
@@ -70,7 +69,7 @@ describe('ProjectV1', () => {
     }
     getAuthenticatorMock.mockClear();
   });
-  
+
   describe('the newInstance method', () => {
     test('should use defaults when options not provided', () => {
       const testInstance = ProjectV1.newInstance();
@@ -168,7 +167,8 @@ describe('ProjectV1', () => {
         description: 'testString',
         authorizations: projectConfigAuthModel,
         compliance_profile: projectConfigComplianceProfileModel,
-        locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+        locator_id:
+          '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
         input: [projectConfigInputVariableModel],
         setting: [projectConfigSettingCollectionModel],
       };
@@ -351,9 +351,9 @@ describe('ProjectV1', () => {
       beforeEach(() => {
         unmock_createRequest();
         const scope = nock(serviceUrl)
-          .get(uri => uri.includes(path))
+          .get((uri) => uri.includes(path))
           .reply(200, mockPagerResponse1)
-          .get(uri => uri.includes(path))
+          .get((uri) => uri.includes(path))
           .reply(200, mockPagerResponse2);
       });
 
@@ -602,10 +602,12 @@ describe('ProjectV1', () => {
         // Construct the params object for operation createConfig
         const projectId = 'testString';
         const name = 'env-stage';
-        const locatorId = '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global';
+        const locatorId =
+          '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global';
         const id = 'testString';
         const labels = ['env:stage', 'governance:test', 'build:0'];
-        const description = 'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.';
+        const description =
+          'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.';
         const authorizations = projectConfigAuthModel;
         const complianceProfile = projectConfigComplianceProfileModel;
         const input = [projectConfigInputVariableModel];
@@ -668,7 +670,8 @@ describe('ProjectV1', () => {
         // parameters
         const projectId = 'testString';
         const name = 'env-stage';
-        const locatorId = '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global';
+        const locatorId =
+          '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const createConfigParams = {
@@ -1151,7 +1154,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/approve', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/approve',
+          'POST'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1245,7 +1252,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/check', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/check',
+          'POST'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1336,7 +1347,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/install', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/install',
+          'POST'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1425,7 +1440,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/uninstall', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/uninstall',
+          'POST'
+        );
         const expectedAccept = undefined;
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1514,7 +1533,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{config_id}/drafts', 'GET');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{config_id}/drafts',
+          'GET'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1605,7 +1628,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{config_id}/drafts/{version}', 'GET');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{config_id}/drafts/{version}',
+          'GET'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
