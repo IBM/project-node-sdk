@@ -15,7 +15,7 @@
  */
 
 /**
- * IBM OpenAPI SDK Code Generator Version: 3.70.0-7df966bf-20230419-195904
+ * IBM OpenAPI SDK Code Generator Version: 3.72.2-2bede9d2-20230601-202845
  */
 
 /* eslint-disable max-classes-per-file */
@@ -111,6 +111,8 @@ class ProjectV1 extends BaseService {
    * @param {string} params.location - The location where the project's data and tools are created.
    * @param {string} params.name - The project name.
    * @param {string} [params.description] - A project's descriptive text.
+   * @param {boolean} [params.destroyOnDelete] - The policy that indicates whether the resources are destroyed or not
+   * when a project is deleted.
    * @param {ProjectConfigPrototype[]} [params.configs] - The project configurations.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.Project>>}
@@ -120,7 +122,15 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.Project>> {
     const _params = { ...params };
     const _requiredParams = ['resourceGroup', 'location', 'name'];
-    const _validParams = ['resourceGroup', 'location', 'name', 'description', 'configs', 'headers'];
+    const _validParams = [
+      'resourceGroup',
+      'location',
+      'name',
+      'description',
+      'destroyOnDelete',
+      'configs',
+      'headers',
+    ];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
@@ -129,6 +139,7 @@ class ProjectV1 extends BaseService {
     const body = {
       'name': _params.name,
       'description': _params.description,
+      'destroy_on_delete': _params.destroyOnDelete,
       'configs': _params.configs,
     };
 
@@ -173,8 +184,6 @@ class ProjectV1 extends BaseService {
    * first page is returned.
    * @param {number} [params.limit] - Determine the maximum number of resources to return. The number of resources that
    * are returned is the same, with the exception of the last page.
-   * @param {boolean} [params.complete] - Determines whether the metadata should be returned. Only the metadata for the
-   * project is returned.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectCollection>>}
    */
@@ -183,7 +192,7 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.ProjectCollection>> {
     const _params = { ...params };
     const _requiredParams = [];
-    const _validParams = ['start', 'limit', 'complete', 'headers'];
+    const _validParams = ['start', 'limit', 'headers'];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
@@ -192,7 +201,6 @@ class ProjectV1 extends BaseService {
     const query = {
       'start': _params.start,
       'limit': _params.limit,
-      'complete': _params.complete,
     };
 
     const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'listProjects');
@@ -224,29 +232,20 @@ class ProjectV1 extends BaseService {
    * Get information about a project.
    *
    * @param {Object} params - The parameters to send to the service.
-   * @param {string} params.id - The unique identifier.
-   * @param {boolean} [params.excludeConfigs] - When set to true, exclude_configs returns only active configurations.
-   * Draft configurations are not returned.
-   * @param {boolean} [params.complete] - Determines whether the metadata should be returned. Only the metadata for the
-   * project is returned.
+   * @param {string} params.id - The unique project ID.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.Project>>}
+   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectSummary>>}
    */
   public getProject(
     params: ProjectV1.GetProjectParams
-  ): Promise<ProjectV1.Response<ProjectV1.Project>> {
+  ): Promise<ProjectV1.Response<ProjectV1.ProjectSummary>> {
     const _params = { ...params };
     const _requiredParams = ['id'];
-    const _validParams = ['id', 'excludeConfigs', 'complete', 'headers'];
+    const _validParams = ['id', 'headers'];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
     }
-
-    const query = {
-      'exclude_configs': _params.excludeConfigs,
-      'complete': _params.complete,
-    };
 
     const path = {
       'id': _params.id,
@@ -258,7 +257,6 @@ class ProjectV1 extends BaseService {
       options: {
         url: '/v1/projects/{id}',
         method: 'GET',
-        qs: query,
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
@@ -267,58 +265,6 @@ class ProjectV1 extends BaseService {
           sdkHeaders,
           {
             'Accept': 'application/json',
-          },
-          _params.headers
-        ),
-      }),
-    };
-
-    return this.createRequest(parameters);
-  }
-
-  /**
-   * Update a project.
-   *
-   * Update a project by the ID.
-   *
-   * @param {Object} params - The parameters to send to the service.
-   * @param {string} params.id - The unique identifier.
-   * @param {JsonPatchOperation[]} params.jsonPatchOperation - The new project definition document.
-   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.Project>>}
-   */
-  public updateProject(
-    params: ProjectV1.UpdateProjectParams
-  ): Promise<ProjectV1.Response<ProjectV1.Project>> {
-    const _params = { ...params };
-    const _requiredParams = ['id', 'jsonPatchOperation'];
-    const _validParams = ['id', 'jsonPatchOperation', 'headers'];
-    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
-    if (_validationErrors) {
-      return Promise.reject(_validationErrors);
-    }
-
-    const body = _params.jsonPatchOperation;
-    const path = {
-      'id': _params.id,
-    };
-
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'updateProject');
-
-    const parameters = {
-      options: {
-        url: '/v1/projects/{id}',
-        method: 'PATCH',
-        body,
-        path,
-      },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(
-          true,
-          sdkHeaders,
-          {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json-patch+json',
           },
           _params.headers
         ),
@@ -334,8 +280,8 @@ class ProjectV1 extends BaseService {
    * Delete a project document by the ID. A project can only be deleted after deleting all of its artifacts.
    *
    * @param {Object} params - The parameters to send to the service.
-   * @param {string} params.id - The unique identifier.
-   * @param {boolean} [params.destroy] - The flag that indicates if the resources deployed by schematics should be
+   * @param {string} params.id - The unique project ID.
+   * @param {boolean} [params.destroy] - The flag that indicates if the resources deployed by Schematics should be
    * destroyed.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.EmptyObject>>}
@@ -392,15 +338,18 @@ class ProjectV1 extends BaseService {
    * created for the configuration.
    * @param {string[]} [params.labels] - A collection of configuration labels.
    * @param {string} [params.description] - The project configuration description.
-   * @param {ProjectConfigInputVariable[]} [params.input] - The input values to use to deploy the configuration.
+   * @param {ProjectConfigAuth} [params.authorizations] - The authorization for a configuration. You can authorize by
+   * using a trusted profile or an API key in Secrets Manager.
+   * @param {ProjectConfigComplianceProfile} [params.complianceProfile] - The profile required for compliance.
+   * @param {ProjectConfigInputVariable[]} [params.input] - The inputs of a Schematics template property.
    * @param {ProjectConfigSettingCollection[]} [params.setting] - Schematics environment variables to use to deploy the
    * configuration.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfig>>}
+   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>>}
    */
   public createConfig(
     params: ProjectV1.CreateConfigParams
-  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfig>> {
+  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>> {
     const _params = { ...params };
     const _requiredParams = ['projectId', 'name', 'locatorId'];
     const _validParams = [
@@ -410,6 +359,8 @@ class ProjectV1 extends BaseService {
       'id',
       'labels',
       'description',
+      'authorizations',
+      'complianceProfile',
       'input',
       'setting',
       'headers',
@@ -425,6 +376,8 @@ class ProjectV1 extends BaseService {
       'id': _params.id,
       'labels': _params.labels,
       'description': _params.description,
+      'authorizations': _params.authorizations,
+      'compliance_profile': _params.complianceProfile,
       'input': _params.input,
       'setting': _params.setting,
     };
@@ -465,9 +418,6 @@ class ProjectV1 extends BaseService {
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} [params.version] - The version of configuration to return.
-   * @param {boolean} [params.complete] - Determines whether the metadata should be returned. Only the metadata for the
-   * project is returned.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigCollection>>}
    */
@@ -476,16 +426,11 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigCollection>> {
     const _params = { ...params };
     const _requiredParams = ['projectId'];
-    const _validParams = ['projectId', 'version', 'complete', 'headers'];
+    const _validParams = ['projectId', 'headers'];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
     }
-
-    const query = {
-      'version': _params.version,
-      'complete': _params.complete,
-    };
 
     const path = {
       'project_id': _params.projectId,
@@ -497,7 +442,6 @@ class ProjectV1 extends BaseService {
       options: {
         url: '/v1/projects/{project_id}/configs',
         method: 'GET',
-        qs: query,
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
@@ -522,28 +466,20 @@ class ProjectV1 extends BaseService {
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique identifier.
-   * @param {string} [params.version] - The version of the configuration to return.
-   * @param {boolean} [params.complete] - Determines whether the metadata should be returned. Only the metadata for the
-   * project is returned.
+   * @param {string} params.id - The unique config ID.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfig>>}
+   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>>}
    */
   public getConfig(
     params: ProjectV1.GetConfigParams
-  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfig>> {
+  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>> {
     const _params = { ...params };
     const _requiredParams = ['projectId', 'id'];
-    const _validParams = ['projectId', 'id', 'version', 'complete', 'headers'];
+    const _validParams = ['projectId', 'id', 'headers'];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
     }
-
-    const query = {
-      'version': _params.version,
-      'complete': _params.complete,
-    };
 
     const path = {
       'project_id': _params.projectId,
@@ -556,7 +492,6 @@ class ProjectV1 extends BaseService {
       options: {
         url: '/v1/projects/{project_id}/configs/{id}',
         method: 'GET',
-        qs: query,
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
@@ -581,27 +516,52 @@ class ProjectV1 extends BaseService {
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique identifier.
-   * @param {JsonPatchOperation[]} params.projectConfig - The change delta of the project configuration to update.
-   * @param {boolean} [params.complete] - Determines whether the metadata should be returned. Only the metadata for the
-   * project is returned.
+   * @param {string} params.id - The unique config ID.
+   * @param {string} [params.locatorId] - A dotted value of catalogID.versionID.
+   * @param {ProjectConfigInputVariable[]} [params.input] - The inputs of a Schematics template property.
+   * @param {ProjectConfigSettingCollection[]} [params.setting] - Schematics environment variables to use to deploy the
+   * configuration.
+   * @param {string} [params.name] - The configuration name.
+   * @param {string[]} [params.labels] - The configuration labels.
+   * @param {string} [params.description] - A project configuration description.
+   * @param {ProjectConfigAuth} [params.authorizations] - The authorization for a configuration. You can authorize by
+   * using a trusted profile or an API key in Secrets Manager.
+   * @param {ProjectConfigComplianceProfile} [params.complianceProfile] - The profile required for compliance.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfig>>}
+   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>>}
    */
   public updateConfig(
     params: ProjectV1.UpdateConfigParams
-  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfig>> {
+  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>> {
     const _params = { ...params };
-    const _requiredParams = ['projectId', 'id', 'projectConfig'];
-    const _validParams = ['projectId', 'id', 'projectConfig', 'complete', 'headers'];
+    const _requiredParams = ['projectId', 'id'];
+    const _validParams = [
+      'projectId',
+      'id',
+      'locatorId',
+      'input',
+      'setting',
+      'name',
+      'labels',
+      'description',
+      'authorizations',
+      'complianceProfile',
+      'headers',
+    ];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
     }
 
-    const body = _params.projectConfig;
-    const query = {
-      'complete': _params.complete,
+    const body = {
+      'locator_id': _params.locatorId,
+      'input': _params.input,
+      'setting': _params.setting,
+      'name': _params.name,
+      'labels': _params.labels,
+      'description': _params.description,
+      'authorizations': _params.authorizations,
+      'compliance_profile': _params.complianceProfile,
     };
 
     const path = {
@@ -616,7 +576,6 @@ class ProjectV1 extends BaseService {
         url: '/v1/projects/{project_id}/configs/{id}',
         method: 'PATCH',
         body,
-        qs: query,
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
@@ -625,7 +584,7 @@ class ProjectV1 extends BaseService {
           sdkHeaders,
           {
             'Accept': 'application/json',
-            'Content-Type': 'application/json-patch+json',
+            'Content-Type': 'application/json',
           },
           _params.headers
         ),
@@ -639,13 +598,13 @@ class ProjectV1 extends BaseService {
    * Delete a configuration in a project by ID.
    *
    * Delete a configuration in a project. Deleting the configuration will also destroy all the resources deployed by the
-   * configuration if the query parameter destroy is specified.
+   * configuration if the query parameter `destroy` is specified.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique identifier.
+   * @param {string} params.id - The unique config ID.
    * @param {boolean} [params.draftOnly] - The flag to determine if only the draft version should be deleted.
-   * @param {boolean} [params.destroy] - The flag that indicates if the resources deployed by schematics should be
+   * @param {boolean} [params.destroy] - The flag that indicates if the resources deployed by Schematics should be
    * destroyed.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigDelete>>}
@@ -696,140 +655,23 @@ class ProjectV1 extends BaseService {
   }
 
   /**
-   * Get a diff summary of a project configuration.
-   *
-   * Returns a diff summary of the specified project configuration between its current draft and active version of a
-   * specific project.
-   *
-   * @param {Object} params - The parameters to send to the service.
-   * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique identifier.
-   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigDiff>>}
-   */
-  public getConfigDiff(
-    params: ProjectV1.GetConfigDiffParams
-  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigDiff>> {
-    const _params = { ...params };
-    const _requiredParams = ['projectId', 'id'];
-    const _validParams = ['projectId', 'id', 'headers'];
-    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
-    if (_validationErrors) {
-      return Promise.reject(_validationErrors);
-    }
-
-    const path = {
-      'project_id': _params.projectId,
-      'id': _params.id,
-    };
-
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'getConfigDiff');
-
-    const parameters = {
-      options: {
-        url: '/v1/projects/{project_id}/configs/{id}/diff',
-        method: 'GET',
-        path,
-      },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(
-          true,
-          sdkHeaders,
-          {
-            'Accept': 'application/json',
-          },
-          _params.headers
-        ),
-      }),
-    };
-
-    return this.createRequest(parameters);
-  }
-
-  /**
-   * Force approve project configuration.
-   *
-   * Force approve configuration edits to the main configuration with an approving comment.
-   *
-   * @param {Object} params - The parameters to send to the service.
-   * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique identifier.
-   * @param {string} [params.comment] - Notes on the project draft action.
-   * @param {boolean} [params.complete] - Determines whether the metadata should be returned. Only the metadata for the
-   * project is returned.
-   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfig>>}
-   */
-  public forceApprove(
-    params: ProjectV1.ForceApproveParams
-  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfig>> {
-    const _params = { ...params };
-    const _requiredParams = ['projectId', 'id'];
-    const _validParams = ['projectId', 'id', 'comment', 'complete', 'headers'];
-    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
-    if (_validationErrors) {
-      return Promise.reject(_validationErrors);
-    }
-
-    const body = {
-      'comment': _params.comment,
-    };
-
-    const query = {
-      'complete': _params.complete,
-    };
-
-    const path = {
-      'project_id': _params.projectId,
-      'id': _params.id,
-    };
-
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'forceApprove');
-
-    const parameters = {
-      options: {
-        url: '/v1/projects/{project_id}/configs/{id}/force_approve',
-        method: 'POST',
-        body,
-        qs: query,
-        path,
-      },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(
-          true,
-          sdkHeaders,
-          {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          _params.headers
-        ),
-      }),
-    };
-
-    return this.createRequest(parameters);
-  }
-
-  /**
    * Approve and merge a configuration draft.
    *
    * Approve and merge configuration edits to the main configuration.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique identifier.
+   * @param {string} params.id - The unique config ID.
    * @param {string} [params.comment] - Notes on the project draft action.
-   * @param {boolean} [params.complete] - Determines whether the metadata should be returned. Only the metadata for the
-   * project is returned.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfig>>}
+   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>>}
    */
   public approve(
     params: ProjectV1.ApproveParams
-  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfig>> {
+  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>> {
     const _params = { ...params };
     const _requiredParams = ['projectId', 'id'];
-    const _validParams = ['projectId', 'id', 'comment', 'complete', 'headers'];
+    const _validParams = ['projectId', 'id', 'comment', 'headers'];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
@@ -837,10 +679,6 @@ class ProjectV1 extends BaseService {
 
     const body = {
       'comment': _params.comment,
-    };
-
-    const query = {
-      'complete': _params.complete,
     };
 
     const path = {
@@ -855,7 +693,6 @@ class ProjectV1 extends BaseService {
         url: '/v1/projects/{project_id}/configs/{id}/approve',
         method: 'POST',
         body,
-        qs: query,
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
@@ -882,29 +719,26 @@ class ProjectV1 extends BaseService {
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique identifier.
+   * @param {string} params.id - The unique config ID.
    * @param {string} [params.xAuthRefreshToken] - The IAM refresh token.
-   * @param {boolean} [params.complete] - Determines whether the metadata should be returned. Only the metadata for the
-   * project is returned.
-   * @param {string} [params.version] - The version of the configuration that the validation check should trigger
-   * against.
+   * @param {boolean} [params.isDraft] - To specify whether the validation check should trigger against the draft or the
+   * active version of the configuration.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfig>>}
+   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>>}
    */
   public checkConfig(
     params: ProjectV1.CheckConfigParams
-  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfig>> {
+  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>> {
     const _params = { ...params };
     const _requiredParams = ['projectId', 'id'];
-    const _validParams = ['projectId', 'id', 'xAuthRefreshToken', 'complete', 'version', 'headers'];
+    const _validParams = ['projectId', 'id', 'xAuthRefreshToken', 'isDraft', 'headers'];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
     }
 
     const query = {
-      'complete': _params.complete,
-      'version': _params.version,
+      'is_draft': _params.isDraft,
     };
 
     const path = {
@@ -945,26 +779,20 @@ class ProjectV1 extends BaseService {
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique identifier.
-   * @param {boolean} [params.complete] - Determines whether the metadata should be returned. Only the metadata for the
-   * project is returned.
+   * @param {string} params.id - The unique config ID.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfig>>}
+   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>>}
    */
   public installConfig(
     params: ProjectV1.InstallConfigParams
-  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfig>> {
+  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>> {
     const _params = { ...params };
     const _requiredParams = ['projectId', 'id'];
-    const _validParams = ['projectId', 'id', 'complete', 'headers'];
+    const _validParams = ['projectId', 'id', 'headers'];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
     }
-
-    const query = {
-      'complete': _params.complete,
-    };
 
     const path = {
       'project_id': _params.projectId,
@@ -977,7 +805,6 @@ class ProjectV1 extends BaseService {
       options: {
         url: '/v1/projects/{project_id}/configs/{id}/install',
         method: 'POST',
-        qs: query,
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
@@ -1003,7 +830,7 @@ class ProjectV1 extends BaseService {
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique identifier.
+   * @param {string} params.id - The unique config ID.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.EmptyObject>>}
    */
@@ -1038,52 +865,40 @@ class ProjectV1 extends BaseService {
 
     return this.createRequest(parameters);
   }
-  /*************************
-   * toolchain
-   ************************/
 
   /**
-   * View the latest schematics job.
+   * Get a list of project configuration drafts.
    *
-   * Fetch and find the latest schematics job that corresponds to a plan, deploy, or destroy configuration resource
-   * action.
+   * Returns a list of previous and current configuration drafts in a specific project.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique identifier.
-   * @param {string} params.action - The triggered action.
-   * @param {number} [params.since] - The timestamp of when the action was triggered.
+   * @param {string} params.configId - The unique configuration ID.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.ActionJob>>}
+   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigDraftSummaryCollection>>}
    */
-  public getSchematicsJob(
-    params: ProjectV1.GetSchematicsJobParams
-  ): Promise<ProjectV1.Response<ProjectV1.ActionJob>> {
+  public listConfigDrafts(
+    params: ProjectV1.ListConfigDraftsParams
+  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigDraftSummaryCollection>> {
     const _params = { ...params };
-    const _requiredParams = ['projectId', 'id', 'action'];
-    const _validParams = ['projectId', 'id', 'action', 'since', 'headers'];
+    const _requiredParams = ['projectId', 'configId'];
+    const _validParams = ['projectId', 'configId', 'headers'];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
     }
 
-    const query = {
-      'since': _params.since,
-    };
-
     const path = {
       'project_id': _params.projectId,
-      'id': _params.id,
-      'action': _params.action,
+      'config_id': _params.configId,
     };
 
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'getSchematicsJob');
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'listConfigDrafts');
 
     const parameters = {
       options: {
-        url: '/v1/projects/{project_id}/configs/{id}/job/{action}',
+        url: '/v1/projects/{project_id}/configs/{config_id}/drafts',
         method: 'GET',
-        qs: query,
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
@@ -1102,197 +917,39 @@ class ProjectV1 extends BaseService {
   }
 
   /**
-   * Get the cost estimate.
+   * Get a project configuration draft.
    *
-   * Retrieve the cost estimate for a configuraton.
+   * Returns the specific version of a configuration draft in a specific project.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique identifier.
-   * @param {string} [params.version] - The version of the configuration that the cost estimate will fetch.
+   * @param {string} params.configId - The unique configuration ID.
+   * @param {number} params.version - The configuration version.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.CostEstimate>>}
+   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigDraft>>}
    */
-  public getCostEstimate(
-    params: ProjectV1.GetCostEstimateParams
-  ): Promise<ProjectV1.Response<ProjectV1.CostEstimate>> {
+  public getConfigDraft(
+    params: ProjectV1.GetConfigDraftParams
+  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigDraft>> {
     const _params = { ...params };
-    const _requiredParams = ['projectId', 'id'];
-    const _validParams = ['projectId', 'id', 'version', 'headers'];
+    const _requiredParams = ['projectId', 'configId', 'version'];
+    const _validParams = ['projectId', 'configId', 'version', 'headers'];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
     }
 
-    const query = {
+    const path = {
+      'project_id': _params.projectId,
+      'config_id': _params.configId,
       'version': _params.version,
     };
 
-    const path = {
-      'project_id': _params.projectId,
-      'id': _params.id,
-    };
-
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'getCostEstimate');
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'getConfigDraft');
 
     const parameters = {
       options: {
-        url: '/v1/projects/{project_id}/configs/{id}/cost_estimate',
-        method: 'GET',
-        qs: query,
-        path,
-      },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(
-          true,
-          sdkHeaders,
-          {
-            'Accept': 'application/json',
-          },
-          _params.headers
-        ),
-      }),
-    };
-
-    return this.createRequest(parameters);
-  }
-
-  /**
-   * Creates a project CRN token.
-   *
-   * Refreshes a project CRN token by creating a new one.
-   *
-   * @param {Object} params - The parameters to send to the service.
-   * @param {string} params.id - The unique identifier.
-   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectCRNTokenResponse>>}
-   */
-  public postCrnToken(
-    params: ProjectV1.PostCrnTokenParams
-  ): Promise<ProjectV1.Response<ProjectV1.ProjectCRNTokenResponse>> {
-    const _params = { ...params };
-    const _requiredParams = ['id'];
-    const _validParams = ['id', 'headers'];
-    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
-    if (_validationErrors) {
-      return Promise.reject(_validationErrors);
-    }
-
-    const path = {
-      'id': _params.id,
-    };
-
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'postCrnToken');
-
-    const parameters = {
-      options: {
-        url: '/v1/projects/{id}/token',
-        method: 'POST',
-        path,
-      },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(
-          true,
-          sdkHeaders,
-          {
-            'Accept': 'application/json',
-          },
-          _params.headers
-        ),
-      }),
-    };
-
-    return this.createRequest(parameters);
-  }
-  /*************************
-   * event
-   ************************/
-
-  /**
-   * Add notifications.
-   *
-   * Creates a notification event to be stored on the project definition.
-   *
-   * @param {Object} params - The parameters to send to the service.
-   * @param {string} params.id - The unique identifier.
-   * @param {NotificationEvent[]} [params.notifications] - Collection of the notification events to post.
-   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.NotificationsPrototypePostResponse>>}
-   */
-  public postNotification(
-    params: ProjectV1.PostNotificationParams
-  ): Promise<ProjectV1.Response<ProjectV1.NotificationsPrototypePostResponse>> {
-    const _params = { ...params };
-    const _requiredParams = ['id'];
-    const _validParams = ['id', 'notifications', 'headers'];
-    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
-    if (_validationErrors) {
-      return Promise.reject(_validationErrors);
-    }
-
-    const body = {
-      'notifications': _params.notifications,
-    };
-
-    const path = {
-      'id': _params.id,
-    };
-
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'postNotification');
-
-    const parameters = {
-      options: {
-        url: '/v1/projects/{id}/event',
-        method: 'POST',
-        body,
-        path,
-      },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(
-          true,
-          sdkHeaders,
-          {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          _params.headers
-        ),
-      }),
-    };
-
-    return this.createRequest(parameters);
-  }
-
-  /**
-   * Get events by project ID.
-   *
-   * Get all the notification events from a specific project ID.
-   *
-   * @param {Object} params - The parameters to send to the service.
-   * @param {string} params.id - The unique identifier.
-   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.NotificationsGetResponse>>}
-   */
-  public getNotifications(
-    params: ProjectV1.GetNotificationsParams
-  ): Promise<ProjectV1.Response<ProjectV1.NotificationsGetResponse>> {
-    const _params = { ...params };
-    const _requiredParams = ['id'];
-    const _validParams = ['id', 'headers'];
-    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
-    if (_validationErrors) {
-      return Promise.reject(_validationErrors);
-    }
-
-    const path = {
-      'id': _params.id,
-    };
-
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'getNotifications');
-
-    const parameters = {
-      options: {
-        url: '/v1/projects/{id}/event',
+        url: '/v1/projects/{project_id}/configs/{config_id}/drafts/{version}',
         method: 'GET',
         path,
       },
@@ -1302,240 +959,6 @@ class ProjectV1 extends BaseService {
           sdkHeaders,
           {
             'Accept': 'application/json',
-          },
-          _params.headers
-        ),
-      }),
-    };
-
-    return this.createRequest(parameters);
-  }
-  /*************************
-   * integration
-   ************************/
-
-  /**
-   * Connect to a event notifications instance.
-   *
-   * Connects a project instance to an event notifications instance.
-   *
-   * @param {Object} params - The parameters to send to the service.
-   * @param {string} params.id - The unique identifier.
-   * @param {string} params.instanceCrn - A CRN of the instance of the event.
-   * @param {string} [params.description] - A description of the instance of the event.
-   * @param {string} [params.eventNotificationsSourceName] - The name of the project source for the event notifications
-   * instance.
-   * @param {boolean} [params.enabled] - A status of the instance of the event.
-   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.NotificationsIntegrationPostResponse>>}
-   */
-  public postEventNotificationsIntegration(
-    params: ProjectV1.PostEventNotificationsIntegrationParams
-  ): Promise<ProjectV1.Response<ProjectV1.NotificationsIntegrationPostResponse>> {
-    const _params = { ...params };
-    const _requiredParams = ['id', 'instanceCrn'];
-    const _validParams = [
-      'id',
-      'instanceCrn',
-      'description',
-      'eventNotificationsSourceName',
-      'enabled',
-      'headers',
-    ];
-    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
-    if (_validationErrors) {
-      return Promise.reject(_validationErrors);
-    }
-
-    const body = {
-      'instance_crn': _params.instanceCrn,
-      'description': _params.description,
-      'event_notifications_source_name': _params.eventNotificationsSourceName,
-      'enabled': _params.enabled,
-    };
-
-    const path = {
-      'id': _params.id,
-    };
-
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'postEventNotificationsIntegration'
-    );
-
-    const parameters = {
-      options: {
-        url: '/v1/projects/{id}/event_notifications',
-        method: 'POST',
-        body,
-        path,
-      },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(
-          true,
-          sdkHeaders,
-          {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          _params.headers
-        ),
-      }),
-    };
-
-    return this.createRequest(parameters);
-  }
-
-  /**
-   * Get event notification source details by project ID.
-   *
-   * Gets the source details of the project from the connect event notifications instance.
-   *
-   * @param {Object} params - The parameters to send to the service.
-   * @param {string} params.id - The unique identifier.
-   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.NotificationsIntegrationGetResponse>>}
-   */
-  public getEventNotificationsIntegration(
-    params: ProjectV1.GetEventNotificationsIntegrationParams
-  ): Promise<ProjectV1.Response<ProjectV1.NotificationsIntegrationGetResponse>> {
-    const _params = { ...params };
-    const _requiredParams = ['id'];
-    const _validParams = ['id', 'headers'];
-    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
-    if (_validationErrors) {
-      return Promise.reject(_validationErrors);
-    }
-
-    const path = {
-      'id': _params.id,
-    };
-
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'getEventNotificationsIntegration'
-    );
-
-    const parameters = {
-      options: {
-        url: '/v1/projects/{id}/event_notifications',
-        method: 'GET',
-        path,
-      },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(
-          true,
-          sdkHeaders,
-          {
-            'Accept': 'application/json',
-          },
-          _params.headers
-        ),
-      }),
-    };
-
-    return this.createRequest(parameters);
-  }
-
-  /**
-   * Delete an event notifications connection.
-   *
-   * Deletes the event notifications integration if that is where the project was onboarded to.
-   *
-   * @param {Object} params - The parameters to send to the service.
-   * @param {string} params.id - The unique identifier.
-   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.EmptyObject>>}
-   */
-  public deleteEventNotificationsIntegration(
-    params: ProjectV1.DeleteEventNotificationsIntegrationParams
-  ): Promise<ProjectV1.Response<ProjectV1.EmptyObject>> {
-    const _params = { ...params };
-    const _requiredParams = ['id'];
-    const _validParams = ['id', 'headers'];
-    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
-    if (_validationErrors) {
-      return Promise.reject(_validationErrors);
-    }
-
-    const path = {
-      'id': _params.id,
-    };
-
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'deleteEventNotificationsIntegration'
-    );
-
-    const parameters = {
-      options: {
-        url: '/v1/projects/{id}/event_notifications',
-        method: 'DELETE',
-        path,
-      },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, sdkHeaders, {}, _params.headers),
-      }),
-    };
-
-    return this.createRequest(parameters);
-  }
-
-  /**
-   * Send notification to event notifications instance.
-   *
-   * Sends a notification to the event notifications instance.
-   *
-   * @param {Object} params - The parameters to send to the service.
-   * @param {string} params.id - The unique identifier.
-   * @param {string} [params.ibmendefaultlong] - The IBM default long message for the instance of an event.
-   * @param {string} [params.ibmendefaultshort] - The IBM default long message for the instance of an event.
-   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.NotificationsIntegrationTestPostResponse>>}
-   */
-  public postTestEventNotification(
-    params: ProjectV1.PostTestEventNotificationParams
-  ): Promise<ProjectV1.Response<ProjectV1.NotificationsIntegrationTestPostResponse>> {
-    const _params = { ...params };
-    const _requiredParams = ['id'];
-    const _validParams = ['id', 'ibmendefaultlong', 'ibmendefaultshort', 'headers'];
-    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
-    if (_validationErrors) {
-      return Promise.reject(_validationErrors);
-    }
-
-    const body = {
-      'ibmendefaultlong': _params.ibmendefaultlong,
-      'ibmendefaultshort': _params.ibmendefaultshort,
-    };
-
-    const path = {
-      'id': _params.id,
-    };
-
-    const sdkHeaders = getSdkHeaders(
-      ProjectV1.DEFAULT_SERVICE_NAME,
-      'v1',
-      'postTestEventNotification'
-    );
-
-    const parameters = {
-      options: {
-        url: '/v1/projects/{id}/event_notifications/test',
-        method: 'POST',
-        body,
-        path,
-      },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(
-          true,
-          sdkHeaders,
-          {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
           },
           _params.headers
         ),
@@ -1584,6 +1007,8 @@ namespace ProjectV1 {
     name: string;
     /** A project's descriptive text. */
     description?: string;
+    /** The policy that indicates whether the resources are destroyed or not when a project is deleted. */
+    destroyOnDelete?: boolean;
     /** The project configurations. */
     configs?: ProjectConfigPrototype[];
     headers?: OutgoingHttpHeaders;
@@ -1599,36 +1024,21 @@ namespace ProjectV1 {
      *  with the exception of the last page.
      */
     limit?: number;
-    /** Determines whether the metadata should be returned. Only the metadata for the project is returned. */
-    complete?: boolean;
     headers?: OutgoingHttpHeaders;
   }
 
   /** Parameters for the `getProject` operation. */
   export interface GetProjectParams {
-    /** The unique identifier. */
+    /** The unique project ID. */
     id: string;
-    /** When set to true, exclude_configs returns only active configurations. Draft configurations are not returned. */
-    excludeConfigs?: boolean;
-    /** Determines whether the metadata should be returned. Only the metadata for the project is returned. */
-    complete?: boolean;
-    headers?: OutgoingHttpHeaders;
-  }
-
-  /** Parameters for the `updateProject` operation. */
-  export interface UpdateProjectParams {
-    /** The unique identifier. */
-    id: string;
-    /** The new project definition document. */
-    jsonPatchOperation: JsonPatchOperation[];
     headers?: OutgoingHttpHeaders;
   }
 
   /** Parameters for the `deleteProject` operation. */
   export interface DeleteProjectParams {
-    /** The unique identifier. */
+    /** The unique project ID. */
     id: string;
-    /** The flag that indicates if the resources deployed by schematics should be destroyed. */
+    /** The flag that indicates if the resources deployed by Schematics should be destroyed. */
     destroy?: boolean;
     headers?: OutgoingHttpHeaders;
   }
@@ -1649,7 +1059,13 @@ namespace ProjectV1 {
     labels?: string[];
     /** The project configuration description. */
     description?: string;
-    /** The input values to use to deploy the configuration. */
+    /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets
+     *  Manager.
+     */
+    authorizations?: ProjectConfigAuth;
+    /** The profile required for compliance. */
+    complianceProfile?: ProjectConfigComplianceProfile;
+    /** The inputs of a Schematics template property. */
     input?: ProjectConfigInputVariable[];
     /** Schematics environment variables to use to deploy the configuration. */
     setting?: ProjectConfigSettingCollection[];
@@ -1660,33 +1076,15 @@ namespace ProjectV1 {
   export interface ListConfigsParams {
     /** The unique project ID. */
     projectId: string;
-    /** The version of configuration to return. */
-    version?: ListConfigsConstants.Version | string;
-    /** Determines whether the metadata should be returned. Only the metadata for the project is returned. */
-    complete?: boolean;
     headers?: OutgoingHttpHeaders;
-  }
-
-  /** Constants for the `listConfigs` operation. */
-  export namespace ListConfigsConstants {
-    /** The version of configuration to return. */
-    export enum Version {
-      ACTIVE = 'active',
-      DRAFT = 'draft',
-      MIXED = 'mixed',
-    }
   }
 
   /** Parameters for the `getConfig` operation. */
   export interface GetConfigParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique identifier. */
+    /** The unique config ID. */
     id: string;
-    /** The version of the configuration to return. */
-    version?: string;
-    /** Determines whether the metadata should be returned. Only the metadata for the project is returned. */
-    complete?: boolean;
     headers?: OutgoingHttpHeaders;
   }
 
@@ -1694,12 +1092,26 @@ namespace ProjectV1 {
   export interface UpdateConfigParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique identifier. */
+    /** The unique config ID. */
     id: string;
-    /** The change delta of the project configuration to update. */
-    projectConfig: JsonPatchOperation[];
-    /** Determines whether the metadata should be returned. Only the metadata for the project is returned. */
-    complete?: boolean;
+    /** A dotted value of catalogID.versionID. */
+    locatorId?: string;
+    /** The inputs of a Schematics template property. */
+    input?: ProjectConfigInputVariable[];
+    /** Schematics environment variables to use to deploy the configuration. */
+    setting?: ProjectConfigSettingCollection[];
+    /** The configuration name. */
+    name?: string;
+    /** The configuration labels. */
+    labels?: string[];
+    /** A project configuration description. */
+    description?: string;
+    /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets
+     *  Manager.
+     */
+    authorizations?: ProjectConfigAuth;
+    /** The profile required for compliance. */
+    complianceProfile?: ProjectConfigComplianceProfile;
     headers?: OutgoingHttpHeaders;
   }
 
@@ -1707,34 +1119,12 @@ namespace ProjectV1 {
   export interface DeleteConfigParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique identifier. */
+    /** The unique config ID. */
     id: string;
     /** The flag to determine if only the draft version should be deleted. */
     draftOnly?: boolean;
-    /** The flag that indicates if the resources deployed by schematics should be destroyed. */
+    /** The flag that indicates if the resources deployed by Schematics should be destroyed. */
     destroy?: boolean;
-    headers?: OutgoingHttpHeaders;
-  }
-
-  /** Parameters for the `getConfigDiff` operation. */
-  export interface GetConfigDiffParams {
-    /** The unique project ID. */
-    projectId: string;
-    /** The unique identifier. */
-    id: string;
-    headers?: OutgoingHttpHeaders;
-  }
-
-  /** Parameters for the `forceApprove` operation. */
-  export interface ForceApproveParams {
-    /** The unique project ID. */
-    projectId: string;
-    /** The unique identifier. */
-    id: string;
-    /** Notes on the project draft action. */
-    comment?: string;
-    /** Determines whether the metadata should be returned. Only the metadata for the project is returned. */
-    complete?: boolean;
     headers?: OutgoingHttpHeaders;
   }
 
@@ -1742,12 +1132,10 @@ namespace ProjectV1 {
   export interface ApproveParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique identifier. */
+    /** The unique config ID. */
     id: string;
     /** Notes on the project draft action. */
     comment?: string;
-    /** Determines whether the metadata should be returned. Only the metadata for the project is returned. */
-    complete?: boolean;
     headers?: OutgoingHttpHeaders;
   }
 
@@ -1755,14 +1143,14 @@ namespace ProjectV1 {
   export interface CheckConfigParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique identifier. */
+    /** The unique config ID. */
     id: string;
     /** The IAM refresh token. */
     xAuthRefreshToken?: string;
-    /** Determines whether the metadata should be returned. Only the metadata for the project is returned. */
-    complete?: boolean;
-    /** The version of the configuration that the validation check should trigger against. */
-    version?: string;
+    /** To specify whether the validation check should trigger against the draft or the active version of the
+     *  configuration.
+     */
+    isDraft?: boolean;
     headers?: OutgoingHttpHeaders;
   }
 
@@ -1770,10 +1158,8 @@ namespace ProjectV1 {
   export interface InstallConfigParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique identifier. */
+    /** The unique config ID. */
     id: string;
-    /** Determines whether the metadata should be returned. Only the metadata for the project is returned. */
-    complete?: boolean;
     headers?: OutgoingHttpHeaders;
   }
 
@@ -1781,123 +1167,34 @@ namespace ProjectV1 {
   export interface UninstallConfigParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique identifier. */
+    /** The unique config ID. */
     id: string;
     headers?: OutgoingHttpHeaders;
   }
 
-  /** Parameters for the `getSchematicsJob` operation. */
-  export interface GetSchematicsJobParams {
+  /** Parameters for the `listConfigDrafts` operation. */
+  export interface ListConfigDraftsParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique identifier. */
-    id: string;
-    /** The triggered action. */
-    action: GetSchematicsJobConstants.Action | string;
-    /** The timestamp of when the action was triggered. */
-    since?: number;
+    /** The unique configuration ID. */
+    configId: string;
     headers?: OutgoingHttpHeaders;
   }
 
-  /** Constants for the `getSchematicsJob` operation. */
-  export namespace GetSchematicsJobConstants {
-    /** The triggered action. */
-    export enum Action {
-      PLAN = 'plan',
-      INSTALL = 'install',
-      UNINSTALL = 'uninstall',
-    }
-  }
-
-  /** Parameters for the `getCostEstimate` operation. */
-  export interface GetCostEstimateParams {
+  /** Parameters for the `getConfigDraft` operation. */
+  export interface GetConfigDraftParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique identifier. */
-    id: string;
-    /** The version of the configuration that the cost estimate will fetch. */
-    version?: string;
-    headers?: OutgoingHttpHeaders;
-  }
-
-  /** Parameters for the `postCrnToken` operation. */
-  export interface PostCrnTokenParams {
-    /** The unique identifier. */
-    id: string;
-    headers?: OutgoingHttpHeaders;
-  }
-
-  /** Parameters for the `postNotification` operation. */
-  export interface PostNotificationParams {
-    /** The unique identifier. */
-    id: string;
-    /** Collection of the notification events to post. */
-    notifications?: NotificationEvent[];
-    headers?: OutgoingHttpHeaders;
-  }
-
-  /** Parameters for the `getNotifications` operation. */
-  export interface GetNotificationsParams {
-    /** The unique identifier. */
-    id: string;
-    headers?: OutgoingHttpHeaders;
-  }
-
-  /** Parameters for the `postEventNotificationsIntegration` operation. */
-  export interface PostEventNotificationsIntegrationParams {
-    /** The unique identifier. */
-    id: string;
-    /** A CRN of the instance of the event. */
-    instanceCrn: string;
-    /** A description of the instance of the event. */
-    description?: string;
-    /** The name of the project source for the event notifications instance. */
-    eventNotificationsSourceName?: string;
-    /** A status of the instance of the event. */
-    enabled?: boolean;
-    headers?: OutgoingHttpHeaders;
-  }
-
-  /** Parameters for the `getEventNotificationsIntegration` operation. */
-  export interface GetEventNotificationsIntegrationParams {
-    /** The unique identifier. */
-    id: string;
-    headers?: OutgoingHttpHeaders;
-  }
-
-  /** Parameters for the `deleteEventNotificationsIntegration` operation. */
-  export interface DeleteEventNotificationsIntegrationParams {
-    /** The unique identifier. */
-    id: string;
-    headers?: OutgoingHttpHeaders;
-  }
-
-  /** Parameters for the `postTestEventNotification` operation. */
-  export interface PostTestEventNotificationParams {
-    /** The unique identifier. */
-    id: string;
-    /** The IBM default long message for the instance of an event. */
-    ibmendefaultlong?: string;
-    /** The IBM default long message for the instance of an event. */
-    ibmendefaultshort?: string;
+    /** The unique configuration ID. */
+    configId: string;
+    /** The configuration version. */
+    version: number;
     headers?: OutgoingHttpHeaders;
   }
 
   /*************************
    * model interfaces
    ************************/
-
-  /** The response of a fetching an action job. */
-  export interface ActionJob {
-    /** The unique ID of a project. */
-    id?: string;
-  }
-
-  /** The cost estimate for the given configuration. */
-  export interface CostEstimate {
-    /** CostEstimate accepts additional properties. */
-    [propName: string]: any;
-  }
 
   /** CumulativeNeedsAttention. */
   export interface CumulativeNeedsAttention {
@@ -1917,150 +1214,10 @@ namespace ProjectV1 {
     name: string;
     /** The variable type. */
     type: string;
-    /** Can be any value - string, number, boolean, array or object. */
+    /** Can be any value - a string, number, boolean, array, or object. */
     value?: any;
     /** Whether the variable is required or not. */
     required?: boolean;
-  }
-
-  /** This model represents an individual patch operation to be performed on a JSON document, as defined by RFC 6902. */
-  export interface JsonPatchOperation {
-    /** The operation to be performed. */
-    op: string;
-    /** The JSON Pointer that identifies the field that is the target of the operation. */
-    path: string;
-    /** The JSON Pointer that identifies the field that is the source of the operation. */
-    from?: string;
-    /** The value to be used within the operation. */
-    value?: any;
-  }
-
-  /** NotificationEvent. */
-  export interface NotificationEvent {
-    /** The type of event. */
-    event: string;
-    /** The target of the event. */
-    target: string;
-    /** The source of the event. */
-    source?: string;
-    /** The user that triggered the flow that posted the event. */
-    triggered_by?: string;
-    /** An actionable URL that users can access in response to the event. */
-    action_url?: string;
-    /** Any relevant metadata to be stored. */
-    data?: JsonObject;
-  }
-
-  /** NotificationEventWithId. */
-  export interface NotificationEventWithId {
-    /** The type of event. */
-    event: string;
-    /** The target of the event. */
-    target: string;
-    /** The source of the event. */
-    source?: string;
-    /** The user that triggered the flow that posted the event. */
-    triggered_by?: string;
-    /** An actionable URL that users can access in response to the event. */
-    action_url?: string;
-    /** Any relevant metadata to be stored. */
-    data?: JsonObject;
-    /** The unique ID of a project. */
-    id: string;
-  }
-
-  /** NotificationEventWithStatus. */
-  export interface NotificationEventWithStatus {
-    /** The type of event. */
-    event: string;
-    /** The target of the event. */
-    target: string;
-    /** The source of the event. */
-    source?: string;
-    /** The user that triggered the flow that posted the event. */
-    triggered_by?: string;
-    /** An actionable URL that users can access in response to the event. */
-    action_url?: string;
-    /** Any relevant metadata to be stored. */
-    data?: JsonObject;
-    /** The unique ID of a project. */
-    id: string;
-    /** Whether or not the event successfully posted. */
-    status?: string;
-    /** The reasons for the status of an event. */
-    reasons?: JsonObject[];
-  }
-
-  /** The response from fetching notifications. */
-  export interface NotificationsGetResponse {
-    /** Collection of the notification events with an ID. */
-    notifications?: NotificationEventWithId[];
-  }
-
-  /** The resulting response of getting the source details of the event notifications integration. */
-  export interface NotificationsIntegrationGetResponse {
-    /** A description of the instance of the event. */
-    description?: string;
-    /** The name of the instance of the event. */
-    name?: string;
-    /** The status of the instance of the event. */
-    enabled?: boolean;
-    /** A unique ID of the instance of the event. */
-    id?: string;
-    /** The type of the instance of event. */
-    type?: string;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
-     *  time format as specified by RFC 3339.
-     */
-    updated_at?: string;
-    /** The topic count of the instance of the event. */
-    topic_count?: number;
-    /** The topic names of the instance of the event. */
-    topic_names?: string[];
-  }
-
-  /** The resulting response of connecting a project to an event notifications instance. */
-  export interface NotificationsIntegrationPostResponse {
-    /** A description of the instance of the event. */
-    description?: string;
-    /** A name of the instance of the event. */
-    name?: string;
-    /** A status of the instance of the event. */
-    enabled?: boolean;
-    /** A unique ID of the instance of the event. */
-    id?: string;
-    /** The type of instance of the event. */
-    type?: string;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
-     *  time format as specified by RFC 3339.
-     */
-    created_at?: string;
-  }
-
-  /** The response for posting a test notification to the event notifications instance. */
-  export interface NotificationsIntegrationTestPostResponse {
-    /** The data content type of the instance of the event. */
-    datacontenttype?: string;
-    /** The IBM default long message for the instance of the event. */
-    ibmendefaultlong?: string;
-    /** The IBM default short message for the instance of the event. */
-    ibmendefaultshort?: string;
-    /** The IBM source ID for the instance of the event. */
-    ibmensourceid?: string;
-    /** A unique ID of the instance of the event. */
-    id: string;
-    /** The source of the instance of the event. */
-    source: string;
-    /** The spec version of the instance of the event. */
-    specversion?: string;
-    /** The type of instance of the event. */
-    type?: string;
-  }
-
-  /** The result of a notification post. */
-  export interface NotificationsPrototypePostResponse {
-    /** The collection of the notification events with status. */
-    notifications?: NotificationEventWithStatus[];
   }
 
   /** OutputValue. */
@@ -2069,13 +1226,13 @@ namespace ProjectV1 {
     name: string;
     /** A short explanation of the output value. */
     description?: string;
-    /** Can be any value - string, number, boolean, array or object. */
+    /** Can be any value - a string, number, boolean, array, or object. */
     value?: any;
   }
 
   /** A pagination link. */
   export interface PaginationLink {
-    /** The URL of the pull request, which uniquely identifies it. */
+    /** A relative URL. */
     href: string;
     /** A pagination token. */
     start?: string;
@@ -2087,22 +1244,14 @@ namespace ProjectV1 {
     name: string;
     /** A project descriptive text. */
     description?: string;
+    /** The policy that indicates whether the resources are destroyed or not when a project is deleted. */
+    destroy_on_delete?: boolean;
     /** The unique ID of a project. */
-    id?: string;
-    /** An IBM Cloud resource name, which uniquely identifies a resource. */
-    crn?: string;
-    /** The project configurations. */
-    configs?: ProjectConfig[];
+    id: string;
     /** The metadata of the project. */
     metadata?: ProjectMetadata;
-  }
-
-  /** The project CRN token. */
-  export interface ProjectCRNTokenResponse {
-    /** The IAM access token. */
-    acces_token?: string;
-    /** Number of seconds counted since January 1st, 1970, until the IAM access token will expire. */
-    expiration?: number;
+    /** The project configurations. */
+    configs?: ProjectConfig[];
   }
 
   /** Projects list. */
@@ -2147,6 +1296,12 @@ namespace ProjectV1 {
     labels?: string[];
     /** The project configuration description. */
     description?: string;
+    /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets
+     *  Manager.
+     */
+    authorizations?: ProjectConfigAuth;
+    /** The profile required for compliance. */
+    compliance_profile?: ProjectConfigComplianceProfile;
     /** A dotted value of catalogID.versionID. */
     locator_id: string;
     /** The type of a project configuration manual property. */
@@ -2159,10 +1314,82 @@ namespace ProjectV1 {
     setting?: ProjectConfigSettingCollection[];
   }
 
+  /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets Manager. */
+  export interface ProjectConfigAuth {
+    /** The trusted profile for authorizations. */
+    trusted_profile?: ProjectConfigAuthTrustedProfile;
+    /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets
+     *  Manager.
+     */
+    method?: string;
+    /** The IBM Cloud API Key. */
+    api_key?: string;
+  }
+
+  /** The trusted profile for authorizations. */
+  export interface ProjectConfigAuthTrustedProfile {
+    /** The unique ID of a project. */
+    id?: string;
+    /** The unique ID of a project. */
+    target_iam_id?: string;
+  }
+
   /** The project configuration list. */
   export interface ProjectConfigCollection {
+    /** The unique ID of a project. */
+    project_id?: string;
     /** The collection list operation response schema that should define the array property with the name "configs". */
-    configs?: ProjectConfig[];
+    configs?: ProjectConfigCollectionMember[];
+  }
+
+  /** The project configuration. */
+  export interface ProjectConfigCollectionMember {
+    /** The ID of the configuration. If this parameter is empty, an ID is automatically created for the
+     *  configuration.
+     */
+    id?: string;
+    /** The configuration name. */
+    name: string;
+    /** A collection of configuration labels. */
+    labels?: string[];
+    /** The project configuration description. */
+    description?: string;
+    /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets
+     *  Manager.
+     */
+    authorizations?: ProjectConfigAuth;
+    /** The profile required for compliance. */
+    compliance_profile?: ProjectConfigComplianceProfile;
+    /** A dotted value of catalogID.versionID. */
+    locator_id: string;
+    /** The type of a project configuration manual property. */
+    type: string;
+    /** The outputs of a Schematics template property. */
+    input?: InputVariable[];
+    /** The outputs of a Schematics template property. */
+    output?: OutputValue[];
+    /** Schematics environment variables to use to deploy the configuration. */
+    setting?: ProjectConfigSettingCollection[];
+    /** The project configuration draft. */
+    active_draft?: ProjectConfigDraftSummary;
+    /** A relative URL. */
+    href?: string;
+    /** The configuration metadata. */
+    metadata?: ProjectConfigMetadataCommon;
+  }
+
+  /** The profile required for compliance. */
+  export interface ProjectConfigComplianceProfile {
+    /** The unique ID of a project. */
+    id?: string;
+    /** The unique ID of a project. */
+    instance_id?: string;
+    /** The location of the compliance instance. */
+    instance_location?: string;
+    /** The unique ID of a project. */
+    attachment_id?: string;
+    /** The name of the compliance profile. */
+    profile_name?: string;
   }
 
   /** Deletes the configuration response. */
@@ -2173,50 +1400,254 @@ namespace ProjectV1 {
     name?: string;
   }
 
-  /** The project configuration diff summary. */
-  export interface ProjectConfigDiff {
-    /** The additions to configurations in the diff summary. */
-    added?: ProjectConfigDiffAdded;
-    /** The changes to configurations in the diff summary. */
-    changed?: ProjectConfigDiffChanged;
-    /** The deletions to configurations in the diff summary. */
-    removed?: ProjectConfigDiffRemoved;
-  }
-
-  /** The additions to configurations in the diff summary. */
-  export interface ProjectConfigDiffAdded {
-    /** The collection of additions to the configurations in the diff summary. */
-    input?: ProjectConfigDiffInputVariable[];
-  }
-
-  /** The changes to configurations in the diff summary. */
-  export interface ProjectConfigDiffChanged {
-    /** The collection of changes to configurations in the diff summary. */
-    input?: ProjectConfigDiffInputVariable[];
-  }
-
-  /** ProjectConfigDiffInputVariable. */
-  export interface ProjectConfigDiffInputVariable {
-    /** The variable name. */
+  /** The project configuration draft. */
+  export interface ProjectConfigDraft {
+    /** The ID of the configuration. If this parameter is empty, an ID is automatically created for the
+     *  configuration.
+     */
+    id?: string;
+    /** The configuration name. */
     name: string;
-    /** The variable type. */
+    /** A collection of configuration labels. */
+    labels?: string[];
+    /** The project configuration description. */
+    description?: string;
+    /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets
+     *  Manager.
+     */
+    authorizations?: ProjectConfigAuth;
+    /** The profile required for compliance. */
+    compliance_profile?: ProjectConfigComplianceProfile;
+    /** A dotted value of catalogID.versionID. */
+    locator_id: string;
+    /** The type of a project configuration manual property. */
     type: string;
-    /** Can be any value - string, number, boolean, array or object. */
-    value?: any;
+    /** The outputs of a Schematics template property. */
+    input?: InputVariable[];
+    /** The outputs of a Schematics template property. */
+    output?: OutputValue[];
+    /** Schematics environment variables to use to deploy the configuration. */
+    setting?: ProjectConfigSettingCollection[];
+    /** The project configuration draft. */
+    metadata?: ProjectConfigDraftMetadata;
   }
 
-  /** The deletions to configurations in the diff summary. */
-  export interface ProjectConfigDiffRemoved {
-    /** The collection of deletions to configurations in the diff summary. */
-    input?: ProjectConfigDiffInputVariable[];
+  /** The project configuration draft. */
+  export interface ProjectConfigDraftMetadata {
+    /** The unique ID of a project. */
+    project_id?: string;
+    /** The version number of the configuration. */
+    version?: number;
+    /** The state of the configuration draft. */
+    state?: string;
+    /** The pipeline state of the configuration. */
+    pipeline_state?: string;
+  }
+
+  /** The project configuration draft. */
+  export interface ProjectConfigDraftSummary {
+    /** The project configuration draft. */
+    metadata?: ProjectConfigDraftMetadata;
+    /** A relative URL. */
+    href?: string;
+  }
+
+  /** The project configuration draft list. */
+  export interface ProjectConfigDraftSummaryCollection {
+    /** The unique ID of a project. */
+    config_id?: string;
+    /** The unique ID of a project. */
+    project_id?: string;
+    /** The collection list operation response schema that defines the array property with the name `drafts`. */
+    drafts?: ProjectConfigDraftSummary[];
+  }
+
+  /** The project configuration. */
+  export interface ProjectConfigGetResponse {
+    /** The ID of the configuration. If this parameter is empty, an ID is automatically created for the
+     *  configuration.
+     */
+    id?: string;
+    /** The configuration name. */
+    name: string;
+    /** A collection of configuration labels. */
+    labels?: string[];
+    /** The project configuration description. */
+    description?: string;
+    /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets
+     *  Manager.
+     */
+    authorizations?: ProjectConfigAuth;
+    /** The profile required for compliance. */
+    compliance_profile?: ProjectConfigComplianceProfile;
+    /** A dotted value of catalogID.versionID. */
+    locator_id: string;
+    /** The type of a project configuration manual property. */
+    type: string;
+    /** The outputs of a Schematics template property. */
+    input?: InputVariable[];
+    /** The outputs of a Schematics template property. */
+    output?: OutputValue[];
+    /** Schematics environment variables to use to deploy the configuration. */
+    setting?: ProjectConfigSettingCollection[];
+    /** The project configuration draft. */
+    active_draft?: ProjectConfigDraftSummary;
+    /** The configuration metadata. */
+    metadata?: ProjectConfigMetadata;
   }
 
   /** ProjectConfigInputVariable. */
   export interface ProjectConfigInputVariable {
     /** The variable name. */
     name: string;
-    /** Can be any value - string, number, boolean, array or object. */
+    /** Can be any value - a string, number, boolean, array, or object. */
     value?: any;
+  }
+
+  /** The configuration metadata. */
+  export interface ProjectConfigMetadata {
+    /** The unique ID of a project. */
+    project_id?: string;
+    /** The version of the configuration. */
+    version?: number;
+    /** The flag that indicates whether the version of the configuration is draft, or active. */
+    is_draft?: boolean;
+    /** The needs attention state of a configuration. */
+    needs_attention_state?: any[];
+    /** The state of the configuration. */
+    state?: string;
+    /** The pipeline state of the configuration. */
+    pipeline_state?: string;
+    /** The flag that indicates whether a configuration update is available. */
+    update_available?: boolean;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+     *  time format as specified by RFC 3339.
+     */
+    created_at?: string;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+     *  time format as specified by RFC 3339.
+     */
+    updated_at?: string;
+    /** The last approved metadata of the configuration. */
+    last_approved?: ProjectConfigMetadataLastApproved;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+     *  time format as specified by RFC 3339.
+     */
+    last_save?: string;
+    /** The summaries of jobs that were performed on the configuration. */
+    job_summary?: ProjectConfigMetadataJobSummary;
+    /** The Code Risk Analyzer logs of the configuration. */
+    cra_logs?: ProjectConfigMetadataCraLogs;
+    /** The cost estimate of the configuration. */
+    cost_estimate?: ProjectConfigMetadataCostEstimate;
+    /** The summaries of jobs that were performed on the configuration. */
+    last_deployment_job_summary?: ProjectConfigMetadataJobSummary;
+  }
+
+  /** The configuration metadata. */
+  export interface ProjectConfigMetadataCommon {
+    /** The unique ID of a project. */
+    project_id?: string;
+    /** The version of the configuration. */
+    version?: number;
+    /** The flag that indicates whether the version of the configuration is draft, or active. */
+    is_draft?: boolean;
+    /** The needs attention state of a configuration. */
+    needs_attention_state?: any[];
+    /** The state of the configuration. */
+    state?: string;
+    /** The pipeline state of the configuration. */
+    pipeline_state?: string;
+    /** The flag that indicates whether a configuration update is available. */
+    update_available?: boolean;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+     *  time format as specified by RFC 3339.
+     */
+    created_at?: string;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+     *  time format as specified by RFC 3339.
+     */
+    updated_at?: string;
+    /** The last approved metadata of the configuration. */
+    last_approved?: ProjectConfigMetadataLastApproved;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+     *  time format as specified by RFC 3339.
+     */
+    last_save?: string;
+  }
+
+  /** The cost estimate of the configuration. */
+  export interface ProjectConfigMetadataCostEstimate {
+    /** The version of the cost estimate of the configuration. */
+    version?: string;
+    /** The currency of the cost estimate of the configuration. */
+    currency?: string;
+    /** The total hourly cost estimate of the configuration. */
+    totalHourlyCost?: string;
+    /** The total monthly cost estimate of the configuration. */
+    totalMonthlyCost?: string;
+    /** The past total hourly cost estimate of the configuration. */
+    pastTotalHourlyCost?: string;
+    /** The past total monthly cost estimate of the configuration. */
+    pastTotalMonthlyCost?: string;
+    /** The difference between current and past total hourly cost estimates of the configuration. */
+    diffTotalHourlyCost?: string;
+    /** The difference between current and past total monthly cost estimates of the configuration. */
+    diffTotalMonthlyCost?: string;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+     *  time format as specified by RFC 3339.
+     */
+    timeGenerated?: string;
+    /** The unique ID of a project. */
+    user_id?: string;
+  }
+
+  /** The Code Risk Analyzer logs of the configuration. */
+  export interface ProjectConfigMetadataCraLogs {
+    /** The version of the Code Risk Analyzer logs of the configuration. */
+    cra_version?: string;
+    /** The schema version of Code Risk Analyzer logs of the configuration. */
+    schema_version?: string;
+    /** The status of the Code Risk Analyzer logs of the configuration. */
+    status?: string;
+    /** The summary of the Code Risk Analyzer logs of the configuration. */
+    summary?: JsonObject;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+     *  time format as specified by RFC 3339.
+     */
+    timestamp?: string;
+  }
+
+  /** The summaries of jobs that were performed on the configuration. */
+  export interface ProjectConfigMetadataJobSummary {
+    /** The summary of the plan jobs on the configuration. */
+    plan_summary?: JsonObject;
+    /** The summary of the apply jobs on the configuration. */
+    apply_summary?: JsonObject;
+    /** The summary of the destroy jobs on the configuration. */
+    destroy_summary?: JsonObject;
+    /** The message summaries of jobs on the configuration. */
+    message_summary?: JsonObject;
+    /** The messages of plan jobs on the configuration. */
+    plan_messages?: JsonObject;
+    /** The messages of apply jobs on the configuration. */
+    apply_messages?: JsonObject;
+    /** The messages of destroy jobs on the configuration. */
+    destroy_messages?: JsonObject;
+  }
+
+  /** The last approved metadata of the configuration. */
+  export interface ProjectConfigMetadataLastApproved {
+    /** The flag that indicates whether the approval was forced approved. */
+    is_forced?: boolean;
+    /** The comment left by the user who approved the configuration. */
+    comment?: string;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+     *  time format as specified by RFC 3339.
+     */
+    timestamp?: string;
+    /** The unique ID of a project. */
+    user_id?: string;
   }
 
   /** The input of a project configuration. */
@@ -2231,9 +1662,15 @@ namespace ProjectV1 {
     labels?: string[];
     /** The project configuration description. */
     description?: string;
+    /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets
+     *  Manager.
+     */
+    authorizations?: ProjectConfigAuth;
+    /** The profile required for compliance. */
+    compliance_profile?: ProjectConfigComplianceProfile;
     /** A dotted value of catalogID.versionID. */
     locator_id: string;
-    /** The input values to use to deploy the configuration. */
+    /** The inputs of a Schematics template property. */
     input?: ProjectConfigInputVariable[];
     /** Schematics environment variables to use to deploy the configuration. */
     setting?: ProjectConfigSettingCollection[];
@@ -2257,7 +1694,7 @@ namespace ProjectV1 {
     created_at?: string;
     /** The cumulative list of needs attention items for a project. */
     cumulative_needs_attention_view?: CumulativeNeedsAttention[];
-    /** "True" indicates that the fetch of the needs attention items failed. */
+    /** True indicates that the fetch of the needs attention items failed. */
     cumulative_needs_attention_view_err?: string;
     /** The IBM Cloud location where a resource is deployed. */
     location?: string;
@@ -2267,6 +1704,20 @@ namespace ProjectV1 {
     state?: string;
     /** The CRN of the event notifications instance if one is connected to this project. */
     event_notifications_crn?: string;
+  }
+
+  /** The project returned in the response body. */
+  export interface ProjectSummary {
+    /** The project name. */
+    name: string;
+    /** A project descriptive text. */
+    description?: string;
+    /** The policy that indicates whether the resources are destroyed or not when a project is deleted. */
+    destroy_on_delete?: boolean;
+    /** The unique ID of a project. */
+    id: string;
+    /** The metadata of the project. */
+    metadata?: ProjectMetadata;
   }
 
   /*************************
