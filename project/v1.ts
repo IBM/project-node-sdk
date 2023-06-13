@@ -109,11 +109,13 @@ class ProjectV1 extends BaseService {
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.resourceGroup - The resource group where the project's data and tools are created.
    * @param {string} params.location - The location where the project's data and tools are created.
-   * @param {string} params.name - The project name.
-   * @param {string} [params.description] - A project's descriptive text.
+   * @param {string} params.name - The name of the project.
+   * @param {string} [params.description] - A brief explanation of the project's use in the configuration of a
+   * deployable architecture. It is possible to create a project without providing a description.
    * @param {boolean} [params.destroyOnDelete] - The policy that indicates whether the resources are destroyed or not
    * when a project is deleted.
-   * @param {ProjectConfigPrototype[]} [params.configs] - The project configurations.
+   * @param {ProjectConfigPrototype[]} [params.configs] - The project configurations. If configurations are not
+   * included, the project resource is persisted without this property.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.Project>>}
    */
@@ -281,8 +283,6 @@ class ProjectV1 extends BaseService {
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.id - The unique project ID.
-   * @param {boolean} [params.destroy] - The flag that indicates if the resources deployed by Schematics should be
-   * destroyed.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.EmptyObject>>}
    */
@@ -291,15 +291,11 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.EmptyObject>> {
     const _params = { ...params };
     const _requiredParams = ['id'];
-    const _validParams = ['id', 'destroy', 'headers'];
+    const _validParams = ['id', 'headers'];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
     }
-
-    const query = {
-      'destroy': _params.destroy,
-    };
 
     const path = {
       'id': _params.id,
@@ -311,7 +307,6 @@ class ProjectV1 extends BaseService {
       options: {
         url: '/v1/projects/{id}',
         method: 'DELETE',
-        qs: query,
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
@@ -332,31 +327,28 @@ class ProjectV1 extends BaseService {
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.name - The configuration name.
+   * @param {string} params.name - The name of the configuration.
    * @param {string} params.locatorId - A dotted value of catalogID.versionID.
-   * @param {string} [params.id] - The ID of the configuration. If this parameter is empty, an ID is automatically
-   * created for the configuration.
    * @param {string[]} [params.labels] - A collection of configuration labels.
-   * @param {string} [params.description] - The project configuration description.
-   * @param {ProjectConfigAuth} [params.authorizations] - The authorization for a configuration. You can authorize by
-   * using a trusted profile or an API key in Secrets Manager.
+   * @param {string} [params.description] - The description of the project configuration.
+   * @param {ProjectConfigAuth} [params.authorizations] - The authorization for a configuration.
+   * You can authorize by using a trusted profile or an API key in Secrets Manager.
    * @param {ProjectConfigComplianceProfile} [params.complianceProfile] - The profile required for compliance.
    * @param {ProjectConfigInputVariable[]} [params.input] - The inputs of a Schematics template property.
    * @param {ProjectConfigSettingCollection[]} [params.setting] - Schematics environment variables to use to deploy the
-   * configuration.
+   * configuration. Settings are only available if they were specified when the configuration was initially created.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>>}
+   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigDraftResponse>>}
    */
   public createConfig(
     params: ProjectV1.CreateConfigParams
-  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>> {
+  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigDraftResponse>> {
     const _params = { ...params };
     const _requiredParams = ['projectId', 'name', 'locatorId'];
     const _validParams = [
       'projectId',
       'name',
       'locatorId',
-      'id',
       'labels',
       'description',
       'authorizations',
@@ -373,7 +365,6 @@ class ProjectV1 extends BaseService {
     const body = {
       'name': _params.name,
       'locator_id': _params.locatorId,
-      'id': _params.id,
       'labels': _params.labels,
       'description': _params.description,
       'authorizations': _params.authorizations,
@@ -520,19 +511,19 @@ class ProjectV1 extends BaseService {
    * @param {string} [params.locatorId] - A dotted value of catalogID.versionID.
    * @param {ProjectConfigInputVariable[]} [params.input] - The inputs of a Schematics template property.
    * @param {ProjectConfigSettingCollection[]} [params.setting] - Schematics environment variables to use to deploy the
-   * configuration.
+   * configuration. Settings are only available if they were specified when the configuration was initially created.
    * @param {string} [params.name] - The configuration name.
    * @param {string[]} [params.labels] - The configuration labels.
    * @param {string} [params.description] - A project configuration description.
-   * @param {ProjectConfigAuth} [params.authorizations] - The authorization for a configuration. You can authorize by
-   * using a trusted profile or an API key in Secrets Manager.
+   * @param {ProjectConfigAuth} [params.authorizations] - The authorization for a configuration.
+   * You can authorize by using a trusted profile or an API key in Secrets Manager.
    * @param {ProjectConfigComplianceProfile} [params.complianceProfile] - The profile required for compliance.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>>}
+   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigDraftResponse>>}
    */
   public updateConfig(
     params: ProjectV1.UpdateConfigParams
-  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>> {
+  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigDraftResponse>> {
     const _params = { ...params };
     const _requiredParams = ['projectId', 'id'];
     const _validParams = [
@@ -604,8 +595,6 @@ class ProjectV1 extends BaseService {
    * @param {string} params.projectId - The unique project ID.
    * @param {string} params.id - The unique config ID.
    * @param {boolean} [params.draftOnly] - The flag to determine if only the draft version should be deleted.
-   * @param {boolean} [params.destroy] - The flag that indicates if the resources deployed by Schematics should be
-   * destroyed.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigDelete>>}
    */
@@ -614,7 +603,7 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigDelete>> {
     const _params = { ...params };
     const _requiredParams = ['projectId', 'id'];
-    const _validParams = ['projectId', 'id', 'draftOnly', 'destroy', 'headers'];
+    const _validParams = ['projectId', 'id', 'draftOnly', 'headers'];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
@@ -622,7 +611,6 @@ class ProjectV1 extends BaseService {
 
     const query = {
       'draft_only': _params.draftOnly,
-      'destroy': _params.destroy,
     };
 
     const path = {
@@ -662,7 +650,8 @@ class ProjectV1 extends BaseService {
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
    * @param {string} params.id - The unique config ID.
-   * @param {string} [params.comment] - Notes on the project draft action.
+   * @param {string} [params.comment] - Notes on the project draft action. If this is a forced approve on the draft
+   * configuration, a non-empty comment is required.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>>}
    */
@@ -721,8 +710,8 @@ class ProjectV1 extends BaseService {
    * @param {string} params.projectId - The unique project ID.
    * @param {string} params.id - The unique config ID.
    * @param {string} [params.xAuthRefreshToken] - The IAM refresh token.
-   * @param {boolean} [params.isDraft] - To specify whether the validation check should trigger against the draft or the
-   * active version of the configuration.
+   * @param {boolean} [params.isDraft] - To specify whether the validation check triggers against the `draft` or the
+   * `active` version of the configuration.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigGetResponse>>}
    */
@@ -867,6 +856,56 @@ class ProjectV1 extends BaseService {
   }
 
   /**
+   * List the resources deployed by a configuration.
+   *
+   * A list of resources deployed by a configuraton.
+   *
+   * @param {Object} params - The parameters to send to the service.
+   * @param {string} params.projectId - The unique project ID.
+   * @param {string} params.id - The unique config ID.
+   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigResourceCollection>>}
+   */
+  public listConfigResources(
+    params: ProjectV1.ListConfigResourcesParams
+  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigResourceCollection>> {
+    const _params = { ...params };
+    const _requiredParams = ['projectId', 'id'];
+    const _validParams = ['projectId', 'id', 'headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
+
+    const path = {
+      'project_id': _params.projectId,
+      'id': _params.id,
+    };
+
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'listConfigResources');
+
+    const parameters = {
+      options: {
+        url: '/v1/projects/{project_id}/configs/{id}/resources',
+        method: 'GET',
+        path,
+      },
+      defaultOptions: extend(true, {}, this.baseOptions, {
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+          },
+          _params.headers
+        ),
+      }),
+    };
+
+    return this.createRequest(parameters);
+  }
+
+  /**
    * Get a list of project configuration drafts.
    *
    * Returns a list of previous and current configuration drafts in a specific project.
@@ -926,11 +965,11 @@ class ProjectV1 extends BaseService {
    * @param {string} params.configId - The unique configuration ID.
    * @param {number} params.version - The configuration version.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigDraft>>}
+   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigDraftResponse>>}
    */
   public getConfigDraft(
     params: ProjectV1.GetConfigDraftParams
-  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigDraft>> {
+  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigDraftResponse>> {
     const _params = { ...params };
     const _requiredParams = ['projectId', 'configId', 'version'];
     const _validParams = ['projectId', 'configId', 'version', 'headers'];
@@ -1003,13 +1042,17 @@ namespace ProjectV1 {
     resourceGroup: string;
     /** The location where the project's data and tools are created. */
     location: string;
-    /** The project name. */
+    /** The name of the project. */
     name: string;
-    /** A project's descriptive text. */
+    /** A brief explanation of the project's use in the configuration of a deployable architecture. It is possible
+     *  to create a project without providing a description.
+     */
     description?: string;
     /** The policy that indicates whether the resources are destroyed or not when a project is deleted. */
     destroyOnDelete?: boolean;
-    /** The project configurations. */
+    /** The project configurations. If configurations are not included, the project resource is persisted without
+     *  this property.
+     */
     configs?: ProjectConfigPrototype[];
     headers?: OutgoingHttpHeaders;
   }
@@ -1038,8 +1081,6 @@ namespace ProjectV1 {
   export interface DeleteProjectParams {
     /** The unique project ID. */
     id: string;
-    /** The flag that indicates if the resources deployed by Schematics should be destroyed. */
-    destroy?: boolean;
     headers?: OutgoingHttpHeaders;
   }
 
@@ -1047,27 +1088,25 @@ namespace ProjectV1 {
   export interface CreateConfigParams {
     /** The unique project ID. */
     projectId: string;
-    /** The configuration name. */
+    /** The name of the configuration. */
     name: string;
     /** A dotted value of catalogID.versionID. */
     locatorId: string;
-    /** The ID of the configuration. If this parameter is empty, an ID is automatically created for the
-     *  configuration.
-     */
-    id?: string;
     /** A collection of configuration labels. */
     labels?: string[];
-    /** The project configuration description. */
+    /** The description of the project configuration. */
     description?: string;
-    /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets
-     *  Manager.
+    /** The authorization for a configuration.
+     *  You can authorize by using a trusted profile or an API key in Secrets Manager.
      */
     authorizations?: ProjectConfigAuth;
     /** The profile required for compliance. */
     complianceProfile?: ProjectConfigComplianceProfile;
     /** The inputs of a Schematics template property. */
     input?: ProjectConfigInputVariable[];
-    /** Schematics environment variables to use to deploy the configuration. */
+    /** Schematics environment variables to use to deploy the configuration. Settings are only available if they
+     *  were specified when the configuration was initially created.
+     */
     setting?: ProjectConfigSettingCollection[];
     headers?: OutgoingHttpHeaders;
   }
@@ -1098,7 +1137,9 @@ namespace ProjectV1 {
     locatorId?: string;
     /** The inputs of a Schematics template property. */
     input?: ProjectConfigInputVariable[];
-    /** Schematics environment variables to use to deploy the configuration. */
+    /** Schematics environment variables to use to deploy the configuration. Settings are only available if they
+     *  were specified when the configuration was initially created.
+     */
     setting?: ProjectConfigSettingCollection[];
     /** The configuration name. */
     name?: string;
@@ -1106,8 +1147,8 @@ namespace ProjectV1 {
     labels?: string[];
     /** A project configuration description. */
     description?: string;
-    /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets
-     *  Manager.
+    /** The authorization for a configuration.
+     *  You can authorize by using a trusted profile or an API key in Secrets Manager.
      */
     authorizations?: ProjectConfigAuth;
     /** The profile required for compliance. */
@@ -1123,8 +1164,6 @@ namespace ProjectV1 {
     id: string;
     /** The flag to determine if only the draft version should be deleted. */
     draftOnly?: boolean;
-    /** The flag that indicates if the resources deployed by Schematics should be destroyed. */
-    destroy?: boolean;
     headers?: OutgoingHttpHeaders;
   }
 
@@ -1134,7 +1173,9 @@ namespace ProjectV1 {
     projectId: string;
     /** The unique config ID. */
     id: string;
-    /** Notes on the project draft action. */
+    /** Notes on the project draft action. If this is a forced approve on the draft configuration, a non-empty
+     *  comment is required.
+     */
     comment?: string;
     headers?: OutgoingHttpHeaders;
   }
@@ -1147,7 +1188,7 @@ namespace ProjectV1 {
     id: string;
     /** The IAM refresh token. */
     xAuthRefreshToken?: string;
-    /** To specify whether the validation check should trigger against the draft or the active version of the
+    /** To specify whether the validation check triggers against the `draft` or the `active` version of the
      *  configuration.
      */
     isDraft?: boolean;
@@ -1165,6 +1206,15 @@ namespace ProjectV1 {
 
   /** Parameters for the `uninstallConfig` operation. */
   export interface UninstallConfigParams {
+    /** The unique project ID. */
+    projectId: string;
+    /** The unique config ID. */
+    id: string;
+    headers?: OutgoingHttpHeaders;
+  }
+
+  /** Parameters for the `listConfigResources` operation. */
+  export interface ListConfigResourcesParams {
     /** The unique project ID. */
     projectId: string;
     /** The unique config ID. */
@@ -1240,18 +1290,36 @@ namespace ProjectV1 {
 
   /** The project returned in the response body. */
   export interface Project {
-    /** The project name. */
-    name: string;
-    /** A project descriptive text. */
-    description?: string;
-    /** The policy that indicates whether the resources are destroyed or not when a project is deleted. */
-    destroy_on_delete?: boolean;
+    /** An IBM Cloud resource name, which uniquely identifies a resource. */
+    crn: string;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+     *  time format as specified by RFC 3339.
+     */
+    created_at: string;
+    /** The cumulative list of needs attention items for a project. If the view is successfully retrieved, an array
+     *  which could be empty is returned.
+     */
+    cumulative_needs_attention_view?: CumulativeNeedsAttention[];
+    /** True indicates that the fetch of the needs attention items failed. It only exists if there was an error
+     *  while retrieving the cumulative needs attention view.
+     */
+    cumulative_needs_attention_view_error?: boolean;
     /** The unique ID of a project. */
     id: string;
-    /** The metadata of the project. */
-    metadata?: ProjectMetadata;
-    /** The project configurations. */
-    configs?: ProjectConfig[];
+    /** The IBM Cloud location where a resource is deployed. */
+    location: string;
+    /** The resource group where the project's data and tools are created. */
+    resource_group: string;
+    /** The project status value. */
+    state: string;
+    /** The CRN of the event notifications instance if one is connected to this project. */
+    event_notifications_crn?: string;
+    /** The definition of the project. */
+    definition?: ProjectDefinitionResponse;
+    /** The project configurations. These configurations are only included in the response of creating a project if
+     *  a configs array is specified in the request payload.
+     */
+    configs?: ProjectConfigCollectionMember[];
   }
 
   /** Projects list. */
@@ -1272,46 +1340,34 @@ namespace ProjectV1 {
     projects?: ProjectCollectionMemberWithMetadata[];
   }
 
-  /** ProjectCollectionMemberWithMetadata. */
+  /** The metadata of the project. */
   export interface ProjectCollectionMemberWithMetadata {
+    /** An IBM Cloud resource name, which uniquely identifies a resource. */
+    crn: string;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+     *  time format as specified by RFC 3339.
+     */
+    created_at: string;
+    /** The cumulative list of needs attention items for a project. If the view is successfully retrieved, an array
+     *  which could be empty is returned.
+     */
+    cumulative_needs_attention_view?: CumulativeNeedsAttention[];
+    /** True indicates that the fetch of the needs attention items failed. It only exists if there was an error
+     *  while retrieving the cumulative needs attention view.
+     */
+    cumulative_needs_attention_view_error?: boolean;
     /** The unique ID of a project. */
     id?: string;
-    /** The project name. */
-    name?: string;
-    /** The project description. */
-    description?: string;
-    /** The metadata of the project. */
-    metadata?: ProjectMetadata;
-  }
-
-  /** The project configuration. */
-  export interface ProjectConfig {
-    /** The ID of the configuration. If this parameter is empty, an ID is automatically created for the
-     *  configuration.
-     */
-    id?: string;
-    /** The configuration name. */
-    name: string;
-    /** A collection of configuration labels. */
-    labels?: string[];
-    /** The project configuration description. */
-    description?: string;
-    /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets
-     *  Manager.
-     */
-    authorizations?: ProjectConfigAuth;
-    /** The profile required for compliance. */
-    compliance_profile?: ProjectConfigComplianceProfile;
-    /** A dotted value of catalogID.versionID. */
-    locator_id: string;
-    /** The type of a project configuration manual property. */
-    type: string;
-    /** The outputs of a Schematics template property. */
-    input?: InputVariable[];
-    /** The outputs of a Schematics template property. */
-    output?: OutputValue[];
-    /** Schematics environment variables to use to deploy the configuration. */
-    setting?: ProjectConfigSettingCollection[];
+    /** The IBM Cloud location where a resource is deployed. */
+    location: string;
+    /** The resource group where the project's data and tools are created. */
+    resource_group: string;
+    /** The project status value. */
+    state: string;
+    /** The CRN of the event notifications instance if one is connected to this project. */
+    event_notifications_crn?: string;
+    /** The definition of the project. */
+    definition?: ProjectDefinitionResponse;
   }
 
   /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets Manager. */
@@ -1336,46 +1392,50 @@ namespace ProjectV1 {
 
   /** The project configuration list. */
   export interface ProjectConfigCollection {
-    /** The unique ID of a project. */
-    project_id?: string;
     /** The collection list operation response schema that should define the array property with the name "configs". */
     configs?: ProjectConfigCollectionMember[];
   }
 
-  /** The project configuration. */
+  /** The configuration metadata. */
   export interface ProjectConfigCollectionMember {
     /** The ID of the configuration. If this parameter is empty, an ID is automatically created for the
      *  configuration.
      */
-    id?: string;
-    /** The configuration name. */
-    name: string;
-    /** A collection of configuration labels. */
-    labels?: string[];
-    /** The project configuration description. */
-    description?: string;
-    /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets
-     *  Manager.
+    id: string;
+    /** The unique ID of a project. */
+    project_id: string;
+    /** The version of the configuration. */
+    version: number;
+    /** The flag that indicates whether the version of the configuration is draft, or active. */
+    is_draft: boolean;
+    /** The needs attention state of a configuration. */
+    needs_attention_state?: any[];
+    /** The state of the configuration. */
+    state: string;
+    /** The pipeline state of the configuration. It only exists after the first configuration validation. */
+    pipeline_state?: string;
+    /** The flag that indicates whether a configuration update is available. */
+    update_available: boolean;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+     *  time format as specified by RFC 3339.
      */
-    authorizations?: ProjectConfigAuth;
-    /** The profile required for compliance. */
-    compliance_profile?: ProjectConfigComplianceProfile;
-    /** A dotted value of catalogID.versionID. */
-    locator_id: string;
-    /** The type of a project configuration manual property. */
-    type: string;
-    /** The outputs of a Schematics template property. */
-    input?: InputVariable[];
-    /** The outputs of a Schematics template property. */
-    output?: OutputValue[];
-    /** Schematics environment variables to use to deploy the configuration. */
-    setting?: ProjectConfigSettingCollection[];
+    created_at: string;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+     *  time format as specified by RFC 3339.
+     */
+    updated_at: string;
+    /** The last approved metadata of the configuration. */
+    last_approved?: ProjectConfigMetadataLastApproved;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+     *  time format as specified by RFC 3339.
+     */
+    last_save?: string;
     /** The project configuration draft. */
     active_draft?: ProjectConfigDraftSummary;
+    /** The project configuration definition. */
+    definition: ProjectConfigDefinition;
     /** A relative URL. */
-    href?: string;
-    /** The configuration metadata. */
-    metadata?: ProjectConfigMetadataCommon;
+    href: string;
   }
 
   /** The profile required for compliance. */
@@ -1392,142 +1452,68 @@ namespace ProjectV1 {
     profile_name?: string;
   }
 
+  /** The project configuration definition. */
+  export interface ProjectConfigDefinition {
+    /** The name of the configuration. */
+    name: string;
+    /** A collection of configuration labels. */
+    labels?: string[];
+    /** The description of the project configuration. */
+    description?: string;
+    /** The authorization for a configuration.
+     *  You can authorize by using a trusted profile or an API key in Secrets Manager.
+     */
+    authorizations?: ProjectConfigAuth;
+    /** The profile required for compliance. */
+    compliance_profile?: ProjectConfigComplianceProfile;
+    /** A dotted value of catalogID.versionID. */
+    locator_id: string;
+    /** The type of a project configuration manual property. */
+    type: string;
+    /** The outputs of a Schematics template property. */
+    input?: InputVariable[];
+    /** The outputs of a Schematics template property. */
+    output?: OutputValue[];
+    /** Schematics environment variables to use to deploy the configuration. Settings are only available if they
+     *  were specified when the configuration was initially created.
+     */
+    setting?: ProjectConfigSettingCollection[];
+  }
+
   /** Deletes the configuration response. */
   export interface ProjectConfigDelete {
     /** The unique ID of a project. */
-    id?: string;
-    /** The name of the configuration being deleted. */
-    name?: string;
+    id: string;
   }
 
   /** The project configuration draft. */
-  export interface ProjectConfigDraft {
+  export interface ProjectConfigDraftResponse {
     /** The ID of the configuration. If this parameter is empty, an ID is automatically created for the
      *  configuration.
      */
-    id?: string;
-    /** The configuration name. */
-    name: string;
-    /** A collection of configuration labels. */
-    labels?: string[];
-    /** The project configuration description. */
-    description?: string;
-    /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets
-     *  Manager.
-     */
-    authorizations?: ProjectConfigAuth;
-    /** The profile required for compliance. */
-    compliance_profile?: ProjectConfigComplianceProfile;
-    /** A dotted value of catalogID.versionID. */
-    locator_id: string;
-    /** The type of a project configuration manual property. */
-    type: string;
-    /** The outputs of a Schematics template property. */
-    input?: InputVariable[];
-    /** The outputs of a Schematics template property. */
-    output?: OutputValue[];
-    /** Schematics environment variables to use to deploy the configuration. */
-    setting?: ProjectConfigSettingCollection[];
-    /** The project configuration draft. */
-    metadata?: ProjectConfigDraftMetadata;
-  }
-
-  /** The project configuration draft. */
-  export interface ProjectConfigDraftMetadata {
+    id: string;
     /** The unique ID of a project. */
-    project_id?: string;
-    /** The version number of the configuration. */
-    version?: number;
-    /** The state of the configuration draft. */
-    state?: string;
-    /** The pipeline state of the configuration. */
-    pipeline_state?: string;
-  }
-
-  /** The project configuration draft. */
-  export interface ProjectConfigDraftSummary {
-    /** The project configuration draft. */
-    metadata?: ProjectConfigDraftMetadata;
-    /** A relative URL. */
-    href?: string;
-  }
-
-  /** The project configuration draft list. */
-  export interface ProjectConfigDraftSummaryCollection {
-    /** The unique ID of a project. */
-    config_id?: string;
-    /** The unique ID of a project. */
-    project_id?: string;
-    /** The collection list operation response schema that defines the array property with the name `drafts`. */
-    drafts?: ProjectConfigDraftSummary[];
-  }
-
-  /** The project configuration. */
-  export interface ProjectConfigGetResponse {
-    /** The ID of the configuration. If this parameter is empty, an ID is automatically created for the
-     *  configuration.
-     */
-    id?: string;
-    /** The configuration name. */
-    name: string;
-    /** A collection of configuration labels. */
-    labels?: string[];
-    /** The project configuration description. */
-    description?: string;
-    /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets
-     *  Manager.
-     */
-    authorizations?: ProjectConfigAuth;
-    /** The profile required for compliance. */
-    compliance_profile?: ProjectConfigComplianceProfile;
-    /** A dotted value of catalogID.versionID. */
-    locator_id: string;
-    /** The type of a project configuration manual property. */
-    type: string;
-    /** The outputs of a Schematics template property. */
-    input?: InputVariable[];
-    /** The outputs of a Schematics template property. */
-    output?: OutputValue[];
-    /** Schematics environment variables to use to deploy the configuration. */
-    setting?: ProjectConfigSettingCollection[];
-    /** The project configuration draft. */
-    active_draft?: ProjectConfigDraftSummary;
-    /** The configuration metadata. */
-    metadata?: ProjectConfigMetadata;
-  }
-
-  /** ProjectConfigInputVariable. */
-  export interface ProjectConfigInputVariable {
-    /** The variable name. */
-    name: string;
-    /** Can be any value - a string, number, boolean, array, or object. */
-    value?: any;
-  }
-
-  /** The configuration metadata. */
-  export interface ProjectConfigMetadata {
-    /** The unique ID of a project. */
-    project_id?: string;
+    project_id: string;
     /** The version of the configuration. */
-    version?: number;
+    version: number;
     /** The flag that indicates whether the version of the configuration is draft, or active. */
-    is_draft?: boolean;
+    is_draft: boolean;
     /** The needs attention state of a configuration. */
     needs_attention_state?: any[];
     /** The state of the configuration. */
-    state?: string;
-    /** The pipeline state of the configuration. */
+    state: string;
+    /** The pipeline state of the configuration. It only exists after the first configuration validation. */
     pipeline_state?: string;
     /** The flag that indicates whether a configuration update is available. */
-    update_available?: boolean;
+    update_available: boolean;
     /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
      *  time format as specified by RFC 3339.
      */
-    created_at?: string;
+    created_at: string;
     /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
      *  time format as specified by RFC 3339.
      */
-    updated_at?: string;
+    updated_at: string;
     /** The last approved metadata of the configuration. */
     last_approved?: ProjectConfigMetadataLastApproved;
     /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
@@ -1538,45 +1524,89 @@ namespace ProjectV1 {
     job_summary?: ProjectConfigMetadataJobSummary;
     /** The Code Risk Analyzer logs of the configuration. */
     cra_logs?: ProjectConfigMetadataCraLogs;
-    /** The cost estimate of the configuration. */
+    /** The cost estimate of the configuration. It only exists after the first configuration validation. */
     cost_estimate?: ProjectConfigMetadataCostEstimate;
     /** The summaries of jobs that were performed on the configuration. */
     last_deployment_job_summary?: ProjectConfigMetadataJobSummary;
+    /** The project configuration definition. */
+    definition: ProjectConfigDefinition;
+  }
+
+  /** The project configuration draft. */
+  export interface ProjectConfigDraftSummary {
+    /** The version number of the configuration. */
+    version: number;
+    /** The state of the configuration draft. */
+    state: string;
+    /** The pipeline state of the configuration. It only exists after the first configuration validation. */
+    pipeline_state?: string;
+    /** A relative URL. */
+    href?: string;
+  }
+
+  /** The project configuration draft list. */
+  export interface ProjectConfigDraftSummaryCollection {
+    /** The collection list operation response schema that defines the array property with the name `drafts`. */
+    drafts?: ProjectConfigDraftSummary[];
   }
 
   /** The configuration metadata. */
-  export interface ProjectConfigMetadataCommon {
+  export interface ProjectConfigGetResponse {
+    /** The ID of the configuration. If this parameter is empty, an ID is automatically created for the
+     *  configuration.
+     */
+    id: string;
     /** The unique ID of a project. */
-    project_id?: string;
+    project_id: string;
     /** The version of the configuration. */
-    version?: number;
+    version: number;
     /** The flag that indicates whether the version of the configuration is draft, or active. */
-    is_draft?: boolean;
+    is_draft: boolean;
     /** The needs attention state of a configuration. */
     needs_attention_state?: any[];
     /** The state of the configuration. */
-    state?: string;
-    /** The pipeline state of the configuration. */
+    state: string;
+    /** The pipeline state of the configuration. It only exists after the first configuration validation. */
     pipeline_state?: string;
     /** The flag that indicates whether a configuration update is available. */
-    update_available?: boolean;
+    update_available: boolean;
     /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
      *  time format as specified by RFC 3339.
      */
-    created_at?: string;
+    created_at: string;
     /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
      *  time format as specified by RFC 3339.
      */
-    updated_at?: string;
+    updated_at: string;
     /** The last approved metadata of the configuration. */
     last_approved?: ProjectConfigMetadataLastApproved;
     /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
      *  time format as specified by RFC 3339.
      */
     last_save?: string;
+    /** The summaries of jobs that were performed on the configuration. */
+    job_summary?: ProjectConfigMetadataJobSummary;
+    /** The Code Risk Analyzer logs of the configuration. */
+    cra_logs?: ProjectConfigMetadataCraLogs;
+    /** The cost estimate of the configuration. It only exists after the first configuration validation. */
+    cost_estimate?: ProjectConfigMetadataCostEstimate;
+    /** The summaries of jobs that were performed on the configuration. */
+    last_deployment_job_summary?: ProjectConfigMetadataJobSummary;
+    /** The project configuration draft. */
+    active_draft?: ProjectConfigDraftSummary;
+    /** The project configuration definition. */
+    definition: ProjectConfigDefinition;
   }
 
-  /** The cost estimate of the configuration. */
+  /** ProjectConfigInputVariable. */
+  export interface ProjectConfigInputVariable {
+    /** The variable name. */
+    name: string;
+    /** Can be any value - a string, number, boolean, array, or object. */
+    value?: any;
+  }
+
+  /** The cost estimate of the configuration. It only exists after the first configuration validation. */
   export interface ProjectConfigMetadataCostEstimate {
     /** The version of the cost estimate of the configuration. */
     version?: string;
@@ -1639,31 +1669,27 @@ namespace ProjectV1 {
   /** The last approved metadata of the configuration. */
   export interface ProjectConfigMetadataLastApproved {
     /** The flag that indicates whether the approval was forced approved. */
-    is_forced?: boolean;
+    is_forced: boolean;
     /** The comment left by the user who approved the configuration. */
     comment?: string;
     /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
      *  time format as specified by RFC 3339.
      */
-    timestamp?: string;
+    timestamp: string;
     /** The unique ID of a project. */
-    user_id?: string;
+    user_id: string;
   }
 
   /** The input of a project configuration. */
   export interface ProjectConfigPrototype {
-    /** The ID of the configuration. If this parameter is empty, an ID is automatically created for the
-     *  configuration.
-     */
-    id?: string;
-    /** The configuration name. */
+    /** The name of the configuration. */
     name: string;
     /** A collection of configuration labels. */
     labels?: string[];
-    /** The project configuration description. */
+    /** The description of the project configuration. */
     description?: string;
-    /** The authorization for a configuration. You can authorize by using a trusted profile or an API key in Secrets
-     *  Manager.
+    /** The authorization for a configuration.
+     *  You can authorize by using a trusted profile or an API key in Secrets Manager.
      */
     authorizations?: ProjectConfigAuth;
     /** The profile required for compliance. */
@@ -1672,8 +1698,32 @@ namespace ProjectV1 {
     locator_id: string;
     /** The inputs of a Schematics template property. */
     input?: ProjectConfigInputVariable[];
-    /** Schematics environment variables to use to deploy the configuration. */
+    /** Schematics environment variables to use to deploy the configuration. Settings are only available if they
+     *  were specified when the configuration was initially created.
+     */
     setting?: ProjectConfigSettingCollection[];
+  }
+
+  /** ProjectConfigResource. */
+  export interface ProjectConfigResource {
+    /** An IBM Cloud resource name, which uniquely identifies a resource. */
+    resource_crn?: string;
+    /** The name of the resource. */
+    resource_name?: string;
+    /** The resource type. */
+    resource_type?: string;
+    /** The flag that indicates whether the status of the resource is tainted. */
+    resource_tainted?: boolean;
+    /** The resource group of the resource. */
+    resource_group_name?: string;
+  }
+
+  /** The project configuration resource list. */
+  export interface ProjectConfigResourceCollection {
+    /** The collection list operation response schema that defines the array property with the name `resources`. */
+    resources?: ProjectConfigResource[];
+    /** The total number of resources deployed by the configuration. */
+    resources_count: number;
   }
 
   /** ProjectConfigSettingCollection. */
@@ -1684,40 +1734,46 @@ namespace ProjectV1 {
     value: string;
   }
 
-  /** The metadata of the project. */
-  export interface ProjectMetadata {
-    /** An IBM Cloud resource name, which uniquely identifies a resource. */
-    crn?: string;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
-     *  time format as specified by RFC 3339.
+  /** The definition of the project. */
+  export interface ProjectDefinitionResponse {
+    /** The name of the project. */
+    name: string;
+    /** A brief explanation of the project's use in the configuration of a deployable architecture. It is possible
+     *  to create a project without providing a description.
      */
-    created_at?: string;
-    /** The cumulative list of needs attention items for a project. */
-    cumulative_needs_attention_view?: CumulativeNeedsAttention[];
-    /** True indicates that the fetch of the needs attention items failed. */
-    cumulative_needs_attention_view_err?: string;
-    /** The IBM Cloud location where a resource is deployed. */
-    location?: string;
-    /** The resource group where the project's data and tools are created. */
-    resource_group?: string;
-    /** The project status value. */
-    state?: string;
-    /** The CRN of the event notifications instance if one is connected to this project. */
-    event_notifications_crn?: string;
+    description: string;
+    /** The policy that indicates whether the resources are destroyed or not when a project is deleted. */
+    destroy_on_delete: boolean;
   }
 
   /** The project returned in the response body. */
   export interface ProjectSummary {
-    /** The project name. */
-    name: string;
-    /** A project descriptive text. */
-    description?: string;
-    /** The policy that indicates whether the resources are destroyed or not when a project is deleted. */
-    destroy_on_delete?: boolean;
+    /** An IBM Cloud resource name, which uniquely identifies a resource. */
+    crn: string;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+     *  time format as specified by RFC 3339.
+     */
+    created_at: string;
+    /** The cumulative list of needs attention items for a project. If the view is successfully retrieved, an array
+     *  which could be empty is returned.
+     */
+    cumulative_needs_attention_view?: CumulativeNeedsAttention[];
+    /** True indicates that the fetch of the needs attention items failed. It only exists if there was an error
+     *  while retrieving the cumulative needs attention view.
+     */
+    cumulative_needs_attention_view_error?: boolean;
     /** The unique ID of a project. */
-    id: string;
-    /** The metadata of the project. */
-    metadata?: ProjectMetadata;
+    id?: string;
+    /** The IBM Cloud location where a resource is deployed. */
+    location: string;
+    /** The resource group where the project's data and tools are created. */
+    resource_group: string;
+    /** The project status value. */
+    state: string;
+    /** The CRN of the event notifications instance if one is connected to this project. */
+    event_notifications_crn?: string;
+    /** The definition of the project. */
+    definition?: ProjectDefinitionResponse;
   }
 
   /*************************

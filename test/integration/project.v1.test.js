@@ -62,15 +62,15 @@ describe('ProjectV1_integration', () => {
     // ProjectConfigAuth
     const projectConfigAuthModel = {
       trusted_profile: projectConfigAuthTrustedProfileModel,
-      method: 'testString',
-      api_key: 'testString',
+      method: 'apikey',
+      api_key: 'VaS21eVsczhVmlQKv_qhyz1f-26CxNZPpSOJnsuHaMP9',
     };
 
     // ProjectConfigComplianceProfile
     const projectConfigComplianceProfileModel = {
       id: 'testString',
       instance_id: 'testString',
-      instance_location: 'testString',
+      instance_location: 'us-south',
       attachment_id: 'testString',
       profile_name: 'testString',
     };
@@ -89,9 +89,8 @@ describe('ProjectV1_integration', () => {
 
     // ProjectConfigPrototype
     const projectConfigPrototypeModel = {
-      id: 'testString',
       name: 'common-variables',
-      labels: ['testString'],
+      labels: [],
       description: 'testString',
       authorizations: projectConfigAuthModel,
       compliance_profile: projectConfigComplianceProfileModel,
@@ -129,8 +128,8 @@ describe('ProjectV1_integration', () => {
     // ProjectConfigAuth
     const projectConfigAuthModel = {
       trusted_profile: projectConfigAuthTrustedProfileModel,
-      method: 'testString',
-      api_key: 'testString',
+      method: 'apikey',
+      api_key: 'VaS21eVsczhVmlQKv_qhyz1f-26CxNZPpSOJnsuHaMP9',
     };
 
     // ProjectConfigComplianceProfile
@@ -158,7 +157,6 @@ describe('ProjectV1_integration', () => {
       projectId: projectIdLink,
       name: 'env-stage',
       locatorId: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
-      id: 'testString',
       labels: ['env:stage', 'governance:test', 'build:0'],
       description:
         'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.',
@@ -268,8 +266,8 @@ describe('ProjectV1_integration', () => {
     // ProjectConfigAuth
     const projectConfigAuthModel = {
       trusted_profile: projectConfigAuthTrustedProfileModel,
-      method: 'testString',
-      api_key: 'testString',
+      method: 'apikey',
+      api_key: 'VaS21eVsczhVmlQKv_qhyz1f-26CxNZPpSOJnsuHaMP9',
     };
 
     // ProjectConfigComplianceProfile
@@ -351,6 +349,18 @@ describe('ProjectV1_integration', () => {
     expect(res.result).toBeDefined();
   });
 
+  test('listConfigResources()', async () => {
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
+    };
+
+    const res = await projectService.listConfigResources(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(200);
+    expect(res.result).toBeDefined();
+  });
+
   test('listConfigDrafts()', async () => {
     const params = {
       projectId: projectIdLink,
@@ -381,7 +391,6 @@ describe('ProjectV1_integration', () => {
       projectId: projectIdLink,
       id: configIdLink,
       draftOnly: false,
-      destroy: true,
     };
 
     const res = await projectService.deleteConfig(params);
@@ -393,7 +402,6 @@ describe('ProjectV1_integration', () => {
   test('deleteProject()', async () => {
     const params = {
       id: projectIdLink,
-      destroy: true,
     };
 
     const res = await projectService.deleteProject(params);

@@ -131,7 +131,7 @@ describe('ProjectV1', () => {
     // ProjectConfigInputVariable
     const projectConfigInputVariableModel = {
       name: 'account_id',
-      value: '$configs[].name["account-stage"].input.account_id',
+      value: 'account_id',
     };
 
     // ProjectConfigSettingCollection
@@ -300,7 +300,7 @@ describe('ProjectV1', () => {
     // ProjectConfigInputVariable
     const projectConfigInputVariableModel = {
       name: 'account_id',
-      value: '$configs[].name["account-stage"].input.account_id',
+      value: 'account_id',
     };
 
     const params = {
@@ -432,6 +432,35 @@ describe('ProjectV1', () => {
     }
 
     // end-uninstall_config
+  });
+
+  test('listConfigResources request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('listConfigResources() result:');
+    // begin-list_config_resources
+
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
+    };
+
+    let res;
+    try {
+      res = await projectService.listConfigResources(params);
+      console.log(JSON.stringify(res.result, null, 2));
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-list_config_resources
   });
 
   test('listConfigDrafts request example', async () => {

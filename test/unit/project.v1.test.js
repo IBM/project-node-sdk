@@ -134,8 +134,8 @@ describe('ProjectV1', () => {
       // ProjectConfigAuth
       const projectConfigAuthModel = {
         trusted_profile: projectConfigAuthTrustedProfileModel,
-        method: 'testString',
-        api_key: 'testString',
+        method: 'apikey',
+        api_key: 'valid_apikey',
       };
 
       // ProjectConfigComplianceProfile
@@ -161,9 +161,8 @@ describe('ProjectV1', () => {
 
       // ProjectConfigPrototype
       const projectConfigPrototypeModel = {
-        id: 'testString',
         name: 'common-variables',
-        labels: ['testString'],
+        labels: [],
         description: 'testString',
         authorizations: projectConfigAuthModel,
         compliance_profile: projectConfigComplianceProfileModel,
@@ -344,9 +343,9 @@ describe('ProjectV1', () => {
       const serviceUrl = projectServiceOptions.url;
       const path = '/v1/projects';
       const mockPagerResponse1 =
-        '{"next":{"start":"1"},"projects":[{"id":"id","name":"name","description":"description","metadata":{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_err":"cumulative_needs_attention_view_err","location":"location","resource_group":"resource_group","state":"state","event_notifications_crn":"event_notifications_crn"}}],"total_count":2,"limit":1}';
+        '{"next":{"start":"1"},"projects":[{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_error":false,"id":"id","location":"location","resource_group":"resource_group","state":"state","event_notifications_crn":"event_notifications_crn","definition":{"name":"name","description":"description","destroy_on_delete":true}}],"total_count":2,"limit":1}';
       const mockPagerResponse2 =
-        '{"projects":[{"id":"id","name":"name","description":"description","metadata":{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_err":"cumulative_needs_attention_view_err","location":"location","resource_group":"resource_group","state":"state","event_notifications_crn":"event_notifications_crn"}}],"total_count":2,"limit":1}';
+        '{"projects":[{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_error":false,"id":"id","location":"location","resource_group":"resource_group","state":"state","event_notifications_crn":"event_notifications_crn","definition":{"name":"name","description":"description","destroy_on_delete":true}}],"total_count":2,"limit":1}';
 
       beforeEach(() => {
         unmock_createRequest();
@@ -478,10 +477,8 @@ describe('ProjectV1', () => {
       function __deleteProjectTest() {
         // Construct the params object for operation deleteProject
         const id = 'testString';
-        const destroy = true;
         const deleteProjectParams = {
           id,
-          destroy,
         };
 
         const deleteProjectResult = projectService.deleteProject(deleteProjectParams);
@@ -498,7 +495,6 @@ describe('ProjectV1', () => {
         const expectedAccept = undefined;
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(mockRequestOptions.qs.destroy).toEqual(destroy);
         expect(mockRequestOptions.path.id).toEqual(id);
       }
 
@@ -573,8 +569,8 @@ describe('ProjectV1', () => {
       // ProjectConfigAuth
       const projectConfigAuthModel = {
         trusted_profile: projectConfigAuthTrustedProfileModel,
-        method: 'testString',
-        api_key: 'testString',
+        method: 'apikey',
+        api_key: 'valid_apikey',
       };
 
       // ProjectConfigComplianceProfile
@@ -604,7 +600,6 @@ describe('ProjectV1', () => {
         const name = 'env-stage';
         const locatorId =
           '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global';
-        const id = 'testString';
         const labels = ['env:stage', 'governance:test', 'build:0'];
         const description =
           'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.';
@@ -616,7 +611,6 @@ describe('ProjectV1', () => {
           projectId,
           name,
           locatorId,
-          id,
           labels,
           description,
           authorizations,
@@ -641,7 +635,6 @@ describe('ProjectV1', () => {
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.body.name).toEqual(name);
         expect(mockRequestOptions.body.locator_id).toEqual(locatorId);
-        expect(mockRequestOptions.body.id).toEqual(id);
         expect(mockRequestOptions.body.labels).toEqual(labels);
         expect(mockRequestOptions.body.description).toEqual(description);
         expect(mockRequestOptions.body.authorizations).toEqual(authorizations);
@@ -912,8 +905,8 @@ describe('ProjectV1', () => {
       // ProjectConfigAuth
       const projectConfigAuthModel = {
         trusted_profile: projectConfigAuthTrustedProfileModel,
-        method: 'testString',
-        api_key: 'testString',
+        method: 'apikey',
+        api_key: 'valid_apikey',
       };
 
       // ProjectConfigComplianceProfile
@@ -1043,12 +1036,10 @@ describe('ProjectV1', () => {
         const projectId = 'testString';
         const id = 'testString';
         const draftOnly = false;
-        const destroy = true;
         const deleteConfigParams = {
           projectId,
           id,
           draftOnly,
-          destroy,
         };
 
         const deleteConfigResult = projectService.deleteConfig(deleteConfigParams);
@@ -1066,7 +1057,6 @@ describe('ProjectV1', () => {
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.qs.draft_only).toEqual(draftOnly);
-        expect(mockRequestOptions.qs.destroy).toEqual(destroy);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
         expect(mockRequestOptions.path.id).toEqual(id);
       }
@@ -1503,6 +1493,100 @@ describe('ProjectV1', () => {
         let err;
         try {
           await projectService.uninstallConfig();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('listConfigResources', () => {
+    describe('positive tests', () => {
+      function __listConfigResourcesTest() {
+        // Construct the params object for operation listConfigResources
+        const projectId = 'testString';
+        const id = 'testString';
+        const listConfigResourcesParams = {
+          projectId,
+          id,
+        };
+
+        const listConfigResourcesResult =
+          projectService.listConfigResources(listConfigResourcesParams);
+
+        // all methods should return a Promise
+        expectToBePromise(listConfigResourcesResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/resources',
+          'GET'
+        );
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __listConfigResourcesTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __listConfigResourcesTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __listConfigResourcesTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const projectId = 'testString';
+        const id = 'testString';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const listConfigResourcesParams = {
+          projectId,
+          id,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.listConfigResources(listConfigResourcesParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.listConfigResources({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.listConfigResources();
         } catch (e) {
           err = e;
         }
