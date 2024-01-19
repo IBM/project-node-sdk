@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2023.
+ * (C) Copyright IBM Corp. 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
+/* eslint-disable no-await-in-loop */
+
+const nock = require('nock');
+
 // need to import the whole package to mock getAuthenticatorFromEnvironment
 const sdkCorePackage = require('ibm-cloud-sdk-core');
 
 const { NoAuthAuthenticator, unitTestUtils } = sdkCorePackage;
-
-const nock = require('nock');
 const ProjectV1 = require('../../dist/project/v1');
-
-/* eslint-disable no-await-in-loop */
 
 const {
   getOptions,
   checkUrlAndMethod,
   checkMediaHeaders,
   expectToBePromise,
-  checkUserHeader,
   checkForSuccessfulExecution,
 } = unitTestUtils;
 
@@ -125,21 +124,22 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       // Request models needed by this operation.
 
-      // ProjectConfigAuthTrustedProfile
-      const projectConfigAuthTrustedProfileModel = {
-        id: 'testString',
-        target_iam_id: 'testString',
+      // ProjectPrototypeDefinition
+      const projectPrototypeDefinitionModel = {
+        name: 'acme-microservice',
+        description: 'A microservice to deploy on top of ACME infrastructure.',
+        destroy_on_delete: true,
       };
 
       // ProjectConfigAuth
       const projectConfigAuthModel = {
-        trusted_profile: projectConfigAuthTrustedProfileModel,
-        method: 'testString',
+        trusted_profile_id: 'testString',
+        method: 'api_key',
         api_key: 'testString',
       };
 
-      // ProjectConfigComplianceProfile
-      const projectConfigComplianceProfileModel = {
+      // ProjectComplianceProfile
+      const projectComplianceProfileModel = {
         id: 'testString',
         instance_id: 'testString',
         instance_location: 'testString',
@@ -147,47 +147,56 @@ describe('ProjectV1', () => {
         profile_name: 'testString',
       };
 
-      // ProjectConfigInputVariable
-      const projectConfigInputVariableModel = {
+      // ProjectConfigPrototypeDefinitionBlockDAConfigDefinitionProperties
+      const projectConfigPrototypeDefinitionBlockModel = {
         name: 'testString',
-        value: 'testString',
+        description: 'testString',
+        environment_id: 'testString',
+        authorizations: projectConfigAuthModel,
+        inputs: { anyKey: 'anyValue' },
+        settings: { anyKey: 'anyValue' },
+        compliance_profile: projectComplianceProfileModel,
+        locator_id: 'testString',
       };
 
-      // ProjectConfigSettingCollection
-      const projectConfigSettingCollectionModel = {
-        name: 'testString',
-        value: 'testString',
+      // SchematicsWorkspace
+      const schematicsWorkspaceModel = {
+        workspace_crn: 'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       };
 
       // ProjectConfigPrototype
       const projectConfigPrototypeModel = {
-        id: 'testString',
-        name: 'common-variables',
-        labels: ['testString'],
+        definition: projectConfigPrototypeDefinitionBlockModel,
+        schematics: schematicsWorkspaceModel,
+      };
+
+      // EnvironmentDefinitionRequiredProperties
+      const environmentDefinitionRequiredPropertiesModel = {
+        name: 'testString',
         description: 'testString',
         authorizations: projectConfigAuthModel,
-        compliance_profile: projectConfigComplianceProfileModel,
-        locator_id:
-          '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
-        input: [projectConfigInputVariableModel],
-        setting: [projectConfigSettingCollectionModel],
+        inputs: { anyKey: 'anyValue' },
+        compliance_profile: projectComplianceProfileModel,
+      };
+
+      // EnvironmentPrototype
+      const environmentPrototypeModel = {
+        definition: environmentDefinitionRequiredPropertiesModel,
       };
 
       function __createProjectTest() {
         // Construct the params object for operation createProject
-        const resourceGroup = 'Default';
+        const definition = projectPrototypeDefinitionModel;
         const location = 'us-south';
-        const name = 'acme-microservice';
-        const description = 'A microservice to deploy on top of ACME infrastructure.';
-        const destroyOnDelete = true;
+        const resourceGroup = 'Default';
         const configs = [projectConfigPrototypeModel];
+        const environments = [environmentPrototypeModel];
         const createProjectParams = {
-          resourceGroup,
+          definition,
           location,
-          name,
-          description,
-          destroyOnDelete,
+          resourceGroup,
           configs,
+          environments,
         };
 
         const createProjectResult = projectService.createProject(createProjectParams);
@@ -204,12 +213,11 @@ describe('ProjectV1', () => {
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(mockRequestOptions.body.name).toEqual(name);
-        expect(mockRequestOptions.body.description).toEqual(description);
-        expect(mockRequestOptions.body.destroy_on_delete).toEqual(destroyOnDelete);
+        expect(mockRequestOptions.body.definition).toEqual(definition);
+        expect(mockRequestOptions.body.location).toEqual(location);
+        expect(mockRequestOptions.body.resource_group).toEqual(resourceGroup);
         expect(mockRequestOptions.body.configs).toEqual(configs);
-        expect(mockRequestOptions.qs.resource_group).toEqual(resourceGroup);
-        expect(mockRequestOptions.qs.location).toEqual(location);
+        expect(mockRequestOptions.body.environments).toEqual(environments);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
@@ -229,15 +237,15 @@ describe('ProjectV1', () => {
 
       test('should prioritize user-given headers', () => {
         // parameters
-        const resourceGroup = 'Default';
+        const definition = projectPrototypeDefinitionModel;
         const location = 'us-south';
-        const name = 'acme-microservice';
+        const resourceGroup = 'Default';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const createProjectParams = {
-          resourceGroup,
+          definition,
           location,
-          name,
+          resourceGroup,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
@@ -344,9 +352,9 @@ describe('ProjectV1', () => {
       const serviceUrl = projectServiceOptions.url;
       const path = '/v1/projects';
       const mockPagerResponse1 =
-        '{"next":{"start":"1"},"projects":[{"id":"id","name":"name","description":"description","metadata":{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_err":"cumulative_needs_attention_view_err","location":"location","resource_group":"resource_group","state":"state","event_notifications_crn":"event_notifications_crn"}}],"total_count":2,"limit":1}';
+        '{"next":{"href":"https://myhost.com/somePath?start=1"},"projects":[{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_error":false,"id":"id","location":"location","resource_group_id":"resource_group_id","state":"ready","href":"href","definition":{"name":"name","description":"description","destroy_on_delete":false}}],"total_count":2,"limit":1}';
       const mockPagerResponse2 =
-        '{"projects":[{"id":"id","name":"name","description":"description","metadata":{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_err":"cumulative_needs_attention_view_err","location":"location","resource_group":"resource_group","state":"state","event_notifications_crn":"event_notifications_crn"}}],"total_count":2,"limit":1}';
+        '{"projects":[{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_error":false,"id":"id","location":"location","resource_group_id":"resource_group_id","state":"ready","href":"href","definition":{"name":"name","description":"description","destroy_on_delete":false}}],"total_count":2,"limit":1}';
 
       beforeEach(() => {
         unmock_createRequest();
@@ -473,15 +481,111 @@ describe('ProjectV1', () => {
     });
   });
 
+  describe('updateProject', () => {
+    describe('positive tests', () => {
+      // Request models needed by this operation.
+
+      // ProjectPatchDefinitionBlock
+      const projectPatchDefinitionBlockModel = {
+        name: 'acme-microservice',
+        description: 'A microservice to deploy on top of ACME infrastructure.',
+        destroy_on_delete: true,
+      };
+
+      function __updateProjectTest() {
+        // Construct the params object for operation updateProject
+        const id = 'testString';
+        const definition = projectPatchDefinitionBlockModel;
+        const updateProjectParams = {
+          id,
+          definition,
+        };
+
+        const updateProjectResult = projectService.updateProject(updateProjectParams);
+
+        // all methods should return a Promise
+        expectToBePromise(updateProjectResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{id}', 'PATCH');
+        const expectedAccept = 'application/json';
+        const expectedContentType = 'application/json';
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.body.definition).toEqual(definition);
+        expect(mockRequestOptions.path.id).toEqual(id);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __updateProjectTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __updateProjectTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __updateProjectTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const id = 'testString';
+        const definition = projectPatchDefinitionBlockModel;
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const updateProjectParams = {
+          id,
+          definition,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.updateProject(updateProjectParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.updateProject({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.updateProject();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
   describe('deleteProject', () => {
     describe('positive tests', () => {
       function __deleteProjectTest() {
         // Construct the params object for operation deleteProject
         const id = 'testString';
-        const destroy = true;
         const deleteProjectParams = {
           id,
-          destroy,
         };
 
         const deleteProjectResult = projectService.deleteProject(deleteProjectParams);
@@ -498,7 +602,6 @@ describe('ProjectV1', () => {
         const expectedAccept = undefined;
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(mockRequestOptions.qs.destroy).toEqual(destroy);
         expect(mockRequestOptions.path.id).toEqual(id);
       }
 
@@ -560,25 +663,518 @@ describe('ProjectV1', () => {
     });
   });
 
+  describe('createProjectEnvironment', () => {
+    describe('positive tests', () => {
+      // Request models needed by this operation.
+
+      // ProjectConfigAuth
+      const projectConfigAuthModel = {
+        trusted_profile_id: 'testString',
+        method: 'api_key',
+        api_key: 'TbcdlprpFODhkpns9e0daOWnAwd2tXwSYtPn8rpEd8d9',
+      };
+
+      // ProjectComplianceProfile
+      const projectComplianceProfileModel = {
+        id: 'some-profile-id',
+        instance_id: 'some-instance-id',
+        instance_location: 'us-south',
+        attachment_id: 'some-attachment-id',
+        profile_name: 'some-profile-name',
+      };
+
+      // EnvironmentDefinitionRequiredProperties
+      const environmentDefinitionRequiredPropertiesModel = {
+        name: 'development',
+        description: 'The environment \'development\'',
+        authorizations: projectConfigAuthModel,
+        inputs: { resource_group: 'stage', region: 'us-south' },
+        compliance_profile: projectComplianceProfileModel,
+      };
+
+      function __createProjectEnvironmentTest() {
+        // Construct the params object for operation createProjectEnvironment
+        const projectId = 'testString';
+        const definition = environmentDefinitionRequiredPropertiesModel;
+        const createProjectEnvironmentParams = {
+          projectId,
+          definition,
+        };
+
+        const createProjectEnvironmentResult = projectService.createProjectEnvironment(createProjectEnvironmentParams);
+
+        // all methods should return a Promise
+        expectToBePromise(createProjectEnvironmentResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/environments', 'POST');
+        const expectedAccept = 'application/json';
+        const expectedContentType = 'application/json';
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.body.definition).toEqual(definition);
+        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __createProjectEnvironmentTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __createProjectEnvironmentTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __createProjectEnvironmentTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const projectId = 'testString';
+        const definition = environmentDefinitionRequiredPropertiesModel;
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const createProjectEnvironmentParams = {
+          projectId,
+          definition,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.createProjectEnvironment(createProjectEnvironmentParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.createProjectEnvironment({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.createProjectEnvironment();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('listProjectEnvironments', () => {
+    describe('positive tests', () => {
+      function __listProjectEnvironmentsTest() {
+        // Construct the params object for operation listProjectEnvironments
+        const projectId = 'testString';
+        const listProjectEnvironmentsParams = {
+          projectId,
+        };
+
+        const listProjectEnvironmentsResult = projectService.listProjectEnvironments(listProjectEnvironmentsParams);
+
+        // all methods should return a Promise
+        expectToBePromise(listProjectEnvironmentsResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/environments', 'GET');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __listProjectEnvironmentsTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __listProjectEnvironmentsTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __listProjectEnvironmentsTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const projectId = 'testString';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const listProjectEnvironmentsParams = {
+          projectId,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.listProjectEnvironments(listProjectEnvironmentsParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.listProjectEnvironments({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.listProjectEnvironments();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('getProjectEnvironment', () => {
+    describe('positive tests', () => {
+      function __getProjectEnvironmentTest() {
+        // Construct the params object for operation getProjectEnvironment
+        const projectId = 'testString';
+        const id = 'testString';
+        const getProjectEnvironmentParams = {
+          projectId,
+          id,
+        };
+
+        const getProjectEnvironmentResult = projectService.getProjectEnvironment(getProjectEnvironmentParams);
+
+        // all methods should return a Promise
+        expectToBePromise(getProjectEnvironmentResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/environments/{id}', 'GET');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __getProjectEnvironmentTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __getProjectEnvironmentTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __getProjectEnvironmentTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const projectId = 'testString';
+        const id = 'testString';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const getProjectEnvironmentParams = {
+          projectId,
+          id,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.getProjectEnvironment(getProjectEnvironmentParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.getProjectEnvironment({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.getProjectEnvironment();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('updateProjectEnvironment', () => {
+    describe('positive tests', () => {
+      // Request models needed by this operation.
+
+      // ProjectConfigAuth
+      const projectConfigAuthModel = {
+        trusted_profile_id: 'testString',
+        method: 'api_key',
+        api_key: 'TbcdlprpFODhkpns9e0daOWnAwd2tXwSYtPn8rpEd8d9',
+      };
+
+      // ProjectComplianceProfile
+      const projectComplianceProfileModel = {
+        id: 'some-profile-id',
+        instance_id: 'some-instance-id',
+        instance_location: 'us-south',
+        attachment_id: 'some-attachment-id',
+        profile_name: 'some-profile-name',
+      };
+
+      // EnvironmentDefinitionProperties
+      const environmentDefinitionPropertiesModel = {
+        name: 'development',
+        description: 'The environment \'development\'',
+        authorizations: projectConfigAuthModel,
+        inputs: { resource_group: 'stage', region: 'us-south' },
+        compliance_profile: projectComplianceProfileModel,
+      };
+
+      function __updateProjectEnvironmentTest() {
+        // Construct the params object for operation updateProjectEnvironment
+        const projectId = 'testString';
+        const id = 'testString';
+        const definition = environmentDefinitionPropertiesModel;
+        const updateProjectEnvironmentParams = {
+          projectId,
+          id,
+          definition,
+        };
+
+        const updateProjectEnvironmentResult = projectService.updateProjectEnvironment(updateProjectEnvironmentParams);
+
+        // all methods should return a Promise
+        expectToBePromise(updateProjectEnvironmentResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/environments/{id}', 'PATCH');
+        const expectedAccept = 'application/json';
+        const expectedContentType = 'application/json';
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.body.definition).toEqual(definition);
+        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __updateProjectEnvironmentTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __updateProjectEnvironmentTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __updateProjectEnvironmentTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const projectId = 'testString';
+        const id = 'testString';
+        const definition = environmentDefinitionPropertiesModel;
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const updateProjectEnvironmentParams = {
+          projectId,
+          id,
+          definition,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.updateProjectEnvironment(updateProjectEnvironmentParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.updateProjectEnvironment({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.updateProjectEnvironment();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('deleteProjectEnvironment', () => {
+    describe('positive tests', () => {
+      function __deleteProjectEnvironmentTest() {
+        // Construct the params object for operation deleteProjectEnvironment
+        const projectId = 'testString';
+        const id = 'testString';
+        const deleteProjectEnvironmentParams = {
+          projectId,
+          id,
+        };
+
+        const deleteProjectEnvironmentResult = projectService.deleteProjectEnvironment(deleteProjectEnvironmentParams);
+
+        // all methods should return a Promise
+        expectToBePromise(deleteProjectEnvironmentResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/environments/{id}', 'DELETE');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __deleteProjectEnvironmentTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __deleteProjectEnvironmentTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __deleteProjectEnvironmentTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const projectId = 'testString';
+        const id = 'testString';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const deleteProjectEnvironmentParams = {
+          projectId,
+          id,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.deleteProjectEnvironment(deleteProjectEnvironmentParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.deleteProjectEnvironment({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.deleteProjectEnvironment();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
   describe('createConfig', () => {
     describe('positive tests', () => {
       // Request models needed by this operation.
 
-      // ProjectConfigAuthTrustedProfile
-      const projectConfigAuthTrustedProfileModel = {
-        id: 'testString',
-        target_iam_id: 'testString',
-      };
-
       // ProjectConfigAuth
       const projectConfigAuthModel = {
-        trusted_profile: projectConfigAuthTrustedProfileModel,
-        method: 'testString',
+        trusted_profile_id: 'testString',
+        method: 'api_key',
         api_key: 'testString',
       };
 
-      // ProjectConfigComplianceProfile
-      const projectConfigComplianceProfileModel = {
+      // ProjectComplianceProfile
+      const projectComplianceProfileModel = {
         id: 'testString',
         instance_id: 'testString',
         instance_location: 'testString',
@@ -586,43 +1182,32 @@ describe('ProjectV1', () => {
         profile_name: 'testString',
       };
 
-      // ProjectConfigInputVariable
-      const projectConfigInputVariableModel = {
-        name: 'account_id',
-        value: '$configs[].name["account-stage"].input.account_id',
+      // ProjectConfigPrototypeDefinitionBlockDAConfigDefinitionProperties
+      const projectConfigPrototypeDefinitionBlockModel = {
+        name: 'env-stage',
+        description: 'Stage environment configuration.',
+        environment_id: 'testString',
+        authorizations: projectConfigAuthModel,
+        inputs: { account_id: 'account_id', resource_group: 'stage', access_tags: ['env:stage'], logdna_name: 'LogDNA_stage_service', sysdig_name: 'SysDig_stage_service' },
+        settings: { IBMCLOUD_TOOLCHAIN_ENDPOINT: 'https://api.us-south.devops.dev.cloud.ibm.com' },
+        compliance_profile: projectComplianceProfileModel,
+        locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
       };
 
-      // ProjectConfigSettingCollection
-      const projectConfigSettingCollectionModel = {
-        name: 'IBMCLOUD_TOOLCHAIN_ENDPOINT',
-        value: 'https://api.us-south.devops.dev.cloud.ibm.com',
+      // SchematicsWorkspace
+      const schematicsWorkspaceModel = {
+        workspace_crn: 'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       };
 
       function __createConfigTest() {
         // Construct the params object for operation createConfig
         const projectId = 'testString';
-        const name = 'env-stage';
-        const locatorId =
-          '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global';
-        const id = 'testString';
-        const labels = ['env:stage', 'governance:test', 'build:0'];
-        const description =
-          'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.';
-        const authorizations = projectConfigAuthModel;
-        const complianceProfile = projectConfigComplianceProfileModel;
-        const input = [projectConfigInputVariableModel];
-        const setting = [projectConfigSettingCollectionModel];
+        const definition = projectConfigPrototypeDefinitionBlockModel;
+        const schematics = schematicsWorkspaceModel;
         const createConfigParams = {
           projectId,
-          name,
-          locatorId,
-          id,
-          labels,
-          description,
-          authorizations,
-          complianceProfile,
-          input,
-          setting,
+          definition,
+          schematics,
         };
 
         const createConfigResult = projectService.createConfig(createConfigParams);
@@ -639,15 +1224,8 @@ describe('ProjectV1', () => {
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(mockRequestOptions.body.name).toEqual(name);
-        expect(mockRequestOptions.body.locator_id).toEqual(locatorId);
-        expect(mockRequestOptions.body.id).toEqual(id);
-        expect(mockRequestOptions.body.labels).toEqual(labels);
-        expect(mockRequestOptions.body.description).toEqual(description);
-        expect(mockRequestOptions.body.authorizations).toEqual(authorizations);
-        expect(mockRequestOptions.body.compliance_profile).toEqual(complianceProfile);
-        expect(mockRequestOptions.body.input).toEqual(input);
-        expect(mockRequestOptions.body.setting).toEqual(setting);
+        expect(mockRequestOptions.body.definition).toEqual(definition);
+        expect(mockRequestOptions.body.schematics).toEqual(schematics);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
       }
 
@@ -669,15 +1247,12 @@ describe('ProjectV1', () => {
       test('should prioritize user-given headers', () => {
         // parameters
         const projectId = 'testString';
-        const name = 'env-stage';
-        const locatorId =
-          '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global';
+        const definition = projectConfigPrototypeDefinitionBlockModel;
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const createConfigParams = {
           projectId,
-          name,
-          locatorId,
+          definition,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
@@ -891,33 +1466,15 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       // Request models needed by this operation.
 
-      // ProjectConfigInputVariable
-      const projectConfigInputVariableModel = {
-        name: 'account_id',
-        value: '$configs[].name["account-stage"].input.account_id',
-      };
-
-      // ProjectConfigSettingCollection
-      const projectConfigSettingCollectionModel = {
-        name: 'testString',
-        value: 'testString',
-      };
-
-      // ProjectConfigAuthTrustedProfile
-      const projectConfigAuthTrustedProfileModel = {
-        id: 'testString',
-        target_iam_id: 'testString',
-      };
-
       // ProjectConfigAuth
       const projectConfigAuthModel = {
-        trusted_profile: projectConfigAuthTrustedProfileModel,
-        method: 'testString',
+        trusted_profile_id: 'testString',
+        method: 'api_key',
         api_key: 'testString',
       };
 
-      // ProjectConfigComplianceProfile
-      const projectConfigComplianceProfileModel = {
+      // ProjectComplianceProfile
+      const projectComplianceProfileModel = {
         id: 'testString',
         instance_id: 'testString',
         instance_location: 'testString',
@@ -925,29 +1482,27 @@ describe('ProjectV1', () => {
         profile_name: 'testString',
       };
 
+      // ProjectConfigPatchDefinitionBlockDAConfigDefinitionProperties
+      const projectConfigPatchDefinitionBlockModel = {
+        name: 'env-stage',
+        description: 'testString',
+        environment_id: 'testString',
+        authorizations: projectConfigAuthModel,
+        inputs: { account_id: 'account_id', resource_group: 'stage', access_tags: ['env:stage'], logdna_name: 'LogDNA_stage_service', sysdig_name: 'SysDig_stage_service' },
+        settings: { anyKey: 'anyValue' },
+        compliance_profile: projectComplianceProfileModel,
+        locator_id: 'testString',
+      };
+
       function __updateConfigTest() {
         // Construct the params object for operation updateConfig
         const projectId = 'testString';
         const id = 'testString';
-        const locatorId = 'testString';
-        const input = [projectConfigInputVariableModel];
-        const setting = [projectConfigSettingCollectionModel];
-        const name = 'testString';
-        const labels = ['testString'];
-        const description = 'testString';
-        const authorizations = projectConfigAuthModel;
-        const complianceProfile = projectConfigComplianceProfileModel;
+        const definition = projectConfigPatchDefinitionBlockModel;
         const updateConfigParams = {
           projectId,
           id,
-          locatorId,
-          input,
-          setting,
-          name,
-          labels,
-          description,
-          authorizations,
-          complianceProfile,
+          definition,
         };
 
         const updateConfigResult = projectService.updateConfig(updateConfigParams);
@@ -964,14 +1519,7 @@ describe('ProjectV1', () => {
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(mockRequestOptions.body.locator_id).toEqual(locatorId);
-        expect(mockRequestOptions.body.input).toEqual(input);
-        expect(mockRequestOptions.body.setting).toEqual(setting);
-        expect(mockRequestOptions.body.name).toEqual(name);
-        expect(mockRequestOptions.body.labels).toEqual(labels);
-        expect(mockRequestOptions.body.description).toEqual(description);
-        expect(mockRequestOptions.body.authorizations).toEqual(authorizations);
-        expect(mockRequestOptions.body.compliance_profile).toEqual(complianceProfile);
+        expect(mockRequestOptions.body.definition).toEqual(definition);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
         expect(mockRequestOptions.path.id).toEqual(id);
       }
@@ -995,11 +1543,13 @@ describe('ProjectV1', () => {
         // parameters
         const projectId = 'testString';
         const id = 'testString';
+        const definition = projectConfigPatchDefinitionBlockModel;
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const updateConfigParams = {
           projectId,
           id,
+          definition,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
@@ -1042,13 +1592,9 @@ describe('ProjectV1', () => {
         // Construct the params object for operation deleteConfig
         const projectId = 'testString';
         const id = 'testString';
-        const draftOnly = false;
-        const destroy = true;
         const deleteConfigParams = {
           projectId,
           id,
-          draftOnly,
-          destroy,
         };
 
         const deleteConfigResult = projectService.deleteConfig(deleteConfigParams);
@@ -1065,8 +1611,6 @@ describe('ProjectV1', () => {
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(mockRequestOptions.qs.draft_only).toEqual(draftOnly);
-        expect(mockRequestOptions.qs.destroy).toEqual(destroy);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
         expect(mockRequestOptions.path.id).toEqual(id);
       }
@@ -1131,6 +1675,100 @@ describe('ProjectV1', () => {
     });
   });
 
+  describe('forceApprove', () => {
+    describe('positive tests', () => {
+      function __forceApproveTest() {
+        // Construct the params object for operation forceApprove
+        const projectId = 'testString';
+        const id = 'testString';
+        const comment = 'Approving the changes';
+        const forceApproveParams = {
+          projectId,
+          id,
+          comment,
+        };
+
+        const forceApproveResult = projectService.forceApprove(forceApproveParams);
+
+        // all methods should return a Promise
+        expectToBePromise(forceApproveResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/force_approve', 'POST');
+        const expectedAccept = 'application/json';
+        const expectedContentType = 'application/json';
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.body.comment).toEqual(comment);
+        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __forceApproveTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __forceApproveTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __forceApproveTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const projectId = 'testString';
+        const id = 'testString';
+        const comment = 'Approving the changes';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const forceApproveParams = {
+          projectId,
+          id,
+          comment,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.forceApprove(forceApproveParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.forceApprove({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.forceApprove();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
   describe('approve', () => {
     describe('positive tests', () => {
       function __approveTest() {
@@ -1154,11 +1792,7 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{id}/approve',
-          'POST'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/approve', 'POST');
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1227,58 +1861,48 @@ describe('ProjectV1', () => {
     });
   });
 
-  describe('checkConfig', () => {
+  describe('validateConfig', () => {
     describe('positive tests', () => {
-      function __checkConfigTest() {
-        // Construct the params object for operation checkConfig
+      function __validateConfigTest() {
+        // Construct the params object for operation validateConfig
         const projectId = 'testString';
         const id = 'testString';
-        const xAuthRefreshToken = 'testString';
-        const isDraft = true;
-        const checkConfigParams = {
+        const validateConfigParams = {
           projectId,
           id,
-          xAuthRefreshToken,
-          isDraft,
         };
 
-        const checkConfigResult = projectService.checkConfig(checkConfigParams);
+        const validateConfigResult = projectService.validateConfig(validateConfigParams);
 
         // all methods should return a Promise
-        expectToBePromise(checkConfigResult);
+        expectToBePromise(validateConfigResult);
 
         // assert that create request was called
         expect(createRequestMock).toHaveBeenCalledTimes(1);
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{id}/check',
-          'POST'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/validate', 'POST');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        checkUserHeader(createRequestMock, 'X-Auth-Refresh-Token', xAuthRefreshToken);
-        expect(mockRequestOptions.qs.is_draft).toEqual(isDraft);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
         expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
         // baseline test
-        __checkConfigTest();
+        __validateConfigTest();
 
         // enable retries and test again
         createRequestMock.mockClear();
         projectService.enableRetries();
-        __checkConfigTest();
+        __validateConfigTest();
 
         // disable retries and test again
         createRequestMock.mockClear();
         projectService.disableRetries();
-        __checkConfigTest();
+        __validateConfigTest();
       });
 
       test('should prioritize user-given headers', () => {
@@ -1287,7 +1911,7 @@ describe('ProjectV1', () => {
         const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
-        const checkConfigParams = {
+        const validateConfigParams = {
           projectId,
           id,
           headers: {
@@ -1296,7 +1920,7 @@ describe('ProjectV1', () => {
           },
         };
 
-        projectService.checkConfig(checkConfigParams);
+        projectService.validateConfig(validateConfigParams);
         checkMediaHeaders(createRequestMock, userAccept, userContentType);
       });
     });
@@ -1305,7 +1929,7 @@ describe('ProjectV1', () => {
       test('should enforce required parameters', async () => {
         let err;
         try {
-          await projectService.checkConfig({});
+          await projectService.validateConfig({});
         } catch (e) {
           err = e;
         }
@@ -1316,7 +1940,7 @@ describe('ProjectV1', () => {
       test('should reject promise when required params are not given', async () => {
         let err;
         try {
-          await projectService.checkConfig();
+          await projectService.validateConfig();
         } catch (e) {
           err = e;
         }
@@ -1326,32 +1950,28 @@ describe('ProjectV1', () => {
     });
   });
 
-  describe('installConfig', () => {
+  describe('deployConfig', () => {
     describe('positive tests', () => {
-      function __installConfigTest() {
-        // Construct the params object for operation installConfig
+      function __deployConfigTest() {
+        // Construct the params object for operation deployConfig
         const projectId = 'testString';
         const id = 'testString';
-        const installConfigParams = {
+        const deployConfigParams = {
           projectId,
           id,
         };
 
-        const installConfigResult = projectService.installConfig(installConfigParams);
+        const deployConfigResult = projectService.deployConfig(deployConfigParams);
 
         // all methods should return a Promise
-        expectToBePromise(installConfigResult);
+        expectToBePromise(deployConfigResult);
 
         // assert that create request was called
         expect(createRequestMock).toHaveBeenCalledTimes(1);
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{id}/install',
-          'POST'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/deploy', 'POST');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1361,17 +1981,17 @@ describe('ProjectV1', () => {
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
         // baseline test
-        __installConfigTest();
+        __deployConfigTest();
 
         // enable retries and test again
         createRequestMock.mockClear();
         projectService.enableRetries();
-        __installConfigTest();
+        __deployConfigTest();
 
         // disable retries and test again
         createRequestMock.mockClear();
         projectService.disableRetries();
-        __installConfigTest();
+        __deployConfigTest();
       });
 
       test('should prioritize user-given headers', () => {
@@ -1380,7 +2000,7 @@ describe('ProjectV1', () => {
         const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
-        const installConfigParams = {
+        const deployConfigParams = {
           projectId,
           id,
           headers: {
@@ -1389,7 +2009,7 @@ describe('ProjectV1', () => {
           },
         };
 
-        projectService.installConfig(installConfigParams);
+        projectService.deployConfig(deployConfigParams);
         checkMediaHeaders(createRequestMock, userAccept, userContentType);
       });
     });
@@ -1398,7 +2018,7 @@ describe('ProjectV1', () => {
       test('should enforce required parameters', async () => {
         let err;
         try {
-          await projectService.installConfig({});
+          await projectService.deployConfig({});
         } catch (e) {
           err = e;
         }
@@ -1409,7 +2029,7 @@ describe('ProjectV1', () => {
       test('should reject promise when required params are not given', async () => {
         let err;
         try {
-          await projectService.installConfig();
+          await projectService.deployConfig();
         } catch (e) {
           err = e;
         }
@@ -1419,32 +2039,28 @@ describe('ProjectV1', () => {
     });
   });
 
-  describe('uninstallConfig', () => {
+  describe('undeployConfig', () => {
     describe('positive tests', () => {
-      function __uninstallConfigTest() {
-        // Construct the params object for operation uninstallConfig
+      function __undeployConfigTest() {
+        // Construct the params object for operation undeployConfig
         const projectId = 'testString';
         const id = 'testString';
-        const uninstallConfigParams = {
+        const undeployConfigParams = {
           projectId,
           id,
         };
 
-        const uninstallConfigResult = projectService.uninstallConfig(uninstallConfigParams);
+        const undeployConfigResult = projectService.undeployConfig(undeployConfigParams);
 
         // all methods should return a Promise
-        expectToBePromise(uninstallConfigResult);
+        expectToBePromise(undeployConfigResult);
 
         // assert that create request was called
         expect(createRequestMock).toHaveBeenCalledTimes(1);
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{id}/uninstall',
-          'POST'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/undeploy', 'POST');
         const expectedAccept = undefined;
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1454,17 +2070,17 @@ describe('ProjectV1', () => {
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
         // baseline test
-        __uninstallConfigTest();
+        __undeployConfigTest();
 
         // enable retries and test again
         createRequestMock.mockClear();
         projectService.enableRetries();
-        __uninstallConfigTest();
+        __undeployConfigTest();
 
         // disable retries and test again
         createRequestMock.mockClear();
         projectService.disableRetries();
-        __uninstallConfigTest();
+        __undeployConfigTest();
       });
 
       test('should prioritize user-given headers', () => {
@@ -1473,7 +2089,7 @@ describe('ProjectV1', () => {
         const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
-        const uninstallConfigParams = {
+        const undeployConfigParams = {
           projectId,
           id,
           headers: {
@@ -1482,7 +2098,7 @@ describe('ProjectV1', () => {
           },
         };
 
-        projectService.uninstallConfig(uninstallConfigParams);
+        projectService.undeployConfig(undeployConfigParams);
         checkMediaHeaders(createRequestMock, userAccept, userContentType);
       });
     });
@@ -1491,7 +2107,7 @@ describe('ProjectV1', () => {
       test('should enforce required parameters', async () => {
         let err;
         try {
-          await projectService.uninstallConfig({});
+          await projectService.undeployConfig({});
         } catch (e) {
           err = e;
         }
@@ -1502,7 +2118,7 @@ describe('ProjectV1', () => {
       test('should reject promise when required params are not given', async () => {
         let err;
         try {
-          await projectService.uninstallConfig();
+          await projectService.undeployConfig();
         } catch (e) {
           err = e;
         }
@@ -1512,70 +2128,76 @@ describe('ProjectV1', () => {
     });
   });
 
-  describe('listConfigDrafts', () => {
+  describe('syncConfig', () => {
     describe('positive tests', () => {
-      function __listConfigDraftsTest() {
-        // Construct the params object for operation listConfigDrafts
+      // Request models needed by this operation.
+
+      // SchematicsWorkspace
+      const schematicsWorkspaceModel = {
+        workspace_crn: 'crn:v1:staging:public:schematics:us-south:a/38acaf4469814090a4e675dc0c317a0d:95ad49de-ab96-4e7d-a08c-45c38aa448e6:workspace:us-south.workspace.service.e0106139',
+      };
+
+      function __syncConfigTest() {
+        // Construct the params object for operation syncConfig
         const projectId = 'testString';
-        const configId = 'testString';
-        const listConfigDraftsParams = {
+        const id = 'testString';
+        const schematics = schematicsWorkspaceModel;
+        const syncConfigParams = {
           projectId,
-          configId,
+          id,
+          schematics,
         };
 
-        const listConfigDraftsResult = projectService.listConfigDrafts(listConfigDraftsParams);
+        const syncConfigResult = projectService.syncConfig(syncConfigParams);
 
         // all methods should return a Promise
-        expectToBePromise(listConfigDraftsResult);
+        expectToBePromise(syncConfigResult);
 
         // assert that create request was called
         expect(createRequestMock).toHaveBeenCalledTimes(1);
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{config_id}/drafts',
-          'GET'
-        );
-        const expectedAccept = 'application/json';
-        const expectedContentType = undefined;
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/sync', 'POST');
+        const expectedAccept = undefined;
+        const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.body.schematics).toEqual(schematics);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
-        expect(mockRequestOptions.path.config_id).toEqual(configId);
+        expect(mockRequestOptions.path.id).toEqual(id);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
         // baseline test
-        __listConfigDraftsTest();
+        __syncConfigTest();
 
         // enable retries and test again
         createRequestMock.mockClear();
         projectService.enableRetries();
-        __listConfigDraftsTest();
+        __syncConfigTest();
 
         // disable retries and test again
         createRequestMock.mockClear();
         projectService.disableRetries();
-        __listConfigDraftsTest();
+        __syncConfigTest();
       });
 
       test('should prioritize user-given headers', () => {
         // parameters
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
-        const listConfigDraftsParams = {
+        const syncConfigParams = {
           projectId,
-          configId,
+          id,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
           },
         };
 
-        projectService.listConfigDrafts(listConfigDraftsParams);
+        projectService.syncConfig(syncConfigParams);
         checkMediaHeaders(createRequestMock, userAccept, userContentType);
       });
     });
@@ -1584,7 +2206,7 @@ describe('ProjectV1', () => {
       test('should enforce required parameters', async () => {
         let err;
         try {
-          await projectService.listConfigDrafts({});
+          await projectService.syncConfig({});
         } catch (e) {
           err = e;
         }
@@ -1595,7 +2217,7 @@ describe('ProjectV1', () => {
       test('should reject promise when required params are not given', async () => {
         let err;
         try {
-          await projectService.listConfigDrafts();
+          await projectService.syncConfig();
         } catch (e) {
           err = e;
         }
@@ -1605,67 +2227,241 @@ describe('ProjectV1', () => {
     });
   });
 
-  describe('getConfigDraft', () => {
+  describe('listConfigResources', () => {
     describe('positive tests', () => {
-      function __getConfigDraftTest() {
-        // Construct the params object for operation getConfigDraft
+      function __listConfigResourcesTest() {
+        // Construct the params object for operation listConfigResources
         const projectId = 'testString';
-        const configId = 'testString';
-        const version = 38;
-        const getConfigDraftParams = {
+        const id = 'testString';
+        const listConfigResourcesParams = {
           projectId,
-          configId,
-          version,
+          id,
         };
 
-        const getConfigDraftResult = projectService.getConfigDraft(getConfigDraftParams);
+        const listConfigResourcesResult = projectService.listConfigResources(listConfigResourcesParams);
 
         // all methods should return a Promise
-        expectToBePromise(getConfigDraftResult);
+        expectToBePromise(listConfigResourcesResult);
 
         // assert that create request was called
         expect(createRequestMock).toHaveBeenCalledTimes(1);
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{config_id}/drafts/{version}',
-          'GET'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/resources', 'GET');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
-        expect(mockRequestOptions.path.config_id).toEqual(configId);
+        expect(mockRequestOptions.path.id).toEqual(id);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __listConfigResourcesTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __listConfigResourcesTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __listConfigResourcesTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const projectId = 'testString';
+        const id = 'testString';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const listConfigResourcesParams = {
+          projectId,
+          id,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.listConfigResources(listConfigResourcesParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.listConfigResources({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.listConfigResources();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('listConfigVersions', () => {
+    describe('positive tests', () => {
+      function __listConfigVersionsTest() {
+        // Construct the params object for operation listConfigVersions
+        const projectId = 'testString';
+        const id = 'testString';
+        const listConfigVersionsParams = {
+          projectId,
+          id,
+        };
+
+        const listConfigVersionsResult = projectService.listConfigVersions(listConfigVersionsParams);
+
+        // all methods should return a Promise
+        expectToBePromise(listConfigVersionsResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/versions', 'GET');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __listConfigVersionsTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __listConfigVersionsTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __listConfigVersionsTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const projectId = 'testString';
+        const id = 'testString';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const listConfigVersionsParams = {
+          projectId,
+          id,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.listConfigVersions(listConfigVersionsParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.listConfigVersions({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.listConfigVersions();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('getConfigVersion', () => {
+    describe('positive tests', () => {
+      function __getConfigVersionTest() {
+        // Construct the params object for operation getConfigVersion
+        const projectId = 'testString';
+        const id = 'testString';
+        const version = 38;
+        const getConfigVersionParams = {
+          projectId,
+          id,
+          version,
+        };
+
+        const getConfigVersionResult = projectService.getConfigVersion(getConfigVersionParams);
+
+        // all methods should return a Promise
+        expectToBePromise(getConfigVersionResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/versions/{version}', 'GET');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
         expect(mockRequestOptions.path.version).toEqual(version);
       }
 
       test('should pass the right params to createRequest with enable and disable retries', () => {
         // baseline test
-        __getConfigDraftTest();
+        __getConfigVersionTest();
 
         // enable retries and test again
         createRequestMock.mockClear();
         projectService.enableRetries();
-        __getConfigDraftTest();
+        __getConfigVersionTest();
 
         // disable retries and test again
         createRequestMock.mockClear();
         projectService.disableRetries();
-        __getConfigDraftTest();
+        __getConfigVersionTest();
       });
 
       test('should prioritize user-given headers', () => {
         // parameters
         const projectId = 'testString';
-        const configId = 'testString';
+        const id = 'testString';
         const version = 38;
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
-        const getConfigDraftParams = {
+        const getConfigVersionParams = {
           projectId,
-          configId,
+          id,
           version,
           headers: {
             Accept: userAccept,
@@ -1673,7 +2469,7 @@ describe('ProjectV1', () => {
           },
         };
 
-        projectService.getConfigDraft(getConfigDraftParams);
+        projectService.getConfigVersion(getConfigVersionParams);
         checkMediaHeaders(createRequestMock, userAccept, userContentType);
       });
     });
@@ -1682,7 +2478,7 @@ describe('ProjectV1', () => {
       test('should enforce required parameters', async () => {
         let err;
         try {
-          await projectService.getConfigDraft({});
+          await projectService.getConfigVersion({});
         } catch (e) {
           err = e;
         }
@@ -1693,7 +2489,101 @@ describe('ProjectV1', () => {
       test('should reject promise when required params are not given', async () => {
         let err;
         try {
-          await projectService.getConfigDraft();
+          await projectService.getConfigVersion();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('deleteConfigVersion', () => {
+    describe('positive tests', () => {
+      function __deleteConfigVersionTest() {
+        // Construct the params object for operation deleteConfigVersion
+        const projectId = 'testString';
+        const id = 'testString';
+        const version = 38;
+        const deleteConfigVersionParams = {
+          projectId,
+          id,
+          version,
+        };
+
+        const deleteConfigVersionResult = projectService.deleteConfigVersion(deleteConfigVersionParams);
+
+        // all methods should return a Promise
+        expectToBePromise(deleteConfigVersionResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/versions/{version}', 'DELETE');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
+        expect(mockRequestOptions.path.version).toEqual(version);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __deleteConfigVersionTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __deleteConfigVersionTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __deleteConfigVersionTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const projectId = 'testString';
+        const id = 'testString';
+        const version = 38;
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const deleteConfigVersionParams = {
+          projectId,
+          id,
+          version,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.deleteConfigVersion(deleteConfigVersionParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.deleteConfigVersion({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.deleteConfigVersion();
         } catch (e) {
           err = e;
         }

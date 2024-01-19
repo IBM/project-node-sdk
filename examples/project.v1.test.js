@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 /**
- * (C) Copyright IBM Corp. 2023.
+ * (C) Copyright IBM Corp. 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,19 +85,16 @@ describe('ProjectV1', () => {
 
     // Request models needed by this operation.
 
-    // ProjectConfigPrototype
-    const projectConfigPrototypeModel = {
-      name: 'common-variables',
-      locator_id:
-        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+    // ProjectPrototypeDefinition
+    const projectPrototypeDefinitionModel = {
+      name: 'acme-microservice',
+      description: 'A microservice to deploy on top of ACME infrastructure.',
     };
 
     const params = {
-      resourceGroup: 'Default',
+      definition: projectPrototypeDefinitionModel,
       location: 'us-south',
-      name: 'acme-microservice',
-      description: 'A microservice to deploy on top of ACME infrastructure.',
-      configs: [projectConfigPrototypeModel],
+      resourceGroup: 'Default',
     };
 
     let res;
@@ -128,27 +125,18 @@ describe('ProjectV1', () => {
 
     // Request models needed by this operation.
 
-    // ProjectConfigInputVariable
-    const projectConfigInputVariableModel = {
-      name: 'account_id',
-      value: '$configs[].name["account-stage"].input.account_id',
-    };
-
-    // ProjectConfigSettingCollection
-    const projectConfigSettingCollectionModel = {
-      name: 'IBMCLOUD_TOOLCHAIN_ENDPOINT',
-      value: 'https://api.us-south.devops.dev.cloud.ibm.com',
+    // ProjectConfigPrototypeDefinitionBlockDAConfigDefinitionProperties
+    const projectConfigPrototypeDefinitionBlockModel = {
+      name: 'env-stage',
+      description: 'Stage environment configuration.',
+      inputs: { account_id: 'account_id', resource_group: 'stage', access_tags: ['env:stage'], logdna_name: 'LogDNA_stage_service', sysdig_name: 'SysDig_stage_service' },
+      settings: { IBMCLOUD_TOOLCHAIN_ENDPOINT: 'https://api.us-south.devops.dev.cloud.ibm.com' },
+      locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
     };
 
     const params = {
       projectId: projectIdLink,
-      name: 'env-stage',
-      locatorId: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
-      labels: ['env:stage', 'governance:test', 'build:0'],
-      description:
-        'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.',
-      input: [projectConfigInputVariableModel],
-      setting: [projectConfigSettingCollectionModel],
+      definition: projectConfigPrototypeDefinitionBlockModel,
     };
 
     let res;
@@ -225,6 +213,211 @@ describe('ProjectV1', () => {
     // end-get_project
   });
 
+  test('updateProject request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('updateProject() result:');
+    // begin-update_project
+
+    // Request models needed by this operation.
+
+    // ProjectPatchDefinitionBlock
+    const projectPatchDefinitionBlockModel = {
+      name: 'acme-microservice',
+      description: 'A microservice to deploy on top of ACME infrastructure.',
+    };
+
+    const params = {
+      id: projectIdLink,
+      definition: projectPatchDefinitionBlockModel,
+    };
+
+    let res;
+    try {
+      res = await projectService.updateProject(params);
+      console.log(JSON.stringify(res.result, null, 2));
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-update_project
+  });
+
+  test('createProjectEnvironment request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('createProjectEnvironment() result:');
+    // begin-create_project_environment
+
+    // Request models needed by this operation.
+
+    // ProjectConfigAuth
+    const projectConfigAuthModel = {
+      method: 'api_key',
+      api_key: 'TbcdlprpFODhkpns9e0daOWnAwd2tXwSYtPn8rpEd8d9',
+    };
+
+    // ProjectComplianceProfile
+    const projectComplianceProfileModel = {
+      id: 'some-profile-id',
+      instance_id: 'some-instance-id',
+      instance_location: 'us-south',
+      attachment_id: 'some-attachment-id',
+      profile_name: 'some-profile-name',
+    };
+
+    // EnvironmentDefinitionRequiredProperties
+    const environmentDefinitionRequiredPropertiesModel = {
+      name: 'development',
+      description: 'The environment \'development\'',
+      authorizations: projectConfigAuthModel,
+      inputs: { resource_group: 'stage', region: 'us-south' },
+      compliance_profile: projectComplianceProfileModel,
+    };
+
+    const params = {
+      projectId: projectIdLink,
+      definition: environmentDefinitionRequiredPropertiesModel,
+    };
+
+    let res;
+    try {
+      res = await projectService.createProjectEnvironment(params);
+      console.log(JSON.stringify(res.result, null, 2));
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-create_project_environment
+  });
+
+  test('listProjectEnvironments request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('listProjectEnvironments() result:');
+    // begin-list_project_environments
+
+    const params = {
+      projectId: projectIdLink,
+    };
+
+    let res;
+    try {
+      res = await projectService.listProjectEnvironments(params);
+      console.log(JSON.stringify(res.result, null, 2));
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-list_project_environments
+  });
+
+  test('getProjectEnvironment request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('getProjectEnvironment() result:');
+    // begin-get_project_environment
+
+    const params = {
+      projectId: projectIdLink,
+      id: projectIdLink,
+    };
+
+    let res;
+    try {
+      res = await projectService.getProjectEnvironment(params);
+      console.log(JSON.stringify(res.result, null, 2));
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-get_project_environment
+  });
+
+  test('updateProjectEnvironment request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('updateProjectEnvironment() result:');
+    // begin-update_project_environment
+
+    // Request models needed by this operation.
+
+    // ProjectConfigAuth
+    const projectConfigAuthModel = {
+      method: 'api_key',
+      api_key: 'TbcdlprpFODhkpns9e0daOWnAwd2tXwSYtPn8rpEd8d9',
+    };
+
+    // ProjectComplianceProfile
+    const projectComplianceProfileModel = {
+      id: 'some-profile-id',
+      instance_id: 'some-instance-id',
+      instance_location: 'us-south',
+      attachment_id: 'some-attachment-id',
+      profile_name: 'some-profile-name',
+    };
+
+    // EnvironmentDefinitionProperties
+    const environmentDefinitionPropertiesModel = {
+      name: 'development',
+      description: 'The environment \'development\'',
+      authorizations: projectConfigAuthModel,
+      inputs: { resource_group: 'stage', region: 'us-south' },
+      compliance_profile: projectComplianceProfileModel,
+    };
+
+    const params = {
+      projectId: projectIdLink,
+      id: projectIdLink,
+      definition: environmentDefinitionPropertiesModel,
+    };
+
+    let res;
+    try {
+      res = await projectService.updateProjectEnvironment(params);
+      console.log(JSON.stringify(res.result, null, 2));
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-update_project_environment
+  });
+
   test('listConfigs request example', async () => {
     consoleLogMock.mockImplementation((output) => {
       originalLog(output);
@@ -297,16 +490,16 @@ describe('ProjectV1', () => {
 
     // Request models needed by this operation.
 
-    // ProjectConfigInputVariable
-    const projectConfigInputVariableModel = {
-      name: 'account_id',
-      value: '$configs[].name["account-stage"].input.account_id',
+    // ProjectConfigPatchDefinitionBlockDAConfigDefinitionProperties
+    const projectConfigPatchDefinitionBlockModel = {
+      name: 'env-stage',
+      inputs: { account_id: 'account_id', resource_group: 'stage', access_tags: ['env:stage'], logdna_name: 'LogDNA_stage_service', sysdig_name: 'SysDig_stage_service' },
     };
 
     const params = {
       projectId: projectIdLink,
       id: configIdLink,
-      input: [projectConfigInputVariableModel],
+      definition: projectConfigPatchDefinitionBlockModel,
     };
 
     let res;
@@ -318,6 +511,36 @@ describe('ProjectV1', () => {
     }
 
     // end-update_config
+  });
+
+  test('forceApprove request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('forceApprove() result:');
+    // begin-force_approve
+
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
+      comment: 'Approving the changes',
+    };
+
+    let res;
+    try {
+      res = await projectService.forceApprove(params);
+      console.log(JSON.stringify(res.result, null, 2));
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-force_approve
   });
 
   test('approve request example', async () => {
@@ -350,7 +573,7 @@ describe('ProjectV1', () => {
     // end-approve
   });
 
-  test('checkConfig request example', async () => {
+  test('validateConfig request example', async () => {
     consoleLogMock.mockImplementation((output) => {
       originalLog(output);
     });
@@ -360,8 +583,8 @@ describe('ProjectV1', () => {
       expect(true).toBeFalsy();
     });
 
-    originalLog('checkConfig() result:');
-    // begin-check_config
+    originalLog('validateConfig() result:');
+    // begin-validate_config
 
     const params = {
       projectId: projectIdLink,
@@ -370,16 +593,16 @@ describe('ProjectV1', () => {
 
     let res;
     try {
-      res = await projectService.checkConfig(params);
+      res = await projectService.validateConfig(params);
       console.log(JSON.stringify(res.result, null, 2));
     } catch (err) {
       console.warn(err);
     }
 
-    // end-check_config
+    // end-validate_config
   });
 
-  test('installConfig request example', async () => {
+  test('deployConfig request example', async () => {
     consoleLogMock.mockImplementation((output) => {
       originalLog(output);
     });
@@ -389,8 +612,8 @@ describe('ProjectV1', () => {
       expect(true).toBeFalsy();
     });
 
-    originalLog('installConfig() result:');
-    // begin-install_config
+    originalLog('deployConfig() result:');
+    // begin-deploy_config
 
     const params = {
       projectId: projectIdLink,
@@ -399,16 +622,16 @@ describe('ProjectV1', () => {
 
     let res;
     try {
-      res = await projectService.installConfig(params);
+      res = await projectService.deployConfig(params);
       console.log(JSON.stringify(res.result, null, 2));
     } catch (err) {
       console.warn(err);
     }
 
-    // end-install_config
+    // end-deploy_config
   });
 
-  test('uninstallConfig request example', async () => {
+  test('undeployConfig request example', async () => {
     consoleLogMock.mockImplementation((output) => {
       originalLog(output);
     });
@@ -418,7 +641,7 @@ describe('ProjectV1', () => {
       expect(true).toBeFalsy();
     });
 
-    // begin-uninstall_config
+    // begin-undeploy_config
 
     const params = {
       projectId: projectIdLink,
@@ -426,15 +649,15 @@ describe('ProjectV1', () => {
     };
 
     try {
-      await projectService.uninstallConfig(params);
+      await projectService.undeployConfig(params);
     } catch (err) {
       console.warn(err);
     }
 
-    // end-uninstall_config
+    // end-undeploy_config
   });
 
-  test('listConfigDrafts request example', async () => {
+  test('syncConfig request example', async () => {
     consoleLogMock.mockImplementation((output) => {
       originalLog(output);
     });
@@ -444,26 +667,60 @@ describe('ProjectV1', () => {
       expect(true).toBeFalsy();
     });
 
-    originalLog('listConfigDrafts() result:');
-    // begin-list_config_drafts
+    // begin-sync_config
+
+    // Request models needed by this operation.
+
+    // SchematicsWorkspace
+    const schematicsWorkspaceModel = {
+      workspace_crn: 'crn:v1:staging:public:schematics:us-south:a/38acaf4469814090a4e675dc0c317a0d:95ad49de-ab96-4e7d-a08c-45c38aa448e6:workspace:us-south.workspace.service.e0106139',
+    };
 
     const params = {
       projectId: projectIdLink,
-      configId: 'testString',
+      id: configIdLink,
+      schematics: schematicsWorkspaceModel,
+    };
+
+    try {
+      await projectService.syncConfig(params);
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-sync_config
+  });
+
+  test('listConfigResources request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('listConfigResources() result:');
+    // begin-list_config_resources
+
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
     };
 
     let res;
     try {
-      res = await projectService.listConfigDrafts(params);
+      res = await projectService.listConfigResources(params);
       console.log(JSON.stringify(res.result, null, 2));
     } catch (err) {
       console.warn(err);
     }
 
-    // end-list_config_drafts
+    // end-list_config_resources
   });
 
-  test('getConfigDraft request example', async () => {
+  test('listConfigVersions request example', async () => {
     consoleLogMock.mockImplementation((output) => {
       originalLog(output);
     });
@@ -473,24 +730,82 @@ describe('ProjectV1', () => {
       expect(true).toBeFalsy();
     });
 
-    originalLog('getConfigDraft() result:');
-    // begin-get_config_draft
+    originalLog('listConfigVersions() result:');
+    // begin-list_config_versions
 
     const params = {
       projectId: projectIdLink,
-      configId: 'testString',
+      id: configIdLink,
+    };
+
+    let res;
+    try {
+      res = await projectService.listConfigVersions(params);
+      console.log(JSON.stringify(res.result, null, 2));
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-list_config_versions
+  });
+
+  test('getConfigVersion request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('getConfigVersion() result:');
+    // begin-get_config_version
+
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
       version: 38,
     };
 
     let res;
     try {
-      res = await projectService.getConfigDraft(params);
+      res = await projectService.getConfigVersion(params);
       console.log(JSON.stringify(res.result, null, 2));
     } catch (err) {
       console.warn(err);
     }
 
-    // end-get_config_draft
+    // end-get_config_version
+  });
+
+  test('deleteProjectEnvironment request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('deleteProjectEnvironment() result:');
+    // begin-delete_project_environment
+
+    const params = {
+      projectId: projectIdLink,
+      id: projectIdLink,
+    };
+
+    let res;
+    try {
+      res = await projectService.deleteProjectEnvironment(params);
+      console.log(JSON.stringify(res.result, null, 2));
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-delete_project_environment
   });
 
   test('deleteConfig request example', async () => {
@@ -520,6 +835,36 @@ describe('ProjectV1', () => {
     }
 
     // end-delete_config
+  });
+
+  test('deleteConfigVersion request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('deleteConfigVersion() result:');
+    // begin-delete_config_version
+
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
+      version: 38,
+    };
+
+    let res;
+    try {
+      res = await projectService.deleteConfigVersion(params);
+      console.log(JSON.stringify(res.result, null, 2));
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-delete_config_version
   });
 
   test('deleteProject request example', async () => {
