@@ -122,7 +122,14 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.Project>> {
     const _params = { ...params };
     const _requiredParams = ['definition', 'location', 'resourceGroup'];
-    const _validParams = ['definition', 'location', 'resourceGroup', 'configs', 'environments', 'headers'];
+    const _validParams = [
+      'definition',
+      'location',
+      'resourceGroup',
+      'configs',
+      'environments',
+      'headers',
+    ];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
@@ -350,13 +357,7 @@ class ProjectV1 extends BaseService {
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(
-          true,
-          sdkHeaders,
-          {
-          },
-          _params.headers
-        ),
+        headers: extend(true, sdkHeaders, {}, _params.headers),
       }),
     };
 
@@ -396,7 +397,11 @@ class ProjectV1 extends BaseService {
       'project_id': _params.projectId,
     };
 
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'createProjectEnvironment');
+    const sdkHeaders = getSdkHeaders(
+      ProjectV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'createProjectEnvironment'
+    );
 
     const parameters = {
       options: {
@@ -446,7 +451,11 @@ class ProjectV1 extends BaseService {
       'project_id': _params.projectId,
     };
 
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'listProjectEnvironments');
+    const sdkHeaders = getSdkHeaders(
+      ProjectV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'listProjectEnvironments'
+    );
 
     const parameters = {
       options: {
@@ -551,7 +560,11 @@ class ProjectV1 extends BaseService {
       'id': _params.id,
     };
 
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'updateProjectEnvironment');
+    const sdkHeaders = getSdkHeaders(
+      ProjectV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'updateProjectEnvironment'
+    );
 
     const parameters = {
       options: {
@@ -603,7 +616,11 @@ class ProjectV1 extends BaseService {
       'id': _params.id,
     };
 
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'deleteProjectEnvironment');
+    const sdkHeaders = getSdkHeaders(
+      ProjectV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'deleteProjectEnvironment'
+    );
 
     const parameters = {
       options: {
@@ -1147,13 +1164,7 @@ class ProjectV1 extends BaseService {
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(
-          true,
-          sdkHeaders,
-          {
-          },
-          _params.headers
-        ),
+        headers: extend(true, sdkHeaders, {}, _params.headers),
       }),
     };
 
@@ -2232,8 +2243,7 @@ namespace ProjectV1 {
   }
 
   /** ProjectConfigPatchDefinitionBlock. */
-  export interface ProjectConfigPatchDefinitionBlock {
-  }
+  export interface ProjectConfigPatchDefinitionBlock {}
 
   /** The input of a project configuration. */
   export interface ProjectConfigPrototype {
@@ -2245,8 +2255,7 @@ namespace ProjectV1 {
   }
 
   /** ProjectConfigPrototypeDefinitionBlock. */
-  export interface ProjectConfigPrototypeDefinitionBlock {
-  }
+  export interface ProjectConfigPrototypeDefinitionBlock {}
 
   /** ProjectConfigResource. */
   export interface ProjectConfigResource {
@@ -2271,8 +2280,7 @@ namespace ProjectV1 {
   }
 
   /** ProjectConfigResponseDefinition. */
-  export interface ProjectConfigResponseDefinition {
-  }
+  export interface ProjectConfigResponseDefinition {}
 
   /** ProjectConfigSummary. */
   export interface ProjectConfigSummary {
@@ -2534,7 +2542,8 @@ namespace ProjectV1 {
   }
 
   /** The name and description of a project configuration. */
-  export interface ProjectConfigPatchDefinitionBlockDAConfigDefinitionProperties extends ProjectConfigPatchDefinitionBlock {
+  export interface ProjectConfigPatchDefinitionBlockDAConfigDefinitionProperties
+    extends ProjectConfigPatchDefinitionBlock {
     /** The configuration name. It is unique within the account across projects and regions. */
     name?: string;
     /** A project configuration description. */
@@ -2558,7 +2567,8 @@ namespace ProjectV1 {
   }
 
   /** The name and description of a project configuration. */
-  export interface ProjectConfigPatchDefinitionBlockResourceConfigDefinitionProperties extends ProjectConfigPatchDefinitionBlock {
+  export interface ProjectConfigPatchDefinitionBlockResourceConfigDefinitionProperties
+    extends ProjectConfigPatchDefinitionBlock {
     /** The configuration name. It is unique within the account across projects and regions. */
     name?: string;
     /** A project configuration description. */
@@ -2578,7 +2588,8 @@ namespace ProjectV1 {
   }
 
   /** The name and description of a project configuration. */
-  export interface ProjectConfigPrototypeDefinitionBlockDAConfigDefinitionProperties extends ProjectConfigPrototypeDefinitionBlock {
+  export interface ProjectConfigPrototypeDefinitionBlockDAConfigDefinitionProperties
+    extends ProjectConfigPrototypeDefinitionBlock {
     /** The configuration name. It is unique within the account across projects and regions. */
     name?: string;
     /** A project configuration description. */
@@ -2602,7 +2613,8 @@ namespace ProjectV1 {
   }
 
   /** The name and description of a project configuration. */
-  export interface ProjectConfigPrototypeDefinitionBlockResourceConfigDefinitionProperties extends ProjectConfigPrototypeDefinitionBlock {
+  export interface ProjectConfigPrototypeDefinitionBlockResourceConfigDefinitionProperties
+    extends ProjectConfigPrototypeDefinitionBlock {
     /** The configuration name. It is unique within the account across projects and regions. */
     name?: string;
     /** A project configuration description. */
@@ -2622,7 +2634,8 @@ namespace ProjectV1 {
   }
 
   /** The name and description of a project configuration. */
-  export interface ProjectConfigResponseDefinitionDAConfigDefinitionProperties extends ProjectConfigResponseDefinition {
+  export interface ProjectConfigResponseDefinitionDAConfigDefinitionProperties
+    extends ProjectConfigResponseDefinition {
     /** The configuration name. It is unique within the account across projects and regions. */
     name?: string;
     /** A project configuration description. */
@@ -2646,7 +2659,8 @@ namespace ProjectV1 {
   }
 
   /** The name and description of a project configuration. */
-  export interface ProjectConfigResponseDefinitionResourceConfigDefinitionProperties extends ProjectConfigResponseDefinition {
+  export interface ProjectConfigResponseDefinitionResourceConfigDefinitionProperties
+    extends ProjectConfigResponseDefinition {
     /** The configuration name. It is unique within the account across projects and regions. */
     name?: string;
     /** A project configuration description. */

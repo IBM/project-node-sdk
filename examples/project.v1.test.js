@@ -129,9 +129,16 @@ describe('ProjectV1', () => {
     const projectConfigPrototypeDefinitionBlockModel = {
       name: 'env-stage',
       description: 'Stage environment configuration.',
-      inputs: { account_id: 'account_id', resource_group: 'stage', access_tags: ['env:stage'], logdna_name: 'LogDNA_stage_service', sysdig_name: 'SysDig_stage_service' },
+      inputs: {
+        account_id: 'account_id',
+        resource_group: 'stage',
+        access_tags: ['env:stage'],
+        logdna_name: 'LogDNA_stage_service',
+        sysdig_name: 'SysDig_stage_service',
+      },
       settings: { IBMCLOUD_TOOLCHAIN_ENDPOINT: 'https://api.us-south.devops.dev.cloud.ibm.com' },
-      locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+      locator_id:
+        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
     };
 
     const params = {
@@ -283,7 +290,7 @@ describe('ProjectV1', () => {
     // EnvironmentDefinitionRequiredProperties
     const environmentDefinitionRequiredPropertiesModel = {
       name: 'development',
-      description: 'The environment \'development\'',
+      description: "The environment 'development'",
       authorizations: projectConfigAuthModel,
       inputs: { resource_group: 'stage', region: 'us-south' },
       compliance_profile: projectComplianceProfileModel,
@@ -395,7 +402,7 @@ describe('ProjectV1', () => {
     // EnvironmentDefinitionProperties
     const environmentDefinitionPropertiesModel = {
       name: 'development',
-      description: 'The environment \'development\'',
+      description: "The environment 'development'",
       authorizations: projectConfigAuthModel,
       inputs: { resource_group: 'stage', region: 'us-south' },
       compliance_profile: projectComplianceProfileModel,
@@ -493,7 +500,13 @@ describe('ProjectV1', () => {
     // ProjectConfigPatchDefinitionBlockDAConfigDefinitionProperties
     const projectConfigPatchDefinitionBlockModel = {
       name: 'env-stage',
-      inputs: { account_id: 'account_id', resource_group: 'stage', access_tags: ['env:stage'], logdna_name: 'LogDNA_stage_service', sysdig_name: 'SysDig_stage_service' },
+      inputs: {
+        account_id: 'account_id',
+        resource_group: 'stage',
+        access_tags: ['env:stage'],
+        logdna_name: 'LogDNA_stage_service',
+        sysdig_name: 'SysDig_stage_service',
+      },
     };
 
     const params = {
@@ -673,7 +686,8 @@ describe('ProjectV1', () => {
 
     // SchematicsWorkspace
     const schematicsWorkspaceModel = {
-      workspace_crn: 'crn:v1:staging:public:schematics:us-south:a/38acaf4469814090a4e675dc0c317a0d:95ad49de-ab96-4e7d-a08c-45c38aa448e6:workspace:us-south.workspace.service.e0106139',
+      workspace_crn:
+        'crn:v1:staging:public:schematics:us-south:a/38acaf4469814090a4e675dc0c317a0d:95ad49de-ab96-4e7d-a08c-45c38aa448e6:workspace:us-south.workspace.service.e0106139',
     };
 
     const params = {

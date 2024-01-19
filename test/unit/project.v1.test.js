@@ -161,7 +161,8 @@ describe('ProjectV1', () => {
 
       // SchematicsWorkspace
       const schematicsWorkspaceModel = {
-        workspace_crn: 'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+        workspace_crn:
+          'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       };
 
       // ProjectConfigPrototype
@@ -686,7 +687,7 @@ describe('ProjectV1', () => {
       // EnvironmentDefinitionRequiredProperties
       const environmentDefinitionRequiredPropertiesModel = {
         name: 'development',
-        description: 'The environment \'development\'',
+        description: "The environment 'development'",
         authorizations: projectConfigAuthModel,
         inputs: { resource_group: 'stage', region: 'us-south' },
         compliance_profile: projectComplianceProfileModel,
@@ -701,7 +702,9 @@ describe('ProjectV1', () => {
           definition,
         };
 
-        const createProjectEnvironmentResult = projectService.createProjectEnvironment(createProjectEnvironmentParams);
+        const createProjectEnvironmentResult = projectService.createProjectEnvironment(
+          createProjectEnvironmentParams
+        );
 
         // all methods should return a Promise
         expectToBePromise(createProjectEnvironmentResult);
@@ -788,7 +791,9 @@ describe('ProjectV1', () => {
           projectId,
         };
 
-        const listProjectEnvironmentsResult = projectService.listProjectEnvironments(listProjectEnvironmentsParams);
+        const listProjectEnvironmentsResult = projectService.listProjectEnvironments(
+          listProjectEnvironmentsParams
+        );
 
         // all methods should return a Promise
         expectToBePromise(listProjectEnvironmentsResult);
@@ -874,7 +879,9 @@ describe('ProjectV1', () => {
           id,
         };
 
-        const getProjectEnvironmentResult = projectService.getProjectEnvironment(getProjectEnvironmentParams);
+        const getProjectEnvironmentResult = projectService.getProjectEnvironment(
+          getProjectEnvironmentParams
+        );
 
         // all methods should return a Promise
         expectToBePromise(getProjectEnvironmentResult);
@@ -975,7 +982,7 @@ describe('ProjectV1', () => {
       // EnvironmentDefinitionProperties
       const environmentDefinitionPropertiesModel = {
         name: 'development',
-        description: 'The environment \'development\'',
+        description: "The environment 'development'",
         authorizations: projectConfigAuthModel,
         inputs: { resource_group: 'stage', region: 'us-south' },
         compliance_profile: projectComplianceProfileModel,
@@ -992,7 +999,9 @@ describe('ProjectV1', () => {
           definition,
         };
 
-        const updateProjectEnvironmentResult = projectService.updateProjectEnvironment(updateProjectEnvironmentParams);
+        const updateProjectEnvironmentResult = projectService.updateProjectEnvironment(
+          updateProjectEnvironmentParams
+        );
 
         // all methods should return a Promise
         expectToBePromise(updateProjectEnvironmentResult);
@@ -1002,7 +1011,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/environments/{id}', 'PATCH');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/environments/{id}',
+          'PATCH'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1084,7 +1097,9 @@ describe('ProjectV1', () => {
           id,
         };
 
-        const deleteProjectEnvironmentResult = projectService.deleteProjectEnvironment(deleteProjectEnvironmentParams);
+        const deleteProjectEnvironmentResult = projectService.deleteProjectEnvironment(
+          deleteProjectEnvironmentParams
+        );
 
         // all methods should return a Promise
         expectToBePromise(deleteProjectEnvironmentResult);
@@ -1094,7 +1109,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/environments/{id}', 'DELETE');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/environments/{id}',
+          'DELETE'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1188,15 +1207,23 @@ describe('ProjectV1', () => {
         description: 'Stage environment configuration.',
         environment_id: 'testString',
         authorizations: projectConfigAuthModel,
-        inputs: { account_id: 'account_id', resource_group: 'stage', access_tags: ['env:stage'], logdna_name: 'LogDNA_stage_service', sysdig_name: 'SysDig_stage_service' },
+        inputs: {
+          account_id: 'account_id',
+          resource_group: 'stage',
+          access_tags: ['env:stage'],
+          logdna_name: 'LogDNA_stage_service',
+          sysdig_name: 'SysDig_stage_service',
+        },
         settings: { IBMCLOUD_TOOLCHAIN_ENDPOINT: 'https://api.us-south.devops.dev.cloud.ibm.com' },
         compliance_profile: projectComplianceProfileModel,
-        locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+        locator_id:
+          '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
       };
 
       // SchematicsWorkspace
       const schematicsWorkspaceModel = {
-        workspace_crn: 'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+        workspace_crn:
+          'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       };
 
       function __createConfigTest() {
@@ -1488,7 +1515,13 @@ describe('ProjectV1', () => {
         description: 'testString',
         environment_id: 'testString',
         authorizations: projectConfigAuthModel,
-        inputs: { account_id: 'account_id', resource_group: 'stage', access_tags: ['env:stage'], logdna_name: 'LogDNA_stage_service', sysdig_name: 'SysDig_stage_service' },
+        inputs: {
+          account_id: 'account_id',
+          resource_group: 'stage',
+          access_tags: ['env:stage'],
+          logdna_name: 'LogDNA_stage_service',
+          sysdig_name: 'SysDig_stage_service',
+        },
         settings: { anyKey: 'anyValue' },
         compliance_profile: projectComplianceProfileModel,
         locator_id: 'testString',
@@ -1698,7 +1731,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/force_approve', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/force_approve',
+          'POST'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1792,7 +1829,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/approve', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/approve',
+          'POST'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1882,7 +1923,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/validate', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/validate',
+          'POST'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1971,7 +2016,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/deploy', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/deploy',
+          'POST'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -2060,7 +2109,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/undeploy', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/undeploy',
+          'POST'
+        );
         const expectedAccept = undefined;
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -2134,7 +2187,8 @@ describe('ProjectV1', () => {
 
       // SchematicsWorkspace
       const schematicsWorkspaceModel = {
-        workspace_crn: 'crn:v1:staging:public:schematics:us-south:a/38acaf4469814090a4e675dc0c317a0d:95ad49de-ab96-4e7d-a08c-45c38aa448e6:workspace:us-south.workspace.service.e0106139',
+        workspace_crn:
+          'crn:v1:staging:public:schematics:us-south:a/38acaf4469814090a4e675dc0c317a0d:95ad49de-ab96-4e7d-a08c-45c38aa448e6:workspace:us-south.workspace.service.e0106139',
       };
 
       function __syncConfigTest() {
@@ -2158,7 +2212,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/sync', 'POST');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/sync',
+          'POST'
+        );
         const expectedAccept = undefined;
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -2238,7 +2296,8 @@ describe('ProjectV1', () => {
           id,
         };
 
-        const listConfigResourcesResult = projectService.listConfigResources(listConfigResourcesParams);
+        const listConfigResourcesResult =
+          projectService.listConfigResources(listConfigResourcesParams);
 
         // all methods should return a Promise
         expectToBePromise(listConfigResourcesResult);
@@ -2248,7 +2307,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/resources', 'GET');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/resources',
+          'GET'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -2327,7 +2390,8 @@ describe('ProjectV1', () => {
           id,
         };
 
-        const listConfigVersionsResult = projectService.listConfigVersions(listConfigVersionsParams);
+        const listConfigVersionsResult =
+          projectService.listConfigVersions(listConfigVersionsParams);
 
         // all methods should return a Promise
         expectToBePromise(listConfigVersionsResult);
@@ -2337,7 +2401,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/versions', 'GET');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/versions',
+          'GET'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -2428,7 +2496,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/versions/{version}', 'GET');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/versions/{version}',
+          'GET'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -2512,7 +2584,8 @@ describe('ProjectV1', () => {
           version,
         };
 
-        const deleteConfigVersionResult = projectService.deleteConfigVersion(deleteConfigVersionParams);
+        const deleteConfigVersionResult =
+          projectService.deleteConfigVersion(deleteConfigVersionParams);
 
         // all methods should return a Promise
         expectToBePromise(deleteConfigVersionResult);
@@ -2522,7 +2595,11 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/versions/{version}', 'DELETE');
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/versions/{version}',
+          'DELETE'
+        );
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);

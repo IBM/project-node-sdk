@@ -90,7 +90,8 @@ describe('ProjectV1_integration', () => {
 
     // SchematicsWorkspace
     const schematicsWorkspaceModel = {
-      workspace_crn: 'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+      workspace_crn:
+        'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
     };
 
     // ProjectConfigPrototype
@@ -153,15 +154,23 @@ describe('ProjectV1_integration', () => {
       description: 'Stage environment configuration.',
       environment_id: 'testString',
       authorizations: projectConfigAuthModel,
-      inputs: { account_id: 'account_id', resource_group: 'stage', access_tags: ['env:stage'], logdna_name: 'LogDNA_stage_service', sysdig_name: 'SysDig_stage_service' },
+      inputs: {
+        account_id: 'account_id',
+        resource_group: 'stage',
+        access_tags: ['env:stage'],
+        logdna_name: 'LogDNA_stage_service',
+        sysdig_name: 'SysDig_stage_service',
+      },
       settings: { IBMCLOUD_TOOLCHAIN_ENDPOINT: 'https://api.us-south.devops.dev.cloud.ibm.com' },
       compliance_profile: projectComplianceProfileModel,
-      locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+      locator_id:
+        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
     };
 
     // SchematicsWorkspace
     const schematicsWorkspaceModel = {
-      workspace_crn: 'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+      workspace_crn:
+        'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
     };
 
     const params = {
@@ -266,7 +275,7 @@ describe('ProjectV1_integration', () => {
     // EnvironmentDefinitionRequiredProperties
     const environmentDefinitionRequiredPropertiesModel = {
       name: 'development',
-      description: 'The environment \'development\'',
+      description: "The environment 'development'",
       authorizations: projectConfigAuthModel,
       inputs: { resource_group: 'stage', region: 'us-south' },
       compliance_profile: projectComplianceProfileModel,
@@ -328,7 +337,7 @@ describe('ProjectV1_integration', () => {
     // EnvironmentDefinitionProperties
     const environmentDefinitionPropertiesModel = {
       name: 'development',
-      description: 'The environment \'development\'',
+      description: "The environment 'development'",
       authorizations: projectConfigAuthModel,
       inputs: { resource_group: 'stage', region: 'us-south' },
       compliance_profile: projectComplianceProfileModel,
@@ -394,7 +403,13 @@ describe('ProjectV1_integration', () => {
       description: 'testString',
       environment_id: 'testString',
       authorizations: projectConfigAuthModel,
-      inputs: { account_id: 'account_id', resource_group: 'stage', access_tags: ['env:stage'], logdna_name: 'LogDNA_stage_service', sysdig_name: 'SysDig_stage_service' },
+      inputs: {
+        account_id: 'account_id',
+        resource_group: 'stage',
+        access_tags: ['env:stage'],
+        logdna_name: 'LogDNA_stage_service',
+        sysdig_name: 'SysDig_stage_service',
+      },
       settings: { anyKey: 'anyValue' },
       compliance_profile: projectComplianceProfileModel,
       locator_id: 'testString',
@@ -479,7 +494,8 @@ describe('ProjectV1_integration', () => {
 
     // SchematicsWorkspace
     const schematicsWorkspaceModel = {
-      workspace_crn: 'crn:v1:staging:public:schematics:us-south:a/38acaf4469814090a4e675dc0c317a0d:95ad49de-ab96-4e7d-a08c-45c38aa448e6:workspace:us-south.workspace.service.e0106139',
+      workspace_crn:
+        'crn:v1:staging:public:schematics:us-south:a/38acaf4469814090a4e675dc0c317a0d:95ad49de-ab96-4e7d-a08c-45c38aa448e6:workspace:us-south.workspace.service.e0106139',
     };
 
     const params = {
