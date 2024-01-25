@@ -44,6 +44,7 @@ Service Name | Import Path
 ## Prerequisites
 * You need an [IBM Cloud][ibm-cloud-onboarding] account.
 * **Node.js >=14**: This SDK is tested with Node.js versions 14 and up. It may work on previous versions but this is not officially supported.
+- Note that v14 is technically *supported* but not officially *guaranteed* as we only test on v16 and higher
 
 [ibm-cloud-onboarding]: http://cloud.ibm.com/registration
 

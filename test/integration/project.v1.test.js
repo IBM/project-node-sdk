@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2023.
+ * (C) Copyright IBM Corp. 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,21 +53,22 @@ describe('ProjectV1_integration', () => {
   test('createProject()', async () => {
     // Request models needed by this operation.
 
-    // ProjectConfigAuthTrustedProfile
-    const projectConfigAuthTrustedProfileModel = {
-      id: 'testString',
-      target_iam_id: 'testString',
+    // ProjectPrototypeDefinition
+    const projectPrototypeDefinitionModel = {
+      name: 'acme-microservice',
+      description: 'A microservice to deploy on top of ACME infrastructure.',
+      destroy_on_delete: true,
     };
 
     // ProjectConfigAuth
     const projectConfigAuthModel = {
-      trusted_profile: projectConfigAuthTrustedProfileModel,
-      method: 'testString',
+      trusted_profile_id: 'testString',
+      method: 'api_key',
       api_key: 'testString',
     };
 
-    // ProjectConfigComplianceProfile
-    const projectConfigComplianceProfileModel = {
+    // ProjectComplianceProfile
+    const projectComplianceProfileModel = {
       id: 'testString',
       instance_id: 'testString',
       instance_location: 'testString',
@@ -75,39 +76,50 @@ describe('ProjectV1_integration', () => {
       profile_name: 'testString',
     };
 
-    // ProjectConfigInputVariable
-    const projectConfigInputVariableModel = {
+    // ProjectConfigPrototypeDefinitionBlockDAConfigDefinitionProperties
+    const projectConfigPrototypeDefinitionBlockModel = {
       name: 'testString',
-      value: 'testString',
+      description: 'testString',
+      environment_id: 'testString',
+      authorizations: projectConfigAuthModel,
+      inputs: { anyKey: 'anyValue' },
+      settings: { anyKey: 'anyValue' },
+      compliance_profile: projectComplianceProfileModel,
+      locator_id: 'testString',
     };
 
-    // ProjectConfigSettingCollection
-    const projectConfigSettingCollectionModel = {
-      name: 'testString',
-      value: 'testString',
+    // SchematicsWorkspace
+    const schematicsWorkspaceModel = {
+      workspace_crn:
+        'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
     };
 
     // ProjectConfigPrototype
     const projectConfigPrototypeModel = {
-      id: 'testString',
-      name: 'common-variables',
-      labels: ['testString'],
+      definition: projectConfigPrototypeDefinitionBlockModel,
+      schematics: schematicsWorkspaceModel,
+    };
+
+    // EnvironmentDefinitionRequiredProperties
+    const environmentDefinitionRequiredPropertiesModel = {
+      name: 'testString',
       description: 'testString',
       authorizations: projectConfigAuthModel,
-      compliance_profile: projectConfigComplianceProfileModel,
-      locator_id:
-        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
-      input: [projectConfigInputVariableModel],
-      setting: [projectConfigSettingCollectionModel],
+      inputs: { anyKey: 'anyValue' },
+      compliance_profile: projectComplianceProfileModel,
+    };
+
+    // EnvironmentPrototype
+    const environmentPrototypeModel = {
+      definition: environmentDefinitionRequiredPropertiesModel,
     };
 
     const params = {
-      resourceGroup: 'Default',
+      definition: projectPrototypeDefinitionModel,
       location: 'us-south',
-      name: 'acme-microservice',
-      description: 'A microservice to deploy on top of ACME infrastructure.',
-      destroyOnDelete: true,
+      resourceGroup: 'Default',
       configs: [projectConfigPrototypeModel],
+      environments: [environmentPrototypeModel],
     };
 
     const res = await projectService.createProject(params);
@@ -120,21 +132,15 @@ describe('ProjectV1_integration', () => {
   test('createConfig()', async () => {
     // Request models needed by this operation.
 
-    // ProjectConfigAuthTrustedProfile
-    const projectConfigAuthTrustedProfileModel = {
-      id: 'testString',
-      target_iam_id: 'testString',
-    };
-
     // ProjectConfigAuth
     const projectConfigAuthModel = {
-      trusted_profile: projectConfigAuthTrustedProfileModel,
-      method: 'testString',
+      trusted_profile_id: 'testString',
+      method: 'api_key',
       api_key: 'testString',
     };
 
-    // ProjectConfigComplianceProfile
-    const projectConfigComplianceProfileModel = {
+    // ProjectComplianceProfile
+    const projectComplianceProfileModel = {
       id: 'testString',
       instance_id: 'testString',
       instance_location: 'testString',
@@ -142,30 +148,35 @@ describe('ProjectV1_integration', () => {
       profile_name: 'testString',
     };
 
-    // ProjectConfigInputVariable
-    const projectConfigInputVariableModel = {
-      name: 'account_id',
-      value: '$configs[].name["account-stage"].input.account_id',
+    // ProjectConfigPrototypeDefinitionBlockDAConfigDefinitionProperties
+    const projectConfigPrototypeDefinitionBlockModel = {
+      name: 'env-stage',
+      description: 'Stage environment configuration.',
+      environment_id: 'testString',
+      authorizations: projectConfigAuthModel,
+      inputs: {
+        account_id: 'account_id',
+        resource_group: 'stage',
+        access_tags: ['env:stage'],
+        logdna_name: 'LogDNA_stage_service',
+        sysdig_name: 'SysDig_stage_service',
+      },
+      settings: { IBMCLOUD_TOOLCHAIN_ENDPOINT: 'https://api.us-south.devops.dev.cloud.ibm.com' },
+      compliance_profile: projectComplianceProfileModel,
+      locator_id:
+        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
     };
 
-    // ProjectConfigSettingCollection
-    const projectConfigSettingCollectionModel = {
-      name: 'IBMCLOUD_TOOLCHAIN_ENDPOINT',
-      value: 'https://api.us-south.devops.dev.cloud.ibm.com',
+    // SchematicsWorkspace
+    const schematicsWorkspaceModel = {
+      workspace_crn:
+        'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
     };
 
     const params = {
       projectId: projectIdLink,
-      name: 'env-stage',
-      locatorId: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
-      id: 'testString',
-      labels: ['env:stage', 'governance:test', 'build:0'],
-      description:
-        'Stage environment configuration, which includes services common to all the environment regions. There must be a blueprint configuring all the services common to the stage regions. It is a terraform_template type of configuration that points to a Github repo hosting the terraform modules that can be deployed by a Schematics Workspace.',
-      authorizations: projectConfigAuthModel,
-      complianceProfile: projectConfigComplianceProfileModel,
-      input: [projectConfigInputVariableModel],
-      setting: [projectConfigSettingCollectionModel],
+      definition: projectConfigPrototypeDefinitionBlockModel,
+      schematics: schematicsWorkspaceModel,
     };
 
     const res = await projectService.createConfig(params);
@@ -221,6 +232,129 @@ describe('ProjectV1_integration', () => {
     expect(res.result).toBeDefined();
   });
 
+  test('updateProject()', async () => {
+    // Request models needed by this operation.
+
+    // ProjectPatchDefinitionBlock
+    const projectPatchDefinitionBlockModel = {
+      name: 'acme-microservice',
+      description: 'A microservice to deploy on top of ACME infrastructure.',
+      destroy_on_delete: true,
+    };
+
+    const params = {
+      id: projectIdLink,
+      definition: projectPatchDefinitionBlockModel,
+    };
+
+    const res = await projectService.updateProject(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(200);
+    expect(res.result).toBeDefined();
+  });
+
+  test('createProjectEnvironment()', async () => {
+    // Request models needed by this operation.
+
+    // ProjectConfigAuth
+    const projectConfigAuthModel = {
+      trusted_profile_id: 'testString',
+      method: 'api_key',
+      api_key: 'TbcdlprpFODhkpns9e0daOWnAwd2tXwSYtPn8rpEd8d9',
+    };
+
+    // ProjectComplianceProfile
+    const projectComplianceProfileModel = {
+      id: 'some-profile-id',
+      instance_id: 'some-instance-id',
+      instance_location: 'us-south',
+      attachment_id: 'some-attachment-id',
+      profile_name: 'some-profile-name',
+    };
+
+    // EnvironmentDefinitionRequiredProperties
+    const environmentDefinitionRequiredPropertiesModel = {
+      name: 'development',
+      description: "The environment 'development'",
+      authorizations: projectConfigAuthModel,
+      inputs: { resource_group: 'stage', region: 'us-south' },
+      compliance_profile: projectComplianceProfileModel,
+    };
+
+    const params = {
+      projectId: projectIdLink,
+      definition: environmentDefinitionRequiredPropertiesModel,
+    };
+
+    const res = await projectService.createProjectEnvironment(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(201);
+    expect(res.result).toBeDefined();
+  });
+
+  test('listProjectEnvironments()', async () => {
+    const params = {
+      projectId: projectIdLink,
+    };
+
+    const res = await projectService.listProjectEnvironments(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(200);
+    expect(res.result).toBeDefined();
+  });
+
+  test('getProjectEnvironment()', async () => {
+    const params = {
+      projectId: projectIdLink,
+      id: projectIdLink,
+    };
+
+    const res = await projectService.getProjectEnvironment(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(200);
+    expect(res.result).toBeDefined();
+  });
+
+  test('updateProjectEnvironment()', async () => {
+    // Request models needed by this operation.
+
+    // ProjectConfigAuth
+    const projectConfigAuthModel = {
+      trusted_profile_id: 'testString',
+      method: 'api_key',
+      api_key: 'TbcdlprpFODhkpns9e0daOWnAwd2tXwSYtPn8rpEd8d9',
+    };
+
+    // ProjectComplianceProfile
+    const projectComplianceProfileModel = {
+      id: 'some-profile-id',
+      instance_id: 'some-instance-id',
+      instance_location: 'us-south',
+      attachment_id: 'some-attachment-id',
+      profile_name: 'some-profile-name',
+    };
+
+    // EnvironmentDefinitionProperties
+    const environmentDefinitionPropertiesModel = {
+      name: 'development',
+      description: "The environment 'development'",
+      authorizations: projectConfigAuthModel,
+      inputs: { resource_group: 'stage', region: 'us-south' },
+      compliance_profile: projectComplianceProfileModel,
+    };
+
+    const params = {
+      projectId: projectIdLink,
+      id: projectIdLink,
+      definition: environmentDefinitionPropertiesModel,
+    };
+
+    const res = await projectService.updateProjectEnvironment(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(200);
+    expect(res.result).toBeDefined();
+  });
+
   test('listConfigs()', async () => {
     const params = {
       projectId: projectIdLink,
@@ -247,33 +381,15 @@ describe('ProjectV1_integration', () => {
   test('updateConfig()', async () => {
     // Request models needed by this operation.
 
-    // ProjectConfigInputVariable
-    const projectConfigInputVariableModel = {
-      name: 'account_id',
-      value: '$configs[].name["account-stage"].input.account_id',
-    };
-
-    // ProjectConfigSettingCollection
-    const projectConfigSettingCollectionModel = {
-      name: 'testString',
-      value: 'testString',
-    };
-
-    // ProjectConfigAuthTrustedProfile
-    const projectConfigAuthTrustedProfileModel = {
-      id: 'testString',
-      target_iam_id: 'testString',
-    };
-
     // ProjectConfigAuth
     const projectConfigAuthModel = {
-      trusted_profile: projectConfigAuthTrustedProfileModel,
-      method: 'testString',
+      trusted_profile_id: 'testString',
+      method: 'api_key',
       api_key: 'testString',
     };
 
-    // ProjectConfigComplianceProfile
-    const projectConfigComplianceProfileModel = {
+    // ProjectComplianceProfile
+    const projectComplianceProfileModel = {
       id: 'testString',
       instance_id: 'testString',
       instance_location: 'testString',
@@ -281,22 +397,46 @@ describe('ProjectV1_integration', () => {
       profile_name: 'testString',
     };
 
+    // ProjectConfigPatchDefinitionBlockDAConfigDefinitionProperties
+    const projectConfigPatchDefinitionBlockModel = {
+      name: 'env-stage',
+      description: 'testString',
+      environment_id: 'testString',
+      authorizations: projectConfigAuthModel,
+      inputs: {
+        account_id: 'account_id',
+        resource_group: 'stage',
+        access_tags: ['env:stage'],
+        logdna_name: 'LogDNA_stage_service',
+        sysdig_name: 'SysDig_stage_service',
+      },
+      settings: { anyKey: 'anyValue' },
+      compliance_profile: projectComplianceProfileModel,
+      locator_id: 'testString',
+    };
+
     const params = {
       projectId: projectIdLink,
       id: configIdLink,
-      locatorId: 'testString',
-      input: [projectConfigInputVariableModel],
-      setting: [projectConfigSettingCollectionModel],
-      name: 'testString',
-      labels: ['testString'],
-      description: 'testString',
-      authorizations: projectConfigAuthModel,
-      complianceProfile: projectConfigComplianceProfileModel,
+      definition: projectConfigPatchDefinitionBlockModel,
     };
 
     const res = await projectService.updateConfig(params);
     expect(res).toBeDefined();
     expect(res.status).toBe(200);
+    expect(res.result).toBeDefined();
+  });
+
+  test('forceApprove()', async () => {
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
+      comment: 'Approving the changes',
+    };
+
+    const res = await projectService.forceApprove(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(201);
     expect(res.result).toBeDefined();
   });
 
@@ -313,64 +453,107 @@ describe('ProjectV1_integration', () => {
     expect(res.result).toBeDefined();
   });
 
-  test('checkConfig()', async () => {
+  test('validateConfig()', async () => {
     const params = {
       projectId: projectIdLink,
       id: configIdLink,
-      xAuthRefreshToken: 'testString',
-      isDraft: true,
     };
 
-    const res = await projectService.checkConfig(params);
+    const res = await projectService.validateConfig(params);
     expect(res).toBeDefined();
     expect(res.status).toBe(202);
     expect(res.result).toBeDefined();
   });
 
-  test('installConfig()', async () => {
+  test('deployConfig()', async () => {
     const params = {
       projectId: projectIdLink,
       id: configIdLink,
     };
 
-    const res = await projectService.installConfig(params);
+    const res = await projectService.deployConfig(params);
     expect(res).toBeDefined();
     expect(res.status).toBe(202);
     expect(res.result).toBeDefined();
   });
 
-  test('uninstallConfig()', async () => {
+  test('undeployConfig()', async () => {
     const params = {
       projectId: projectIdLink,
       id: configIdLink,
     };
 
-    const res = await projectService.uninstallConfig(params);
+    const res = await projectService.undeployConfig(params);
     expect(res).toBeDefined();
     expect(res.status).toBe(204);
     expect(res.result).toBeDefined();
   });
 
-  test('listConfigDrafts()', async () => {
-    const params = {
-      projectId: projectIdLink,
-      configId: 'testString',
+  test('syncConfig()', async () => {
+    // Request models needed by this operation.
+
+    // SchematicsWorkspace
+    const schematicsWorkspaceModel = {
+      workspace_crn:
+        'crn:v1:staging:public:schematics:us-south:a/38acaf4469814090a4e675dc0c317a0d:95ad49de-ab96-4e7d-a08c-45c38aa448e6:workspace:us-south.workspace.service.e0106139',
     };
 
-    const res = await projectService.listConfigDrafts(params);
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
+      schematics: schematicsWorkspaceModel,
+    };
+
+    const res = await projectService.syncConfig(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(204);
+    expect(res.result).toBeDefined();
+  });
+
+  test('listConfigResources()', async () => {
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
+    };
+
+    const res = await projectService.listConfigResources(params);
     expect(res).toBeDefined();
     expect(res.status).toBe(200);
     expect(res.result).toBeDefined();
   });
 
-  test('getConfigDraft()', async () => {
+  test('listConfigVersions()', async () => {
     const params = {
       projectId: projectIdLink,
-      configId: 'testString',
+      id: configIdLink,
+    };
+
+    const res = await projectService.listConfigVersions(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(200);
+    expect(res.result).toBeDefined();
+  });
+
+  test('getConfigVersion()', async () => {
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
       version: 38,
     };
 
-    const res = await projectService.getConfigDraft(params);
+    const res = await projectService.getConfigVersion(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(200);
+    expect(res.result).toBeDefined();
+  });
+
+  test('deleteProjectEnvironment()', async () => {
+    const params = {
+      projectId: projectIdLink,
+      id: projectIdLink,
+    };
+
+    const res = await projectService.deleteProjectEnvironment(params);
     expect(res).toBeDefined();
     expect(res.status).toBe(200);
     expect(res.result).toBeDefined();
@@ -380,8 +563,6 @@ describe('ProjectV1_integration', () => {
     const params = {
       projectId: projectIdLink,
       id: configIdLink,
-      draftOnly: false,
-      destroy: true,
     };
 
     const res = await projectService.deleteConfig(params);
@@ -390,10 +571,22 @@ describe('ProjectV1_integration', () => {
     expect(res.result).toBeDefined();
   });
 
+  test('deleteConfigVersion()', async () => {
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
+      version: 38,
+    };
+
+    const res = await projectService.deleteConfigVersion(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(200);
+    expect(res.result).toBeDefined();
+  });
+
   test('deleteProject()', async () => {
     const params = {
       id: projectIdLink,
-      destroy: true,
     };
 
     const res = await projectService.deleteProject(params);
