@@ -56,15 +56,9 @@ describe('ProjectV1_integration', () => {
     // ProjectPrototypeDefinition
     const projectPrototypeDefinitionModel = {
       name: 'acme-microservice',
-      description: 'A microservice to deploy on top of ACME infrastructure.',
       destroy_on_delete: true,
-    };
-
-    // ProjectConfigAuth
-    const projectConfigAuthModel = {
-      trusted_profile_id: 'testString',
-      method: 'api_key',
-      api_key: 'testString',
+      description: 'A microservice to deploy on top of ACME infrastructure.',
+      monitoring_enabled: true,
     };
 
     // ProjectComplianceProfile
@@ -76,16 +70,23 @@ describe('ProjectV1_integration', () => {
       profile_name: 'testString',
     };
 
-    // ProjectConfigPrototypeDefinitionBlockDAConfigDefinitionProperties
-    const projectConfigPrototypeDefinitionBlockModel = {
-      name: 'testString',
+    // ProjectConfigAuth
+    const projectConfigAuthModel = {
+      trusted_profile_id: 'testString',
+      method: 'api_key',
+      api_key: 'testString',
+    };
+
+    // ProjectConfigDefinitionBlockPrototypeDAConfigDefinitionProperties
+    const projectConfigDefinitionBlockPrototypeModel = {
+      compliance_profile: projectComplianceProfileModel,
+      locator_id: 'testString',
       description: 'testString',
+      name: 'testString',
       environment_id: 'testString',
       authorizations: projectConfigAuthModel,
       inputs: { anyKey: 'anyValue' },
       settings: { anyKey: 'anyValue' },
-      compliance_profile: projectComplianceProfileModel,
-      locator_id: 'testString',
     };
 
     // SchematicsWorkspace
@@ -96,14 +97,14 @@ describe('ProjectV1_integration', () => {
 
     // ProjectConfigPrototype
     const projectConfigPrototypeModel = {
-      definition: projectConfigPrototypeDefinitionBlockModel,
+      definition: projectConfigDefinitionBlockPrototypeModel,
       schematics: schematicsWorkspaceModel,
     };
 
     // EnvironmentDefinitionRequiredProperties
     const environmentDefinitionRequiredPropertiesModel = {
-      name: 'testString',
       description: 'testString',
+      name: 'testString',
       authorizations: projectConfigAuthModel,
       inputs: { anyKey: 'anyValue' },
       compliance_profile: projectComplianceProfileModel,
@@ -132,13 +133,6 @@ describe('ProjectV1_integration', () => {
   test('createConfig()', async () => {
     // Request models needed by this operation.
 
-    // ProjectConfigAuth
-    const projectConfigAuthModel = {
-      trusted_profile_id: 'testString',
-      method: 'api_key',
-      api_key: 'testString',
-    };
-
     // ProjectComplianceProfile
     const projectComplianceProfileModel = {
       id: 'testString',
@@ -148,10 +142,20 @@ describe('ProjectV1_integration', () => {
       profile_name: 'testString',
     };
 
-    // ProjectConfigPrototypeDefinitionBlockDAConfigDefinitionProperties
-    const projectConfigPrototypeDefinitionBlockModel = {
-      name: 'env-stage',
+    // ProjectConfigAuth
+    const projectConfigAuthModel = {
+      trusted_profile_id: 'testString',
+      method: 'api_key',
+      api_key: 'testString',
+    };
+
+    // ProjectConfigDefinitionBlockPrototypeDAConfigDefinitionProperties
+    const projectConfigDefinitionBlockPrototypeModel = {
+      compliance_profile: projectComplianceProfileModel,
+      locator_id:
+        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
       description: 'Stage environment configuration.',
+      name: 'env-stage',
       environment_id: 'testString',
       authorizations: projectConfigAuthModel,
       inputs: {
@@ -162,9 +166,6 @@ describe('ProjectV1_integration', () => {
         sysdig_name: 'SysDig_stage_service',
       },
       settings: { IBMCLOUD_TOOLCHAIN_ENDPOINT: 'https://api.us-south.devops.dev.cloud.ibm.com' },
-      compliance_profile: projectComplianceProfileModel,
-      locator_id:
-        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
     };
 
     // SchematicsWorkspace
@@ -175,7 +176,7 @@ describe('ProjectV1_integration', () => {
 
     const params = {
       projectId: projectIdLink,
-      definition: projectConfigPrototypeDefinitionBlockModel,
+      definition: projectConfigDefinitionBlockPrototypeModel,
       schematics: schematicsWorkspaceModel,
     };
 
@@ -238,8 +239,9 @@ describe('ProjectV1_integration', () => {
     // ProjectPatchDefinitionBlock
     const projectPatchDefinitionBlockModel = {
       name: 'acme-microservice',
-      description: 'A microservice to deploy on top of ACME infrastructure.',
       destroy_on_delete: true,
+      description: 'A microservice to deploy on top of ACME infrastructure.',
+      monitoring_enabled: true,
     };
 
     const params = {
@@ -274,8 +276,8 @@ describe('ProjectV1_integration', () => {
 
     // EnvironmentDefinitionRequiredProperties
     const environmentDefinitionRequiredPropertiesModel = {
-      name: 'development',
       description: "The environment 'development'",
+      name: 'development',
       authorizations: projectConfigAuthModel,
       inputs: { resource_group: 'stage', region: 'us-south' },
       compliance_profile: projectComplianceProfileModel,
@@ -334,10 +336,10 @@ describe('ProjectV1_integration', () => {
       profile_name: 'some-profile-name',
     };
 
-    // EnvironmentDefinitionProperties
-    const environmentDefinitionPropertiesModel = {
-      name: 'development',
+    // EnvironmentDefinitionPropertiesPatch
+    const environmentDefinitionPropertiesPatchModel = {
       description: "The environment 'development'",
+      name: 'development',
       authorizations: projectConfigAuthModel,
       inputs: { resource_group: 'stage', region: 'us-south' },
       compliance_profile: projectComplianceProfileModel,
@@ -346,7 +348,7 @@ describe('ProjectV1_integration', () => {
     const params = {
       projectId: projectIdLink,
       id: projectIdLink,
-      definition: environmentDefinitionPropertiesModel,
+      definition: environmentDefinitionPropertiesPatchModel,
     };
 
     const res = await projectService.updateProjectEnvironment(params);
@@ -381,13 +383,6 @@ describe('ProjectV1_integration', () => {
   test('updateConfig()', async () => {
     // Request models needed by this operation.
 
-    // ProjectConfigAuth
-    const projectConfigAuthModel = {
-      trusted_profile_id: 'testString',
-      method: 'api_key',
-      api_key: 'testString',
-    };
-
     // ProjectComplianceProfile
     const projectComplianceProfileModel = {
       id: 'testString',
@@ -397,10 +392,19 @@ describe('ProjectV1_integration', () => {
       profile_name: 'testString',
     };
 
-    // ProjectConfigPatchDefinitionBlockDAConfigDefinitionProperties
-    const projectConfigPatchDefinitionBlockModel = {
-      name: 'env-stage',
+    // ProjectConfigAuth
+    const projectConfigAuthModel = {
+      trusted_profile_id: 'testString',
+      method: 'api_key',
+      api_key: 'testString',
+    };
+
+    // ProjectConfigDefinitionBlockPatchDAConfigDefinitionPropertiesPatch
+    const projectConfigDefinitionBlockPatchModel = {
+      compliance_profile: projectComplianceProfileModel,
+      locator_id: 'testString',
       description: 'testString',
+      name: 'env-stage',
       environment_id: 'testString',
       authorizations: projectConfigAuthModel,
       inputs: {
@@ -411,14 +415,12 @@ describe('ProjectV1_integration', () => {
         sysdig_name: 'SysDig_stage_service',
       },
       settings: { anyKey: 'anyValue' },
-      compliance_profile: projectComplianceProfileModel,
-      locator_id: 'testString',
     };
 
     const params = {
       projectId: projectIdLink,
       id: configIdLink,
-      definition: projectConfigPatchDefinitionBlockModel,
+      definition: projectConfigDefinitionBlockPatchModel,
     };
 
     const res = await projectService.updateConfig(params);
@@ -436,7 +438,7 @@ describe('ProjectV1_integration', () => {
 
     const res = await projectService.forceApprove(params);
     expect(res).toBeDefined();
-    expect(res.status).toBe(201);
+    expect(res.status).toBe(200);
     expect(res.result).toBeDefined();
   });
 
@@ -449,7 +451,7 @@ describe('ProjectV1_integration', () => {
 
     const res = await projectService.approve(params);
     expect(res).toBeDefined();
-    expect(res.status).toBe(201);
+    expect(res.status).toBe(200);
     expect(res.result).toBeDefined();
   });
 
@@ -485,7 +487,7 @@ describe('ProjectV1_integration', () => {
 
     const res = await projectService.undeployConfig(params);
     expect(res).toBeDefined();
-    expect(res.status).toBe(204);
+    expect(res.status).toBe(202);
     expect(res.result).toBeDefined();
   });
 
@@ -591,7 +593,7 @@ describe('ProjectV1_integration', () => {
 
     const res = await projectService.deleteProject(params);
     expect(res).toBeDefined();
-    expect(res.status).toBe(204);
+    expect(res.status).toBe(202);
     expect(res.result).toBeDefined();
   });
 });
