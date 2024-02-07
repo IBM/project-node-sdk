@@ -331,11 +331,11 @@ class ProjectV1 extends BaseService {
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.id - The unique project ID.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.EmptyObject>>}
+   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectDeleteResponse>>}
    */
   public deleteProject(
     params: ProjectV1.DeleteProjectParams
-  ): Promise<ProjectV1.Response<ProjectV1.EmptyObject>> {
+  ): Promise<ProjectV1.Response<ProjectV1.ProjectDeleteResponse>> {
     const _params = { ...params };
     const _requiredParams = ['id'];
     const _validParams = ['id', 'headers'];
@@ -357,7 +357,14 @@ class ProjectV1 extends BaseService {
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, sdkHeaders, {}, _params.headers),
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+          },
+          _params.headers
+        ),
       }),
     };
 
@@ -536,7 +543,7 @@ class ProjectV1 extends BaseService {
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
    * @param {string} params.id - The environment ID.
-   * @param {EnvironmentDefinitionProperties} params.definition - The environment definition used for updates.
+   * @param {EnvironmentDefinitionPropertiesPatch} params.definition - The environment definition used for updates.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.Environment>>}
    */
@@ -653,7 +660,7 @@ class ProjectV1 extends BaseService {
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {ProjectConfigPrototypeDefinitionBlock} params.definition -
+   * @param {ProjectConfigDefinitionBlockPrototype} params.definition -
    * @param {SchematicsWorkspace} [params.schematics] - A Schematics workspace to use for deploying this configuration.
    * Either schematics.workspace_crn, definition.locator_id, or both must be specified.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
@@ -810,7 +817,7 @@ class ProjectV1 extends BaseService {
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
    * @param {string} params.id - The unique config ID.
-   * @param {ProjectConfigPatchDefinitionBlock} params.definition -
+   * @param {ProjectConfigDefinitionBlockPatch} params.definition -
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfig>>}
    */
@@ -1137,11 +1144,11 @@ class ProjectV1 extends BaseService {
    * @param {string} params.projectId - The unique project ID.
    * @param {string} params.id - The unique config ID.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.EmptyObject>>}
+   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigVersion>>}
    */
   public undeployConfig(
     params: ProjectV1.UndeployConfigParams
-  ): Promise<ProjectV1.Response<ProjectV1.EmptyObject>> {
+  ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigVersion>> {
     const _params = { ...params };
     const _requiredParams = ['projectId', 'id'];
     const _validParams = ['projectId', 'id', 'headers'];
@@ -1164,7 +1171,14 @@ class ProjectV1 extends BaseService {
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, sdkHeaders, {}, _params.headers),
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+          },
+          _params.headers
+        ),
       }),
     };
 
@@ -1549,7 +1563,7 @@ namespace ProjectV1 {
     /** The environment ID. */
     id: string;
     /** The environment definition used for updates. */
-    definition: EnvironmentDefinitionProperties;
+    definition: EnvironmentDefinitionPropertiesPatch;
     headers?: OutgoingHttpHeaders;
   }
 
@@ -1566,7 +1580,7 @@ namespace ProjectV1 {
   export interface CreateConfigParams {
     /** The unique project ID. */
     projectId: string;
-    definition: ProjectConfigPrototypeDefinitionBlock;
+    definition: ProjectConfigDefinitionBlockPrototype;
     /** A Schematics workspace to use for deploying this configuration.
      *  Either schematics.workspace_crn, definition.locator_id, or both must be specified.
      */
@@ -1596,7 +1610,7 @@ namespace ProjectV1 {
     projectId: string;
     /** The unique config ID. */
     id: string;
-    definition: ProjectConfigPatchDefinitionBlock;
+    definition: ProjectConfigDefinitionBlockPatch;
     headers?: OutgoingHttpHeaders;
   }
 
@@ -1721,91 +1735,111 @@ namespace ProjectV1 {
 
   /** The messages of apply jobs on the configuration. */
   export interface ActionJobApplyMessagesSummary {
-    /** The collection of error messages. */
+    /** The collection of error messages. This is only reported if schematics triggered a terraform apply job. */
     error_messages?: TerraformLogAnalyzerErrorMessage[];
-    /** The collection of success messages. */
+    /** The collection of success messages. This is only reported if schematics triggered a terraform apply job. */
     sucess_message?: TerraformLogAnalyzerSuccessMessage[];
   }
 
   /** The summary of the apply jobs on the configuration. */
   export interface ActionJobApplySummary {
-    /** The number of applied resources. */
+    /** The number of applied resources. This is only reported if schematics triggered a terraform apply job. */
     success?: number;
-    /** The number of failed resources. */
+    /** The number of failed resources. The number of applied resources. This is only reported if schematics
+     *  triggered a terraform apply job.
+     */
     failed?: number;
-    /** The collection of successfully applied resources. */
+    /** The collection of successfully applied resources. This is only reported if schematics triggered a terraform
+     *  apply job.
+     */
     success_resources?: string[];
-    /** The collection of failed applied resources. */
+    /** The collection of failed applied resources. This is only reported if schematics triggered a terraform apply
+     *  job.
+     */
     failed_resources?: string[];
   }
 
   /** The messages of destroy jobs on the configuration. */
   export interface ActionJobDestroyMessagesSummary {
-    /** The collection of error messages. */
+    /** The collection of error messages. This is only reported if schematics triggered a terraform destroy job. */
     error_messages?: TerraformLogAnalyzerErrorMessage[];
   }
 
   /** The summary of the destroy jobs on the configuration. */
   export interface ActionJobDestroySummary {
-    /** The number of destroyed resources. */
+    /** The number of destroyed resources. This is only reported if schematics triggered a terraform destroy job. */
     success?: number;
-    /** The number of failed resources. */
+    /** The number of failed resources. This is only reported if schematics triggered a terraform destroy job. */
     failed?: number;
-    /** The number of tainted resources. */
+    /** The number of tainted resources. This is only reported if schematics triggered a terraform destroy job. */
     tainted?: number;
-    /** The destroy resources results from the job. */
+    /** The destroy resources results from the job. This is only reported if schematics triggered a terraform
+     *  destroy job.
+     */
     resources?: ActionJobDestroySummaryResources;
   }
 
-  /** The destroy resources results from the job. */
+  /** The destroy resources results from the job. This is only reported if schematics triggered a terraform destroy job. */
   export interface ActionJobDestroySummaryResources {
-    /** The collection of destroyed resources. */
+    /** The collection of destroyed resources. This is only reported if schematics triggered a terraform destroy
+     *  job.
+     */
     success?: string[];
-    /** The collection of failed resources. */
+    /** The collection of failed resources. This is only reported if schematics triggered a terraform destroy job. */
     failed?: string[];
-    /** The collection of tainted resources. */
+    /** The collection of tainted resources. This is only reported if schematics triggered a terraform destroy job. */
     tainted?: string[];
   }
 
   /** The message summaries of jobs on the configuration. */
   export interface ActionJobMessageSummary {
-    /** The number of info messages. */
+    /** The number of info messages. This is only reported if schematics triggered a terraform job. */
     info?: number;
-    /** The number of debug messages. */
+    /** The number of debug messages. This is only reported if schematics triggered a terraform job. */
     debug?: number;
-    /** The number of error messages. */
+    /** The number of error messages. This is only reported if schematics triggered a terraform job. */
     error?: number;
   }
 
   /** The plan messages on the configuration. */
   export interface ActionJobPlanMessagesSummary {
-    /** The collection of error messages. */
+    /** The collection of error messages. This is only reported if schematics triggered a terraform plan job. */
     error_messages?: TerraformLogAnalyzerErrorMessage[];
-    /** The collection of success messages. */
+    /** The collection of success messages. This is only reported if schematics triggered a terraform plan job. */
     sucess_message?: string[];
-    /** The collection of update messages. */
+    /** The collection of update messages. This is only reported if schematics triggered a terraform plan job. */
     update_message?: string[];
-    /** The collection of destroy messages. */
+    /** The collection of destroy messages. This is only reported if schematics triggered a terraform plan job. */
     destroy_message?: string[];
   }
 
   /** The summary of the plan jobs on the configuration. */
   export interface ActionJobPlanSummary {
-    /** The number of resources to be added. */
+    /** The number of resources to be added. This is only reported if schematics triggered a terraform plan job. */
     add?: number;
-    /** The number of resources that failed during the plan job. */
+    /** The number of resources that failed during the plan job. This is only reported if schematics triggered a
+     *  terraform plan job.
+     */
     failed?: number;
-    /** The number of resources to be updated. */
+    /** The number of resources to be updated. This is only reported if schematics triggered a terraform plan job. */
     update?: number;
-    /** The number of resources to be destroyed. */
+    /** The number of resources to be destroyed. This is only reported if schematics triggered a terraform plan job. */
     destroy?: number;
-    /** The collection of planned added resources. */
+    /** The collection of planned added resources. This is only reported if schematics triggered a terraform plan
+     *  job.
+     */
     add_resources?: string[];
-    /** The collection of failed planned resources. */
+    /** The collection of failed planned resources. This is only reported if schematics triggered a terraform plan
+     *  job.
+     */
     failed_resources?: string[];
-    /** The collection of planned updated resources. */
+    /** The collection of planned updated resources. This is only reported if schematics triggered a terraform plan
+     *  job.
+     */
     updated_resources?: string[];
-    /** The collection of planned destroy resources. */
+    /** The collection of planned destroy resources. This is only reported if schematics triggered a terraform plan
+     *  job.
+     */
     destroy_resources?: string[];
   }
 
@@ -1887,20 +1921,12 @@ namespace ProjectV1 {
     environments?: Environment[];
   }
 
-  /** The environment definition used in the project collection. */
-  export interface EnvironmentDefinitionNameDescription {
-    /** The name of the environment.  It is unique within the account across projects and regions. */
-    name?: string;
-    /** The description of the environment. */
-    description?: string;
-  }
-
   /** The environment definition used for updates. */
-  export interface EnvironmentDefinitionProperties {
-    /** The name of the environment.  It is unique within the account across projects and regions. */
-    name?: string;
+  export interface EnvironmentDefinitionPropertiesPatch {
     /** The description of the environment. */
     description?: string;
+    /** The name of the environment.  It is unique within the account across projects and regions. */
+    name?: string;
     /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
     authorizations?: ProjectConfigAuth;
     /** The input variables for configuration definition and environment. */
@@ -1911,10 +1937,10 @@ namespace ProjectV1 {
 
   /** The environment definition. */
   export interface EnvironmentDefinitionRequiredProperties {
-    /** The name of the environment.  It is unique within the account across projects and regions. */
-    name: string;
     /** The description of the environment. */
     description?: string;
+    /** The name of the environment.  It is unique within the account across projects and regions. */
+    name: string;
     /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
     authorizations?: ProjectConfigAuth;
     /** The input variables for configuration definition and environment. */
@@ -1941,12 +1967,28 @@ namespace ProjectV1 {
     href: string;
     /** The result of the last action. */
     result?: string;
+    /** A brief summary of an action. */
+    job?: ActionJobWithIdAndSummary;
     /** A brief summary of a pre/post action. */
     pre_job?: PrePostActionJobWithIdAndSummary;
     /** A brief summary of a pre/post action. */
     post_job?: PrePostActionJobWithIdAndSummary;
+  }
+
+  /** The drift detection job performed as part of the monitoring action. */
+  export interface LastDriftDetectionJobSummary {
     /** A brief summary of an action. */
     job?: ActionJobWithIdAndSummary;
+  }
+
+  /** The monitoring action job performed on the project configuration. */
+  export interface LastMonitoringActionWithSummary {
+    /** A URL. */
+    href: string;
+    /** The result of the last action. */
+    result?: string;
+    /** The drift detection job performed as part of the monitoring action. */
+    drift_detection?: LastDriftDetectionJobSummary;
   }
 
   /** The action job performed on the project configuration. */
@@ -1955,15 +1997,17 @@ namespace ProjectV1 {
     href: string;
     /** The result of the last action. */
     result?: string;
+    /** A brief summary of an action. */
+    job?: ActionJobWithIdAndSummary;
     /** A brief summary of a pre/post action. */
     pre_job?: PrePostActionJobWithIdAndSummary;
     /** A brief summary of a pre/post action. */
     post_job?: PrePostActionJobWithIdAndSummary;
-    /** A brief summary of an action. */
-    job?: ActionJobWithIdAndSummary;
     /** The cost estimate of the configuration. It only exists after the first configuration validation. */
     cost_estimate?: ProjectConfigMetadataCostEstimate;
-    /** The Code Risk Analyzer logs of the configuration. */
+    /** The Code Risk Analyzer logs from the compliance scan run for this validation. This is only populated after
+     *  the compliance scan step is run for the validation. Note: cra is the abbreviated form of Code Risk Analyzer.
+     */
     cra_logs?: ProjectConfigMetadataCodeRiskAnalyzerLogs;
   }
 
@@ -1983,7 +2027,7 @@ namespace ProjectV1 {
     href: string;
   }
 
-  /** A brief summary of a pre/post action job. */
+  /** A brief summary of a pre/post action job. This is only populated after an action is run as part of a validation, deployment, or undeployment. */
   export interface PrePostActionJobSummary {
     /** The ID of the Schematics action job that ran as part of the pre/post job. */
     job_id: string;
@@ -2029,7 +2073,9 @@ namespace ProjectV1 {
   export interface PrePostActionJobWithIdAndSummary {
     /** The unique ID. */
     id: string;
-    /** A brief summary of a pre/post action job. */
+    /** A brief summary of a pre/post action job. This is only populated after an action is run as part of a
+     *  validation, deployment, or undeployment.
+     */
     summary: PrePostActionJobSummary;
   }
 
@@ -2133,6 +2179,8 @@ namespace ProjectV1 {
     last_deployed?: LastActionWithSummary;
     /** The action job performed on the project configuration. */
     last_undeployed?: LastActionWithSummary;
+    /** The monitoring action job performed on the project configuration. */
+    last_monitoring?: LastMonitoringActionWithSummary;
     /** The outputs of a Schematics template property. */
     outputs: OutputValue[];
     /** The project referenced by this resource. */
@@ -2145,6 +2193,8 @@ namespace ProjectV1 {
     state: string;
     /** The flag that indicates whether a configuration update is available. */
     update_available?: boolean;
+    /** The configuration UUIDs associated to this stack. */
+    members?: string[];
     /** A URL. */
     href: string;
     definition: ProjectConfigResponseDefinition;
@@ -2170,37 +2220,20 @@ namespace ProjectV1 {
     configs?: ProjectConfigSummary[];
   }
 
-  /** The name and description of a project configuration. */
-  export interface ProjectConfigDefinitionNameDescription {
-    /** The configuration name. It is unique within the account across projects and regions. */
-    name?: string;
-    /** A project configuration description. */
-    description?: string;
-  }
+  /** ProjectConfigDefinitionBlockPatch. */
+  export interface ProjectConfigDefinitionBlockPatch {}
 
-  /** Deletes the configuration response. */
+  /** ProjectConfigDefinitionBlockPrototype. */
+  export interface ProjectConfigDefinitionBlockPrototype {}
+
+  /** The ID of the deleted config. */
   export interface ProjectConfigDelete {
-    /** The unique configuration ID. */
+    /** The ID of the deleted project or configuration. */
     id: string;
   }
 
-  /** The Code Risk Analyzer logs of the configuration. */
-  export interface ProjectConfigMetadataCodeRiskAnalyzerLogs {
-    /** The version of the Code Risk Analyzer logs of the configuration. This will change as the Code Risk Analyzer
-     *  is updated.
-     */
-    cra_version?: string;
-    /** The schema version of Code Risk Analyzer logs of the configuration. */
-    schema_version?: string;
-    /** The status of the Code Risk Analyzer logs of the configuration. */
-    status?: string;
-    /** The Code Risk Analyzer logs summary of the configuration. */
-    summary?: CodeRiskAnalyzerLogsSummary;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
-     *  time format as specified by RFC 3339.
-     */
-    timestamp?: string;
-  }
+  /** The Code Risk Analyzer logs of the configuration. This is only populated after the validation step in which the Code Risk Analyzer is run. */
+  export interface ProjectConfigMetadataCodeRiskAnalyzerLogs {}
 
   /** The cost estimate of the configuration. It only exists after the first configuration validation. */
   export interface ProjectConfigMetadataCostEstimate {
@@ -2242,20 +2275,14 @@ namespace ProjectV1 {
     user_id: string;
   }
 
-  /** ProjectConfigPatchDefinitionBlock. */
-  export interface ProjectConfigPatchDefinitionBlock {}
-
   /** The input of a project configuration. */
   export interface ProjectConfigPrototype {
-    definition: ProjectConfigPrototypeDefinitionBlock;
+    definition: ProjectConfigDefinitionBlockPrototype;
     /** A Schematics workspace to use for deploying this configuration.
      *  Either schematics.workspace_crn, definition.locator_id, or both must be specified.
      */
     schematics?: SchematicsWorkspace;
   }
-
-  /** ProjectConfigPrototypeDefinitionBlock. */
-  export interface ProjectConfigPrototypeDefinitionBlock {}
 
   /** ProjectConfigResource. */
   export interface ProjectConfigResource {
@@ -2307,11 +2334,19 @@ namespace ProjectV1 {
     /** A URL. */
     href: string;
     /** The name and description of a project configuration. */
-    definition: ProjectConfigDefinitionNameDescription;
+    definition: ProjectConfigSummaryDefinition;
     /** The project referenced by this resource. */
     project: ProjectReference;
     /** The configuration type. */
     deployment_model?: string;
+  }
+
+  /** The name and description of a project configuration. */
+  export interface ProjectConfigSummaryDefinition {
+    /** A project configuration description. */
+    description?: string;
+    /** The configuration name. It is unique within the account across projects and regions. */
+    name?: string;
   }
 
   /** A specific version of a project configuration. */
@@ -2346,6 +2381,8 @@ namespace ProjectV1 {
     last_deployed?: LastActionWithSummary;
     /** The action job performed on the project configuration. */
     last_undeployed?: LastActionWithSummary;
+    /** The monitoring action job performed on the project configuration. */
+    last_monitoring?: LastMonitoringActionWithSummary;
     /** The outputs of a Schematics template property. */
     outputs: OutputValue[];
     /** The project referenced by this resource. */
@@ -2358,6 +2395,8 @@ namespace ProjectV1 {
     state: string;
     /** The flag that indicates whether a configuration update is available. */
     update_available?: boolean;
+    /** The configuration UUIDs associated to this stack. */
+    members?: string[];
     /** A URL. */
     href: string;
     definition: ProjectConfigResponseDefinition;
@@ -2383,18 +2422,26 @@ namespace ProjectV1 {
   export interface ProjectDefinitionProperties {
     /** The name of the project.  It is unique within the account across regions. */
     name: string;
+    /** The policy that indicates whether the resources are destroyed or not when a project is deleted. */
+    destroy_on_delete: boolean;
     /** A brief explanation of the project's use in the configuration of a deployable architecture. It is possible
      *  to create a project without providing a description.
      */
-    description?: string;
-    /** The policy that indicates whether the resources are destroyed or not when a project is deleted. */
-    destroy_on_delete: boolean;
+    description: string;
+    /** A boolean flag to enable project monitoring. */
+    monitoring_enabled: boolean;
   }
 
   /** The definition of the project reference. */
   export interface ProjectDefinitionReference {
     /** The name of the project. */
     name: string;
+  }
+
+  /** The ID of the deleted project. */
+  export interface ProjectDeleteResponse {
+    /** The ID of the deleted project or configuration. */
+    id: string;
   }
 
   /** The environment metadata. */
@@ -2410,31 +2457,43 @@ namespace ProjectV1 {
     /** A URL. */
     href: string;
     /** The environment definition used in the project collection. */
-    definition: EnvironmentDefinitionNameDescription;
+    definition: ProjectEnvironmentSummaryDefinition;
+  }
+
+  /** The environment definition used in the project collection. */
+  export interface ProjectEnvironmentSummaryDefinition {
+    /** The description of the environment. */
+    description?: string;
+    /** The name of the environment.  It is unique within the account across projects and regions. */
+    name: string;
   }
 
   /** The definition of the project. */
   export interface ProjectPatchDefinitionBlock {
     /** The name of the project.  It is unique within the account across regions. */
     name?: string;
+    /** The policy that indicates whether the resources are destroyed or not when a project is deleted. */
+    destroy_on_delete?: boolean;
     /** A brief explanation of the project's use in the configuration of a deployable architecture. It is possible
      *  to create a project without providing a description.
      */
     description?: string;
-    /** The policy that indicates whether the resources are destroyed or not when a project is deleted. */
-    destroy_on_delete?: boolean;
+    /** A boolean flag to enable project monitoring. */
+    monitoring_enabled?: boolean;
   }
 
   /** The definition of the project. */
   export interface ProjectPrototypeDefinition {
     /** The name of the project.  It is unique within the account across regions. */
     name: string;
+    /** The policy that indicates whether the resources are undeployed or not when a project is deleted. */
+    destroy_on_delete?: boolean;
     /** A brief explanation of the project's use in the configuration of a deployable architecture. It is possible
      *  to create a project without providing a description.
      */
     description?: string;
-    /** The policy that indicates whether the resources are undeployed or not when a project is deleted. */
-    destroy_on_delete?: boolean;
+    /** A boolean flag to enable project monitoring. */
+    monitoring_enabled?: boolean;
   }
 
   /** The project referenced by this resource. */
@@ -2542,37 +2601,18 @@ namespace ProjectV1 {
   }
 
   /** The name and description of a project configuration. */
-  export interface ProjectConfigPatchDefinitionBlockDAConfigDefinitionProperties
-    extends ProjectConfigPatchDefinitionBlock {
-    /** The configuration name. It is unique within the account across projects and regions. */
-    name?: string;
-    /** A project configuration description. */
-    description?: string;
-    /** The ID of the project environment. */
-    environment_id?: string;
-    /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
-    authorizations?: ProjectConfigAuth;
-    /** The input variables for configuration definition and environment. */
-    inputs?: JsonObject;
-    /** Schematics environment variables to use to deploy the configuration. Settings are only available if they
-     *  were specified when the configuration was initially created.
-     */
-    settings?: JsonObject;
+  export interface ProjectConfigDefinitionBlockPatchDAConfigDefinitionPropertiesPatch
+    extends ProjectConfigDefinitionBlockPatch {
     /** The profile required for compliance. */
     compliance_profile?: ProjectComplianceProfile;
     /** A unique concatenation of catalogID.versionID that identifies the DA in the catalog. Either
      *  schematics.workspace_crn, definition.locator_id, or both must be specified.
      */
     locator_id?: string;
-  }
-
-  /** The name and description of a project configuration. */
-  export interface ProjectConfigPatchDefinitionBlockResourceConfigDefinitionProperties
-    extends ProjectConfigPatchDefinitionBlock {
-    /** The configuration name. It is unique within the account across projects and regions. */
-    name?: string;
     /** A project configuration description. */
     description?: string;
+    /** The configuration name. It is unique within the account across projects and regions. */
+    name?: string;
     /** The ID of the project environment. */
     environment_id?: string;
     /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
@@ -2583,17 +2623,17 @@ namespace ProjectV1 {
      *  were specified when the configuration was initially created.
      */
     settings?: JsonObject;
+  }
+
+  /** The name and description of a project configuration. */
+  export interface ProjectConfigDefinitionBlockPatchResourceConfigDefinitionPropertiesPatch
+    extends ProjectConfigDefinitionBlockPatch {
     /** The CRNs of resources associated with this configuration. */
     resource_crns?: string[];
-  }
-
-  /** The name and description of a project configuration. */
-  export interface ProjectConfigPrototypeDefinitionBlockDAConfigDefinitionProperties
-    extends ProjectConfigPrototypeDefinitionBlock {
-    /** The configuration name. It is unique within the account across projects and regions. */
-    name?: string;
     /** A project configuration description. */
     description?: string;
+    /** The configuration name. It is unique within the account across projects and regions. */
+    name?: string;
     /** The ID of the project environment. */
     environment_id?: string;
     /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
@@ -2604,21 +2644,21 @@ namespace ProjectV1 {
      *  were specified when the configuration was initially created.
      */
     settings?: JsonObject;
+  }
+
+  /** The name and description of a project configuration. */
+  export interface ProjectConfigDefinitionBlockPrototypeDAConfigDefinitionProperties
+    extends ProjectConfigDefinitionBlockPrototype {
     /** The profile required for compliance. */
     compliance_profile?: ProjectComplianceProfile;
     /** A unique concatenation of catalogID.versionID that identifies the DA in the catalog. Either
      *  schematics.workspace_crn, definition.locator_id, or both must be specified.
      */
     locator_id?: string;
-  }
-
-  /** The name and description of a project configuration. */
-  export interface ProjectConfigPrototypeDefinitionBlockResourceConfigDefinitionProperties
-    extends ProjectConfigPrototypeDefinitionBlock {
-    /** The configuration name. It is unique within the account across projects and regions. */
-    name?: string;
     /** A project configuration description. */
     description?: string;
+    /** The configuration name. It is unique within the account across projects and regions. */
+    name?: string;
     /** The ID of the project environment. */
     environment_id?: string;
     /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
@@ -2629,42 +2669,61 @@ namespace ProjectV1 {
      *  were specified when the configuration was initially created.
      */
     settings?: JsonObject;
+  }
+
+  /** The name and description of a project configuration. */
+  export interface ProjectConfigDefinitionBlockPrototypeResourceConfigDefinitionProperties
+    extends ProjectConfigDefinitionBlockPrototype {
     /** The CRNs of resources associated with this configuration. */
     resource_crns?: string[];
+    /** A project configuration description. */
+    description?: string;
+    /** The configuration name. It is unique within the account across projects and regions. */
+    name?: string;
+    /** The ID of the project environment. */
+    environment_id?: string;
+    /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
+    authorizations?: ProjectConfigAuth;
+    /** The input variables for configuration definition and environment. */
+    inputs?: JsonObject;
+    /** Schematics environment variables to use to deploy the configuration. Settings are only available if they
+     *  were specified when the configuration was initially created.
+     */
+    settings?: JsonObject;
+  }
+
+  /** The Code Risk Analyzer logs of the configuration per Code Risk Analyzer Version 2.0.4. */
+  export interface ProjectConfigMetadataCodeRiskAnalyzerLogsVersion204
+    extends ProjectConfigMetadataCodeRiskAnalyzerLogs {
+    /** The version of the Code Risk Analyzer logs of the configuration. The metadata for this schema is specific to
+     *  cra version 2.0.4.
+     */
+    cra_version?: string;
+    /** The schema version of Code Risk Analyzer logs of the configuration. */
+    schema_version?: string;
+    /** The status of the Code Risk Analyzer logs of the configuration. */
+    status?: string;
+    /** The Code Risk Analyzer logs summary of the configuration. */
+    summary?: CodeRiskAnalyzerLogsSummary;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+     *  time format as specified by RFC 3339.
+     */
+    timestamp?: string;
   }
 
   /** The name and description of a project configuration. */
   export interface ProjectConfigResponseDefinitionDAConfigDefinitionProperties
     extends ProjectConfigResponseDefinition {
-    /** The configuration name. It is unique within the account across projects and regions. */
-    name?: string;
-    /** A project configuration description. */
-    description?: string;
-    /** The ID of the project environment. */
-    environment_id?: string;
-    /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
-    authorizations?: ProjectConfigAuth;
-    /** The input variables for configuration definition and environment. */
-    inputs?: JsonObject;
-    /** Schematics environment variables to use to deploy the configuration. Settings are only available if they
-     *  were specified when the configuration was initially created.
-     */
-    settings?: JsonObject;
     /** The profile required for compliance. */
     compliance_profile?: ProjectComplianceProfile;
     /** A unique concatenation of catalogID.versionID that identifies the DA in the catalog. Either
      *  schematics.workspace_crn, definition.locator_id, or both must be specified.
      */
     locator_id?: string;
-  }
-
-  /** The name and description of a project configuration. */
-  export interface ProjectConfigResponseDefinitionResourceConfigDefinitionProperties
-    extends ProjectConfigResponseDefinition {
-    /** The configuration name. It is unique within the account across projects and regions. */
-    name?: string;
     /** A project configuration description. */
     description?: string;
+    /** The configuration name. It is unique within the account across projects and regions. */
+    name?: string;
     /** The ID of the project environment. */
     environment_id?: string;
     /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
@@ -2675,8 +2734,42 @@ namespace ProjectV1 {
      *  were specified when the configuration was initially created.
      */
     settings?: JsonObject;
+  }
+
+  /** The name and description of a project configuration. */
+  export interface ProjectConfigResponseDefinitionResourceConfigDefinitionProperties
+    extends ProjectConfigResponseDefinition {
     /** The CRNs of resources associated with this configuration. */
     resource_crns?: string[];
+    /** A project configuration description. */
+    description?: string;
+    /** The configuration name. It is unique within the account across projects and regions. */
+    name?: string;
+    /** The ID of the project environment. */
+    environment_id?: string;
+    /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
+    authorizations?: ProjectConfigAuth;
+    /** The input variables for configuration definition and environment. */
+    inputs?: JsonObject;
+    /** Schematics environment variables to use to deploy the configuration. Settings are only available if they
+     *  were specified when the configuration was initially created.
+     */
+    settings?: JsonObject;
+  }
+
+  /** The name and description of a project configuration. */
+  export interface ProjectConfigResponseDefinitionStackConfigDefinitionProperties
+    extends ProjectConfigResponseDefinition {
+    /** A project configuration description. */
+    description?: string;
+    /** The configuration name. It is unique within the account across projects and regions. */
+    name?: string;
+    /** A unique concatenation of catalogID.versionID that identifies the DA in the catalog. Either
+     *  schematics.workspace_crn, definition.locator_id, or both must be specified.
+     */
+    locator_id?: string;
+    /** The ID of the project environment. */
+    environment_id?: string;
   }
 
   /*************************

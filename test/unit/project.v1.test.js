@@ -127,15 +127,9 @@ describe('ProjectV1', () => {
       // ProjectPrototypeDefinition
       const projectPrototypeDefinitionModel = {
         name: 'acme-microservice',
-        description: 'A microservice to deploy on top of ACME infrastructure.',
         destroy_on_delete: true,
-      };
-
-      // ProjectConfigAuth
-      const projectConfigAuthModel = {
-        trusted_profile_id: 'testString',
-        method: 'api_key',
-        api_key: 'testString',
+        description: 'A microservice to deploy on top of ACME infrastructure.',
+        monitoring_enabled: true,
       };
 
       // ProjectComplianceProfile
@@ -147,16 +141,23 @@ describe('ProjectV1', () => {
         profile_name: 'testString',
       };
 
-      // ProjectConfigPrototypeDefinitionBlockDAConfigDefinitionProperties
-      const projectConfigPrototypeDefinitionBlockModel = {
-        name: 'testString',
+      // ProjectConfigAuth
+      const projectConfigAuthModel = {
+        trusted_profile_id: 'testString',
+        method: 'api_key',
+        api_key: 'testString',
+      };
+
+      // ProjectConfigDefinitionBlockPrototypeDAConfigDefinitionProperties
+      const projectConfigDefinitionBlockPrototypeModel = {
+        compliance_profile: projectComplianceProfileModel,
+        locator_id: 'testString',
         description: 'testString',
+        name: 'testString',
         environment_id: 'testString',
         authorizations: projectConfigAuthModel,
         inputs: { anyKey: 'anyValue' },
         settings: { anyKey: 'anyValue' },
-        compliance_profile: projectComplianceProfileModel,
-        locator_id: 'testString',
       };
 
       // SchematicsWorkspace
@@ -167,14 +168,14 @@ describe('ProjectV1', () => {
 
       // ProjectConfigPrototype
       const projectConfigPrototypeModel = {
-        definition: projectConfigPrototypeDefinitionBlockModel,
+        definition: projectConfigDefinitionBlockPrototypeModel,
         schematics: schematicsWorkspaceModel,
       };
 
       // EnvironmentDefinitionRequiredProperties
       const environmentDefinitionRequiredPropertiesModel = {
-        name: 'testString',
         description: 'testString',
+        name: 'testString',
         authorizations: projectConfigAuthModel,
         inputs: { anyKey: 'anyValue' },
         compliance_profile: projectComplianceProfileModel,
@@ -353,9 +354,9 @@ describe('ProjectV1', () => {
       const serviceUrl = projectServiceOptions.url;
       const path = '/v1/projects';
       const mockPagerResponse1 =
-        '{"next":{"href":"https://myhost.com/somePath?start=1"},"projects":[{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_error":false,"id":"id","location":"location","resource_group_id":"resource_group_id","state":"ready","href":"href","definition":{"name":"name","description":"description","destroy_on_delete":false}}],"total_count":2,"limit":1}';
+        '{"next":{"href":"https://myhost.com/somePath?start=1"},"projects":[{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_error":false,"id":"id","location":"location","resource_group_id":"resource_group_id","state":"ready","href":"href","definition":{"name":"name","destroy_on_delete":false,"description":"description","monitoring_enabled":false}}],"total_count":2,"limit":1}';
       const mockPagerResponse2 =
-        '{"projects":[{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_error":false,"id":"id","location":"location","resource_group_id":"resource_group_id","state":"ready","href":"href","definition":{"name":"name","description":"description","destroy_on_delete":false}}],"total_count":2,"limit":1}';
+        '{"projects":[{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_error":false,"id":"id","location":"location","resource_group_id":"resource_group_id","state":"ready","href":"href","definition":{"name":"name","destroy_on_delete":false,"description":"description","monitoring_enabled":false}}],"total_count":2,"limit":1}';
 
       beforeEach(() => {
         unmock_createRequest();
@@ -489,8 +490,9 @@ describe('ProjectV1', () => {
       // ProjectPatchDefinitionBlock
       const projectPatchDefinitionBlockModel = {
         name: 'acme-microservice',
-        description: 'A microservice to deploy on top of ACME infrastructure.',
         destroy_on_delete: true,
+        description: 'A microservice to deploy on top of ACME infrastructure.',
+        monitoring_enabled: true,
       };
 
       function __updateProjectTest() {
@@ -600,7 +602,7 @@ describe('ProjectV1', () => {
         const mockRequestOptions = getOptions(createRequestMock);
 
         checkUrlAndMethod(mockRequestOptions, '/v1/projects/{id}', 'DELETE');
-        const expectedAccept = undefined;
+        const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.path.id).toEqual(id);
@@ -686,8 +688,8 @@ describe('ProjectV1', () => {
 
       // EnvironmentDefinitionRequiredProperties
       const environmentDefinitionRequiredPropertiesModel = {
-        name: 'development',
         description: "The environment 'development'",
+        name: 'development',
         authorizations: projectConfigAuthModel,
         inputs: { resource_group: 'stage', region: 'us-south' },
         compliance_profile: projectComplianceProfileModel,
@@ -979,10 +981,10 @@ describe('ProjectV1', () => {
         profile_name: 'some-profile-name',
       };
 
-      // EnvironmentDefinitionProperties
-      const environmentDefinitionPropertiesModel = {
-        name: 'development',
+      // EnvironmentDefinitionPropertiesPatch
+      const environmentDefinitionPropertiesPatchModel = {
         description: "The environment 'development'",
+        name: 'development',
         authorizations: projectConfigAuthModel,
         inputs: { resource_group: 'stage', region: 'us-south' },
         compliance_profile: projectComplianceProfileModel,
@@ -992,7 +994,7 @@ describe('ProjectV1', () => {
         // Construct the params object for operation updateProjectEnvironment
         const projectId = 'testString';
         const id = 'testString';
-        const definition = environmentDefinitionPropertiesModel;
+        const definition = environmentDefinitionPropertiesPatchModel;
         const updateProjectEnvironmentParams = {
           projectId,
           id,
@@ -1043,7 +1045,7 @@ describe('ProjectV1', () => {
         // parameters
         const projectId = 'testString';
         const id = 'testString';
-        const definition = environmentDefinitionPropertiesModel;
+        const definition = environmentDefinitionPropertiesPatchModel;
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const updateProjectEnvironmentParams = {
@@ -1185,13 +1187,6 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       // Request models needed by this operation.
 
-      // ProjectConfigAuth
-      const projectConfigAuthModel = {
-        trusted_profile_id: 'testString',
-        method: 'api_key',
-        api_key: 'testString',
-      };
-
       // ProjectComplianceProfile
       const projectComplianceProfileModel = {
         id: 'testString',
@@ -1201,10 +1196,20 @@ describe('ProjectV1', () => {
         profile_name: 'testString',
       };
 
-      // ProjectConfigPrototypeDefinitionBlockDAConfigDefinitionProperties
-      const projectConfigPrototypeDefinitionBlockModel = {
-        name: 'env-stage',
+      // ProjectConfigAuth
+      const projectConfigAuthModel = {
+        trusted_profile_id: 'testString',
+        method: 'api_key',
+        api_key: 'testString',
+      };
+
+      // ProjectConfigDefinitionBlockPrototypeDAConfigDefinitionProperties
+      const projectConfigDefinitionBlockPrototypeModel = {
+        compliance_profile: projectComplianceProfileModel,
+        locator_id:
+          '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
         description: 'Stage environment configuration.',
+        name: 'env-stage',
         environment_id: 'testString',
         authorizations: projectConfigAuthModel,
         inputs: {
@@ -1215,9 +1220,6 @@ describe('ProjectV1', () => {
           sysdig_name: 'SysDig_stage_service',
         },
         settings: { IBMCLOUD_TOOLCHAIN_ENDPOINT: 'https://api.us-south.devops.dev.cloud.ibm.com' },
-        compliance_profile: projectComplianceProfileModel,
-        locator_id:
-          '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
       };
 
       // SchematicsWorkspace
@@ -1229,7 +1231,7 @@ describe('ProjectV1', () => {
       function __createConfigTest() {
         // Construct the params object for operation createConfig
         const projectId = 'testString';
-        const definition = projectConfigPrototypeDefinitionBlockModel;
+        const definition = projectConfigDefinitionBlockPrototypeModel;
         const schematics = schematicsWorkspaceModel;
         const createConfigParams = {
           projectId,
@@ -1274,7 +1276,7 @@ describe('ProjectV1', () => {
       test('should prioritize user-given headers', () => {
         // parameters
         const projectId = 'testString';
-        const definition = projectConfigPrototypeDefinitionBlockModel;
+        const definition = projectConfigDefinitionBlockPrototypeModel;
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const createConfigParams = {
@@ -1493,13 +1495,6 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       // Request models needed by this operation.
 
-      // ProjectConfigAuth
-      const projectConfigAuthModel = {
-        trusted_profile_id: 'testString',
-        method: 'api_key',
-        api_key: 'testString',
-      };
-
       // ProjectComplianceProfile
       const projectComplianceProfileModel = {
         id: 'testString',
@@ -1509,10 +1504,19 @@ describe('ProjectV1', () => {
         profile_name: 'testString',
       };
 
-      // ProjectConfigPatchDefinitionBlockDAConfigDefinitionProperties
-      const projectConfigPatchDefinitionBlockModel = {
-        name: 'env-stage',
+      // ProjectConfigAuth
+      const projectConfigAuthModel = {
+        trusted_profile_id: 'testString',
+        method: 'api_key',
+        api_key: 'testString',
+      };
+
+      // ProjectConfigDefinitionBlockPatchDAConfigDefinitionPropertiesPatch
+      const projectConfigDefinitionBlockPatchModel = {
+        compliance_profile: projectComplianceProfileModel,
+        locator_id: 'testString',
         description: 'testString',
+        name: 'env-stage',
         environment_id: 'testString',
         authorizations: projectConfigAuthModel,
         inputs: {
@@ -1523,15 +1527,13 @@ describe('ProjectV1', () => {
           sysdig_name: 'SysDig_stage_service',
         },
         settings: { anyKey: 'anyValue' },
-        compliance_profile: projectComplianceProfileModel,
-        locator_id: 'testString',
       };
 
       function __updateConfigTest() {
         // Construct the params object for operation updateConfig
         const projectId = 'testString';
         const id = 'testString';
-        const definition = projectConfigPatchDefinitionBlockModel;
+        const definition = projectConfigDefinitionBlockPatchModel;
         const updateConfigParams = {
           projectId,
           id,
@@ -1576,7 +1578,7 @@ describe('ProjectV1', () => {
         // parameters
         const projectId = 'testString';
         const id = 'testString';
-        const definition = projectConfigPatchDefinitionBlockModel;
+        const definition = projectConfigDefinitionBlockPatchModel;
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const updateConfigParams = {
@@ -2114,7 +2116,7 @@ describe('ProjectV1', () => {
           '/v1/projects/{project_id}/configs/{id}/undeploy',
           'POST'
         );
-        const expectedAccept = undefined;
+        const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);

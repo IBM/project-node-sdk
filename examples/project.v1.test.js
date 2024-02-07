@@ -125,10 +125,12 @@ describe('ProjectV1', () => {
 
     // Request models needed by this operation.
 
-    // ProjectConfigPrototypeDefinitionBlockDAConfigDefinitionProperties
-    const projectConfigPrototypeDefinitionBlockModel = {
-      name: 'env-stage',
+    // ProjectConfigDefinitionBlockPrototypeDAConfigDefinitionProperties
+    const projectConfigDefinitionBlockPrototypeModel = {
+      locator_id:
+        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
       description: 'Stage environment configuration.',
+      name: 'env-stage',
       inputs: {
         account_id: 'account_id',
         resource_group: 'stage',
@@ -137,13 +139,11 @@ describe('ProjectV1', () => {
         sysdig_name: 'SysDig_stage_service',
       },
       settings: { IBMCLOUD_TOOLCHAIN_ENDPOINT: 'https://api.us-south.devops.dev.cloud.ibm.com' },
-      locator_id:
-        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
     };
 
     const params = {
       projectId: projectIdLink,
-      definition: projectConfigPrototypeDefinitionBlockModel,
+      definition: projectConfigDefinitionBlockPrototypeModel,
     };
 
     let res;
@@ -289,8 +289,8 @@ describe('ProjectV1', () => {
 
     // EnvironmentDefinitionRequiredProperties
     const environmentDefinitionRequiredPropertiesModel = {
-      name: 'development',
       description: "The environment 'development'",
+      name: 'development',
       authorizations: projectConfigAuthModel,
       inputs: { resource_group: 'stage', region: 'us-south' },
       compliance_profile: projectComplianceProfileModel,
@@ -399,10 +399,10 @@ describe('ProjectV1', () => {
       profile_name: 'some-profile-name',
     };
 
-    // EnvironmentDefinitionProperties
-    const environmentDefinitionPropertiesModel = {
-      name: 'development',
+    // EnvironmentDefinitionPropertiesPatch
+    const environmentDefinitionPropertiesPatchModel = {
       description: "The environment 'development'",
+      name: 'development',
       authorizations: projectConfigAuthModel,
       inputs: { resource_group: 'stage', region: 'us-south' },
       compliance_profile: projectComplianceProfileModel,
@@ -411,7 +411,7 @@ describe('ProjectV1', () => {
     const params = {
       projectId: projectIdLink,
       id: projectIdLink,
-      definition: environmentDefinitionPropertiesModel,
+      definition: environmentDefinitionPropertiesPatchModel,
     };
 
     let res;
@@ -497,8 +497,8 @@ describe('ProjectV1', () => {
 
     // Request models needed by this operation.
 
-    // ProjectConfigPatchDefinitionBlockDAConfigDefinitionProperties
-    const projectConfigPatchDefinitionBlockModel = {
+    // ProjectConfigDefinitionBlockPatchDAConfigDefinitionPropertiesPatch
+    const projectConfigDefinitionBlockPatchModel = {
       name: 'env-stage',
       inputs: {
         account_id: 'account_id',
@@ -512,7 +512,7 @@ describe('ProjectV1', () => {
     const params = {
       projectId: projectIdLink,
       id: configIdLink,
-      definition: projectConfigPatchDefinitionBlockModel,
+      definition: projectConfigDefinitionBlockPatchModel,
     };
 
     let res;
@@ -654,6 +654,7 @@ describe('ProjectV1', () => {
       expect(true).toBeFalsy();
     });
 
+    originalLog('undeployConfig() result:');
     // begin-undeploy_config
 
     const params = {
@@ -661,8 +662,10 @@ describe('ProjectV1', () => {
       id: configIdLink,
     };
 
+    let res;
     try {
-      await projectService.undeployConfig(params);
+      res = await projectService.undeployConfig(params);
+      console.log(JSON.stringify(res.result, null, 2));
     } catch (err) {
       console.warn(err);
     }
@@ -891,14 +894,17 @@ describe('ProjectV1', () => {
       expect(true).toBeFalsy();
     });
 
+    originalLog('deleteProject() result:');
     // begin-delete_project
 
     const params = {
       id: projectIdLink,
     };
 
+    let res;
     try {
-      await projectService.deleteProject(params);
+      res = await projectService.deleteProject(params);
+      console.log(JSON.stringify(res.result, null, 2));
     } catch (err) {
       console.warn(err);
     }
