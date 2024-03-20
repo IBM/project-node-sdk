@@ -129,7 +129,7 @@ describe('ProjectV1', () => {
         name: 'acme-microservice',
         destroy_on_delete: true,
         description: 'A microservice to deploy on top of ACME infrastructure.',
-        monitoring_enabled: true,
+        monitoring_enabled: false,
       };
 
       // ProjectComplianceProfile
@@ -148,12 +148,12 @@ describe('ProjectV1', () => {
         api_key: 'testString',
       };
 
-      // ProjectConfigDefinitionBlockPrototypeDAConfigDefinitionProperties
-      const projectConfigDefinitionBlockPrototypeModel = {
+      // ProjectConfigDefinitionPrototypeDAConfigDefinitionPropertiesPrototype
+      const projectConfigDefinitionPrototypeModel = {
         compliance_profile: projectComplianceProfileModel,
-        locator_id: 'testString',
-        description: 'testString',
-        name: 'testString',
+        locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+        description: 'The stage account configuration.',
+        name: 'account-stage',
         environment_id: 'testString',
         authorizations: projectConfigAuthModel,
         inputs: { anyKey: 'anyValue' },
@@ -162,13 +162,12 @@ describe('ProjectV1', () => {
 
       // SchematicsWorkspace
       const schematicsWorkspaceModel = {
-        workspace_crn:
-          'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+        workspace_crn: 'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       };
 
       // ProjectConfigPrototype
       const projectConfigPrototypeModel = {
-        definition: projectConfigDefinitionBlockPrototypeModel,
+        definition: projectConfigDefinitionPrototypeModel,
         schematics: schematicsWorkspaceModel,
       };
 
@@ -288,10 +287,10 @@ describe('ProjectV1', () => {
     describe('positive tests', () => {
       function __listProjectsTest() {
         // Construct the params object for operation listProjects
-        const start = 'testString';
+        const token = 'testString';
         const limit = 10;
         const listProjectsParams = {
-          start,
+          token,
           limit,
         };
 
@@ -309,7 +308,7 @@ describe('ProjectV1', () => {
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(mockRequestOptions.qs.start).toEqual(start);
+        expect(mockRequestOptions.qs.token).toEqual(token);
         expect(mockRequestOptions.qs.limit).toEqual(limit);
       }
 
@@ -354,7 +353,7 @@ describe('ProjectV1', () => {
       const serviceUrl = projectServiceOptions.url;
       const path = '/v1/projects';
       const mockPagerResponse1 =
-        '{"next":{"href":"https://myhost.com/somePath?start=1"},"projects":[{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_error":false,"id":"id","location":"location","resource_group_id":"resource_group_id","state":"ready","href":"href","definition":{"name":"name","destroy_on_delete":false,"description":"description","monitoring_enabled":false}}],"total_count":2,"limit":1}';
+        '{"next":{"href":"https://myhost.com/somePath?token=1"},"projects":[{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_error":false,"id":"id","location":"location","resource_group_id":"resource_group_id","state":"ready","href":"href","definition":{"name":"name","destroy_on_delete":false,"description":"description","monitoring_enabled":false}}],"total_count":2,"limit":1}';
       const mockPagerResponse2 =
         '{"projects":[{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_error":false,"id":"id","location":"location","resource_group_id":"resource_group_id","state":"ready","href":"href","definition":{"name":"name","destroy_on_delete":false,"description":"description","monitoring_enabled":false}}],"total_count":2,"limit":1}';
 
@@ -666,15 +665,155 @@ describe('ProjectV1', () => {
     });
   });
 
+  describe('listProjectResources', () => {
+    describe('positive tests', () => {
+      function __listProjectResourcesTest() {
+        // Construct the params object for operation listProjectResources
+        const id = 'testString';
+        const start = 'testString';
+        const limit = 10;
+        const listProjectResourcesParams = {
+          id,
+          start,
+          limit,
+        };
+
+        const listProjectResourcesResult = projectService.listProjectResources(listProjectResourcesParams);
+
+        // all methods should return a Promise
+        expectToBePromise(listProjectResourcesResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{id}/resources', 'GET');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.qs.start).toEqual(start);
+        expect(mockRequestOptions.qs.limit).toEqual(limit);
+        expect(mockRequestOptions.path.id).toEqual(id);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __listProjectResourcesTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __listProjectResourcesTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __listProjectResourcesTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const id = 'testString';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const listProjectResourcesParams = {
+          id,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.listProjectResources(listProjectResourcesParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.listProjectResources({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.listProjectResources();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+
+    describe('ProjectResourcesPager tests', () => {
+      const serviceUrl = projectServiceOptions.url;
+      const path = '/v1/projects/testString/resources';
+      const mockPagerResponse1 =
+        '{"next":{"href":"https://myhost.com/somePath?start=1"},"total_count":2,"limit":1,"resources":[{"resource_crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","resource_name":"resource_name","account_id":"account_id","location":"location","resource_type":"project_deployed","resource_status":"resource_status","resource_group_id":"resource_group_id","tags":["tags"],"service_tags":["service_tags"]}]}';
+      const mockPagerResponse2 =
+        '{"total_count":2,"limit":1,"resources":[{"resource_crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","resource_name":"resource_name","account_id":"account_id","location":"location","resource_type":"project_deployed","resource_status":"resource_status","resource_group_id":"resource_group_id","tags":["tags"],"service_tags":["service_tags"]}]}';
+
+      beforeEach(() => {
+        unmock_createRequest();
+        const scope = nock(serviceUrl)
+          .get((uri) => uri.includes(path))
+          .reply(200, mockPagerResponse1)
+          .get((uri) => uri.includes(path))
+          .reply(200, mockPagerResponse2);
+      });
+
+      afterEach(() => {
+        nock.cleanAll();
+        mock_createRequest();
+      });
+
+      test('getNext()', async () => {
+        const params = {
+          id: 'testString',
+          limit: 10,
+        };
+        const allResults = [];
+        const pager = new ProjectV1.ProjectResourcesPager(projectService, params);
+        while (pager.hasNext()) {
+          const nextPage = await pager.getNext();
+          expect(nextPage).not.toBeNull();
+          allResults.push(...nextPage);
+        }
+        expect(allResults).not.toBeNull();
+        expect(allResults).toHaveLength(2);
+      });
+
+      test('getAll()', async () => {
+        const params = {
+          id: 'testString',
+          limit: 10,
+        };
+        const pager = new ProjectV1.ProjectResourcesPager(projectService, params);
+        const allResults = await pager.getAll();
+        expect(allResults).not.toBeNull();
+        expect(allResults).toHaveLength(2);
+      });
+    });
+  });
+
   describe('createProjectEnvironment', () => {
     describe('positive tests', () => {
       // Request models needed by this operation.
 
       // ProjectConfigAuth
       const projectConfigAuthModel = {
-        trusted_profile_id: 'testString',
-        method: 'api_key',
-        api_key: 'TbcdlprpFODhkpns9e0daOWnAwd2tXwSYtPn8rpEd8d9',
+        trusted_profile_id: 'Profile-9ac10c5c-195c-41ef-b465-68a6b6dg5f12',
+        method: 'trusted_profile',
+        api_key: 'testString',
       };
 
       // ProjectComplianceProfile
@@ -688,7 +827,7 @@ describe('ProjectV1', () => {
 
       // EnvironmentDefinitionRequiredProperties
       const environmentDefinitionRequiredPropertiesModel = {
-        description: "The environment 'development'",
+        description: 'The environment development.',
         name: 'development',
         authorizations: projectConfigAuthModel,
         inputs: { resource_group: 'stage', region: 'us-south' },
@@ -704,9 +843,7 @@ describe('ProjectV1', () => {
           definition,
         };
 
-        const createProjectEnvironmentResult = projectService.createProjectEnvironment(
-          createProjectEnvironmentParams
-        );
+        const createProjectEnvironmentResult = projectService.createProjectEnvironment(createProjectEnvironmentParams);
 
         // all methods should return a Promise
         expectToBePromise(createProjectEnvironmentResult);
@@ -789,13 +926,15 @@ describe('ProjectV1', () => {
       function __listProjectEnvironmentsTest() {
         // Construct the params object for operation listProjectEnvironments
         const projectId = 'testString';
+        const token = 'testString';
+        const limit = 10;
         const listProjectEnvironmentsParams = {
           projectId,
+          token,
+          limit,
         };
 
-        const listProjectEnvironmentsResult = projectService.listProjectEnvironments(
-          listProjectEnvironmentsParams
-        );
+        const listProjectEnvironmentsResult = projectService.listProjectEnvironments(listProjectEnvironmentsParams);
 
         // all methods should return a Promise
         expectToBePromise(listProjectEnvironmentsResult);
@@ -809,6 +948,8 @@ describe('ProjectV1', () => {
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.qs.token).toEqual(token);
+        expect(mockRequestOptions.qs.limit).toEqual(limit);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
       }
 
@@ -868,6 +1009,56 @@ describe('ProjectV1', () => {
         expect(err.message).toMatch(/Missing required parameters/);
       });
     });
+
+    describe('ProjectEnvironmentsPager tests', () => {
+      const serviceUrl = projectServiceOptions.url;
+      const path = '/v1/projects/testString/environments';
+      const mockPagerResponse1 =
+        '{"next":{"href":"https://myhost.com/somePath?token=1"},"environments":[{"id":"id","project":{"id":"id","href":"href","definition":{"name":"name"},"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::"},"created_at":"2019-01-01T12:00:00.000Z","target_account":"target_account","modified_at":"2019-01-01T12:00:00.000Z","href":"href","definition":{"description":"description","name":"name","authorizations":{"trusted_profile_id":"trusted_profile_id","method":"api_key","api_key":"api_key"},"inputs":{"anyKey":"anyValue"},"compliance_profile":{"id":"id","instance_id":"instance_id","instance_location":"instance_location","attachment_id":"attachment_id","profile_name":"profile_name"}}}],"total_count":2,"limit":1}';
+      const mockPagerResponse2 =
+        '{"environments":[{"id":"id","project":{"id":"id","href":"href","definition":{"name":"name"},"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::"},"created_at":"2019-01-01T12:00:00.000Z","target_account":"target_account","modified_at":"2019-01-01T12:00:00.000Z","href":"href","definition":{"description":"description","name":"name","authorizations":{"trusted_profile_id":"trusted_profile_id","method":"api_key","api_key":"api_key"},"inputs":{"anyKey":"anyValue"},"compliance_profile":{"id":"id","instance_id":"instance_id","instance_location":"instance_location","attachment_id":"attachment_id","profile_name":"profile_name"}}}],"total_count":2,"limit":1}';
+
+      beforeEach(() => {
+        unmock_createRequest();
+        const scope = nock(serviceUrl)
+          .get((uri) => uri.includes(path))
+          .reply(200, mockPagerResponse1)
+          .get((uri) => uri.includes(path))
+          .reply(200, mockPagerResponse2);
+      });
+
+      afterEach(() => {
+        nock.cleanAll();
+        mock_createRequest();
+      });
+
+      test('getNext()', async () => {
+        const params = {
+          projectId: 'testString',
+          limit: 10,
+        };
+        const allResults = [];
+        const pager = new ProjectV1.ProjectEnvironmentsPager(projectService, params);
+        while (pager.hasNext()) {
+          const nextPage = await pager.getNext();
+          expect(nextPage).not.toBeNull();
+          allResults.push(...nextPage);
+        }
+        expect(allResults).not.toBeNull();
+        expect(allResults).toHaveLength(2);
+      });
+
+      test('getAll()', async () => {
+        const params = {
+          projectId: 'testString',
+          limit: 10,
+        };
+        const pager = new ProjectV1.ProjectEnvironmentsPager(projectService, params);
+        const allResults = await pager.getAll();
+        expect(allResults).not.toBeNull();
+        expect(allResults).toHaveLength(2);
+      });
+    });
   });
 
   describe('getProjectEnvironment', () => {
@@ -881,9 +1072,7 @@ describe('ProjectV1', () => {
           id,
         };
 
-        const getProjectEnvironmentResult = projectService.getProjectEnvironment(
-          getProjectEnvironmentParams
-        );
+        const getProjectEnvironmentResult = projectService.getProjectEnvironment(getProjectEnvironmentParams);
 
         // all methods should return a Promise
         expectToBePromise(getProjectEnvironmentResult);
@@ -967,9 +1156,9 @@ describe('ProjectV1', () => {
 
       // ProjectConfigAuth
       const projectConfigAuthModel = {
-        trusted_profile_id: 'testString',
-        method: 'api_key',
-        api_key: 'TbcdlprpFODhkpns9e0daOWnAwd2tXwSYtPn8rpEd8d9',
+        trusted_profile_id: 'Profile-9ac10c5c-195c-41ef-b465-68a6b6dg5f12',
+        method: 'trusted_profile',
+        api_key: 'testString',
       };
 
       // ProjectComplianceProfile
@@ -983,7 +1172,7 @@ describe('ProjectV1', () => {
 
       // EnvironmentDefinitionPropertiesPatch
       const environmentDefinitionPropertiesPatchModel = {
-        description: "The environment 'development'",
+        description: 'The environment development.',
         name: 'development',
         authorizations: projectConfigAuthModel,
         inputs: { resource_group: 'stage', region: 'us-south' },
@@ -1001,9 +1190,7 @@ describe('ProjectV1', () => {
           definition,
         };
 
-        const updateProjectEnvironmentResult = projectService.updateProjectEnvironment(
-          updateProjectEnvironmentParams
-        );
+        const updateProjectEnvironmentResult = projectService.updateProjectEnvironment(updateProjectEnvironmentParams);
 
         // all methods should return a Promise
         expectToBePromise(updateProjectEnvironmentResult);
@@ -1013,11 +1200,7 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/environments/{id}',
-          'PATCH'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/environments/{id}', 'PATCH');
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1099,9 +1282,7 @@ describe('ProjectV1', () => {
           id,
         };
 
-        const deleteProjectEnvironmentResult = projectService.deleteProjectEnvironment(
-          deleteProjectEnvironmentParams
-        );
+        const deleteProjectEnvironmentResult = projectService.deleteProjectEnvironment(deleteProjectEnvironmentParams);
 
         // all methods should return a Promise
         expectToBePromise(deleteProjectEnvironmentResult);
@@ -1111,11 +1292,7 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/environments/{id}',
-          'DELETE'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/environments/{id}', 'DELETE');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1203,35 +1380,27 @@ describe('ProjectV1', () => {
         api_key: 'testString',
       };
 
-      // ProjectConfigDefinitionBlockPrototypeDAConfigDefinitionProperties
-      const projectConfigDefinitionBlockPrototypeModel = {
+      // ProjectConfigDefinitionPrototypeDAConfigDefinitionPropertiesPrototype
+      const projectConfigDefinitionPrototypeModel = {
         compliance_profile: projectComplianceProfileModel,
-        locator_id:
-          '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
-        description: 'Stage environment configuration.',
+        locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+        description: 'The stage environment configuration.',
         name: 'env-stage',
         environment_id: 'testString',
         authorizations: projectConfigAuthModel,
-        inputs: {
-          account_id: 'account_id',
-          resource_group: 'stage',
-          access_tags: ['env:stage'],
-          logdna_name: 'LogDNA_stage_service',
-          sysdig_name: 'SysDig_stage_service',
-        },
-        settings: { IBMCLOUD_TOOLCHAIN_ENDPOINT: 'https://api.us-south.devops.dev.cloud.ibm.com' },
+        inputs: { account_id: 'account_id', resource_group: 'stage', access_tags: ['env:stage'], logdna_name: 'LogDNA_stage_service', sysdig_name: 'SysDig_stage_service' },
+        settings: { anyKey: 'anyValue' },
       };
 
       // SchematicsWorkspace
       const schematicsWorkspaceModel = {
-        workspace_crn:
-          'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+        workspace_crn: 'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
       };
 
       function __createConfigTest() {
         // Construct the params object for operation createConfig
         const projectId = 'testString';
-        const definition = projectConfigDefinitionBlockPrototypeModel;
+        const definition = projectConfigDefinitionPrototypeModel;
         const schematics = schematicsWorkspaceModel;
         const createConfigParams = {
           projectId,
@@ -1276,7 +1445,7 @@ describe('ProjectV1', () => {
       test('should prioritize user-given headers', () => {
         // parameters
         const projectId = 'testString';
-        const definition = projectConfigDefinitionBlockPrototypeModel;
+        const definition = projectConfigDefinitionPrototypeModel;
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const createConfigParams = {
@@ -1323,8 +1492,12 @@ describe('ProjectV1', () => {
       function __listConfigsTest() {
         // Construct the params object for operation listConfigs
         const projectId = 'testString';
+        const token = 'testString';
+        const limit = 10;
         const listConfigsParams = {
           projectId,
+          token,
+          limit,
         };
 
         const listConfigsResult = projectService.listConfigs(listConfigsParams);
@@ -1341,6 +1514,8 @@ describe('ProjectV1', () => {
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.qs.token).toEqual(token);
+        expect(mockRequestOptions.qs.limit).toEqual(limit);
         expect(mockRequestOptions.path.project_id).toEqual(projectId);
       }
 
@@ -1398,6 +1573,56 @@ describe('ProjectV1', () => {
         }
 
         expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+
+    describe('ConfigsPager tests', () => {
+      const serviceUrl = projectServiceOptions.url;
+      const path = '/v1/projects/testString/configs';
+      const mockPagerResponse1 =
+        '{"next":{"href":"https://myhost.com/somePath?token=1"},"configs":[{"approved_version":{"definition":{"environment_id":"environment_id","locator_id":"locator_id"},"state":"approved","version":7,"href":"href"},"deployed_version":{"definition":{"environment_id":"environment_id","locator_id":"locator_id"},"state":"approved","version":7,"href":"href"},"id":"id","version":7,"state":"approved","created_at":"2019-01-01T12:00:00.000Z","modified_at":"2019-01-01T12:00:00.000Z","href":"href","definition":{"description":"description","name":"name","locator_id":"locator_id"},"project":{"id":"id","href":"href","definition":{"name":"name"},"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::"},"deployment_model":"project_deployed"}],"total_count":2,"limit":1}';
+      const mockPagerResponse2 =
+        '{"configs":[{"approved_version":{"definition":{"environment_id":"environment_id","locator_id":"locator_id"},"state":"approved","version":7,"href":"href"},"deployed_version":{"definition":{"environment_id":"environment_id","locator_id":"locator_id"},"state":"approved","version":7,"href":"href"},"id":"id","version":7,"state":"approved","created_at":"2019-01-01T12:00:00.000Z","modified_at":"2019-01-01T12:00:00.000Z","href":"href","definition":{"description":"description","name":"name","locator_id":"locator_id"},"project":{"id":"id","href":"href","definition":{"name":"name"},"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::"},"deployment_model":"project_deployed"}],"total_count":2,"limit":1}';
+
+      beforeEach(() => {
+        unmock_createRequest();
+        const scope = nock(serviceUrl)
+          .get((uri) => uri.includes(path))
+          .reply(200, mockPagerResponse1)
+          .get((uri) => uri.includes(path))
+          .reply(200, mockPagerResponse2);
+      });
+
+      afterEach(() => {
+        nock.cleanAll();
+        mock_createRequest();
+      });
+
+      test('getNext()', async () => {
+        const params = {
+          projectId: 'testString',
+          limit: 10,
+        };
+        const allResults = [];
+        const pager = new ProjectV1.ConfigsPager(projectService, params);
+        while (pager.hasNext()) {
+          const nextPage = await pager.getNext();
+          expect(nextPage).not.toBeNull();
+          allResults.push(...nextPage);
+        }
+        expect(allResults).not.toBeNull();
+        expect(allResults).toHaveLength(2);
+      });
+
+      test('getAll()', async () => {
+        const params = {
+          projectId: 'testString',
+          limit: 10,
+        };
+        const pager = new ProjectV1.ConfigsPager(projectService, params);
+        const allResults = await pager.getAll();
+        expect(allResults).not.toBeNull();
+        expect(allResults).toHaveLength(2);
       });
     });
   });
@@ -1511,21 +1736,15 @@ describe('ProjectV1', () => {
         api_key: 'testString',
       };
 
-      // ProjectConfigDefinitionBlockPatchDAConfigDefinitionPropertiesPatch
-      const projectConfigDefinitionBlockPatchModel = {
+      // ProjectConfigDefinitionPatchDAConfigDefinitionPropertiesPatch
+      const projectConfigDefinitionPatchModel = {
         compliance_profile: projectComplianceProfileModel,
         locator_id: 'testString',
         description: 'testString',
         name: 'env-stage',
         environment_id: 'testString',
         authorizations: projectConfigAuthModel,
-        inputs: {
-          account_id: 'account_id',
-          resource_group: 'stage',
-          access_tags: ['env:stage'],
-          logdna_name: 'LogDNA_stage_service',
-          sysdig_name: 'SysDig_stage_service',
-        },
+        inputs: { account_id: 'account_id', resource_group: 'stage', access_tags: ['env:stage'], logdna_name: 'LogDNA_stage_service', sysdig_name: 'SysDig_stage_service' },
         settings: { anyKey: 'anyValue' },
       };
 
@@ -1533,7 +1752,7 @@ describe('ProjectV1', () => {
         // Construct the params object for operation updateConfig
         const projectId = 'testString';
         const id = 'testString';
-        const definition = projectConfigDefinitionBlockPatchModel;
+        const definition = projectConfigDefinitionPatchModel;
         const updateConfigParams = {
           projectId,
           id,
@@ -1578,7 +1797,7 @@ describe('ProjectV1', () => {
         // parameters
         const projectId = 'testString';
         const id = 'testString';
-        const definition = projectConfigDefinitionBlockPatchModel;
+        const definition = projectConfigDefinitionPatchModel;
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
         const updateConfigParams = {
@@ -1733,11 +1952,7 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{id}/force_approve',
-          'POST'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/force_approve', 'POST');
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1831,11 +2046,7 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{id}/approve',
-          'POST'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/approve', 'POST');
         const expectedAccept = 'application/json';
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -1925,11 +2136,7 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{id}/validate',
-          'POST'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/validate', 'POST');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -2018,11 +2225,7 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{id}/deploy',
-          'POST'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/deploy', 'POST');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -2111,11 +2314,7 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{id}/undeploy',
-          'POST'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/undeploy', 'POST');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -2189,8 +2388,7 @@ describe('ProjectV1', () => {
 
       // SchematicsWorkspace
       const schematicsWorkspaceModel = {
-        workspace_crn:
-          'crn:v1:staging:public:schematics:us-south:a/38acaf4469814090a4e675dc0c317a0d:95ad49de-ab96-4e7d-a08c-45c38aa448e6:workspace:us-south.workspace.service.e0106139',
+        workspace_crn: 'crn:v1:staging:public:schematics:us-south:a/38acaf4469814090a4e675dc0c317a0d:95ad49de-ab96-4e7d-a08c-45c38aa448e6:workspace:us-south.workspace.service.e0106139',
       };
 
       function __syncConfigTest() {
@@ -2214,11 +2412,7 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{id}/sync',
-          'POST'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/sync', 'POST');
         const expectedAccept = undefined;
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -2298,8 +2492,7 @@ describe('ProjectV1', () => {
           id,
         };
 
-        const listConfigResourcesResult =
-          projectService.listConfigResources(listConfigResourcesParams);
+        const listConfigResourcesResult = projectService.listConfigResources(listConfigResourcesParams);
 
         // all methods should return a Promise
         expectToBePromise(listConfigResourcesResult);
@@ -2309,11 +2502,7 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{id}/resources',
-          'GET'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/resources', 'GET');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -2392,8 +2581,7 @@ describe('ProjectV1', () => {
           id,
         };
 
-        const listConfigVersionsResult =
-          projectService.listConfigVersions(listConfigVersionsParams);
+        const listConfigVersionsResult = projectService.listConfigVersions(listConfigVersionsParams);
 
         // all methods should return a Promise
         expectToBePromise(listConfigVersionsResult);
@@ -2403,11 +2591,7 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{id}/versions',
-          'GET'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/versions', 'GET');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -2498,11 +2682,7 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{id}/versions/{version}',
-          'GET'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/versions/{version}', 'GET');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
@@ -2586,8 +2766,7 @@ describe('ProjectV1', () => {
           version,
         };
 
-        const deleteConfigVersionResult =
-          projectService.deleteConfigVersion(deleteConfigVersionParams);
+        const deleteConfigVersionResult = projectService.deleteConfigVersion(deleteConfigVersionParams);
 
         // all methods should return a Promise
         expectToBePromise(deleteConfigVersionResult);
@@ -2597,11 +2776,7 @@ describe('ProjectV1', () => {
 
         const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(
-          mockRequestOptions,
-          '/v1/projects/{project_id}/configs/{id}/versions/{version}',
-          'DELETE'
-        );
+        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{project_id}/configs/{id}/versions/{version}', 'DELETE');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
