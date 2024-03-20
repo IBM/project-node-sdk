@@ -124,7 +124,14 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.Project>> {
     const _params = { ...params };
     const _requiredParams = ['definition', 'location', 'resourceGroup'];
-    const _validParams = ['definition', 'location', 'resourceGroup', 'configs', 'environments', 'headers'];
+    const _validParams = [
+      'definition',
+      'location',
+      'resourceGroup',
+      'configs',
+      'environments',
+      'headers',
+    ];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
@@ -459,7 +466,11 @@ class ProjectV1 extends BaseService {
       'project_id': _params.projectId,
     };
 
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'createProjectEnvironment');
+    const sdkHeaders = getSdkHeaders(
+      ProjectV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'createProjectEnvironment'
+    );
 
     const parameters = {
       options: {
@@ -519,7 +530,11 @@ class ProjectV1 extends BaseService {
       'project_id': _params.projectId,
     };
 
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'listProjectEnvironments');
+    const sdkHeaders = getSdkHeaders(
+      ProjectV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'listProjectEnvironments'
+    );
 
     const parameters = {
       options: {
@@ -627,7 +642,11 @@ class ProjectV1 extends BaseService {
       'id': _params.id,
     };
 
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'updateProjectEnvironment');
+    const sdkHeaders = getSdkHeaders(
+      ProjectV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'updateProjectEnvironment'
+    );
 
     const parameters = {
       options: {
@@ -679,7 +698,11 @@ class ProjectV1 extends BaseService {
       'id': _params.id,
     };
 
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'deleteProjectEnvironment');
+    const sdkHeaders = getSdkHeaders(
+      ProjectV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'deleteProjectEnvironment'
+    );
 
     const parameters = {
       options: {
@@ -2429,16 +2452,13 @@ namespace ProjectV1 {
   }
 
   /** ProjectConfigDefinitionPatch. */
-  export interface ProjectConfigDefinitionPatch {
-  }
+  export interface ProjectConfigDefinitionPatch {}
 
   /** ProjectConfigDefinitionPrototype. */
-  export interface ProjectConfigDefinitionPrototype {
-  }
+  export interface ProjectConfigDefinitionPrototype {}
 
   /** ProjectConfigDefinitionResponse. */
-  export interface ProjectConfigDefinitionResponse {
-  }
+  export interface ProjectConfigDefinitionResponse {}
 
   /** The ID of the deleted configuration. */
   export interface ProjectConfigDelete {
@@ -2447,8 +2467,7 @@ namespace ProjectV1 {
   }
 
   /** The Code Risk Analyzer logs of the configuration. This property is populated only after the validation step when the Code Risk Analyzer is run. Note: `cra` is the abbreviated form of Code Risk Analyzer. */
-  export interface ProjectConfigMetadataCodeRiskAnalyzerLogs {
-  }
+  export interface ProjectConfigMetadataCodeRiskAnalyzerLogs {}
 
   /** The cost estimate of the configuration. This property exists only after the first configuration validation. */
   export interface ProjectConfigMetadataCostEstimate {
@@ -2899,7 +2918,8 @@ namespace ProjectV1 {
   }
 
   /** The name and description of a project configuration. */
-  export interface ProjectConfigDefinitionPatchDAConfigDefinitionPropertiesPatch extends ProjectConfigDefinitionPatch {
+  export interface ProjectConfigDefinitionPatchDAConfigDefinitionPropertiesPatch
+    extends ProjectConfigDefinitionPatch {
     /** The profile that is required for compliance. */
     compliance_profile?: ProjectComplianceProfile;
     /** A unique concatenation of the catalog ID and the version ID that identify the deployable architecture in the
@@ -2933,7 +2953,8 @@ namespace ProjectV1 {
   }
 
   /** The name and description of a project configuration. */
-  export interface ProjectConfigDefinitionPatchResourceConfigDefinitionPropertiesPatch extends ProjectConfigDefinitionPatch {
+  export interface ProjectConfigDefinitionPatchResourceConfigDefinitionPropertiesPatch
+    extends ProjectConfigDefinitionPatch {
     /** The CRNs of the resources that are associated with this configuration. */
     resource_crns?: string[];
     /** A project configuration description. */
@@ -2953,7 +2974,8 @@ namespace ProjectV1 {
   }
 
   /** The description of a project configuration. */
-  export interface ProjectConfigDefinitionPrototypeDAConfigDefinitionPropertiesPrototype extends ProjectConfigDefinitionPrototype {
+  export interface ProjectConfigDefinitionPrototypeDAConfigDefinitionPropertiesPrototype
+    extends ProjectConfigDefinitionPrototype {
     /** The profile that is required for compliance. */
     compliance_profile?: ProjectComplianceProfile;
     /** A unique concatenation of the catalog ID and the version ID that identify the deployable architecture in the
@@ -2987,7 +3009,8 @@ namespace ProjectV1 {
   }
 
   /** The description of a project configuration. */
-  export interface ProjectConfigDefinitionPrototypeResourceConfigDefinitionPropertiesPrototype extends ProjectConfigDefinitionPrototype {
+  export interface ProjectConfigDefinitionPrototypeResourceConfigDefinitionPropertiesPrototype
+    extends ProjectConfigDefinitionPrototype {
     /** The CRNs of the resources that are associated with this configuration. */
     resource_crns?: string[];
     /** A project configuration description. */
@@ -3007,7 +3030,8 @@ namespace ProjectV1 {
   }
 
   /** The description of a project configuration. */
-  export interface ProjectConfigDefinitionResponseDAConfigDefinitionPropertiesResponse extends ProjectConfigDefinitionResponse {
+  export interface ProjectConfigDefinitionResponseDAConfigDefinitionPropertiesResponse
+    extends ProjectConfigDefinitionResponse {
     /** The profile that is required for compliance. */
     compliance_profile?: ProjectComplianceProfile;
     /** A unique concatenation of the catalog ID and the version ID that identify the deployable architecture in the
@@ -3041,7 +3065,8 @@ namespace ProjectV1 {
   }
 
   /** The description of a project configuration. */
-  export interface ProjectConfigDefinitionResponseResourceConfigDefinitionPropertiesResponse extends ProjectConfigDefinitionResponse {
+  export interface ProjectConfigDefinitionResponseResourceConfigDefinitionPropertiesResponse
+    extends ProjectConfigDefinitionResponse {
     /** The CRNs of the resources that are associated with this configuration. */
     resource_crns?: string[];
     /** A project configuration description. */
@@ -3061,7 +3086,8 @@ namespace ProjectV1 {
   }
 
   /** The Code Risk Analyzer logs of the configuration based on Code Risk Analyzer version 2.0.4. */
-  export interface ProjectConfigMetadataCodeRiskAnalyzerLogsVersion204 extends ProjectConfigMetadataCodeRiskAnalyzerLogs {
+  export interface ProjectConfigMetadataCodeRiskAnalyzerLogsVersion204
+    extends ProjectConfigMetadataCodeRiskAnalyzerLogs {
     /** The version of the Code Risk Analyzer logs of the configuration. The metadata for this schema is specific to
      *  Code Risk Analyzer version 2.0.4.
      */

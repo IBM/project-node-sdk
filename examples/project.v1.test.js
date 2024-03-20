@@ -93,7 +93,8 @@ describe('ProjectV1', () => {
 
     // ProjectConfigDefinitionPrototypeDAConfigDefinitionPropertiesPrototype
     const projectConfigDefinitionPrototypeModel = {
-      locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+      locator_id:
+        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
       description: 'The stage account configuration.',
       name: 'account-stage',
     };
@@ -140,10 +141,17 @@ describe('ProjectV1', () => {
 
     // ProjectConfigDefinitionPrototypeDAConfigDefinitionPropertiesPrototype
     const projectConfigDefinitionPrototypeModel = {
-      locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+      locator_id:
+        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
       description: 'The stage environment configuration.',
       name: 'env-stage',
-      inputs: { account_id: 'account_id', resource_group: 'stage', access_tags: ['env:stage'], logdna_name: 'LogDNA_stage_service', sysdig_name: 'SysDig_stage_service' },
+      inputs: {
+        account_id: 'account_id',
+        resource_group: 'stage',
+        access_tags: ['env:stage'],
+        logdna_name: 'LogDNA_stage_service',
+        sysdig_name: 'SysDig_stage_service',
+      },
     };
 
     const params = {
@@ -551,7 +559,13 @@ describe('ProjectV1', () => {
     // ProjectConfigDefinitionPatchDAConfigDefinitionPropertiesPatch
     const projectConfigDefinitionPatchModel = {
       name: 'env-stage',
-      inputs: { account_id: 'account_id', resource_group: 'stage', access_tags: ['env:stage'], logdna_name: 'LogDNA_stage_service', sysdig_name: 'SysDig_stage_service' },
+      inputs: {
+        account_id: 'account_id',
+        resource_group: 'stage',
+        access_tags: ['env:stage'],
+        logdna_name: 'LogDNA_stage_service',
+        sysdig_name: 'SysDig_stage_service',
+      },
     };
 
     const params = {
@@ -734,7 +748,8 @@ describe('ProjectV1', () => {
 
     // SchematicsWorkspace
     const schematicsWorkspaceModel = {
-      workspace_crn: 'crn:v1:staging:public:schematics:us-south:a/38acaf4469814090a4e675dc0c317a0d:95ad49de-ab96-4e7d-a08c-45c38aa448e6:workspace:us-south.workspace.service.e0106139',
+      workspace_crn:
+        'crn:v1:staging:public:schematics:us-south:a/38acaf4469814090a4e675dc0c317a0d:95ad49de-ab96-4e7d-a08c-45c38aa448e6:workspace:us-south.workspace.service.e0106139',
     };
 
     const params = {

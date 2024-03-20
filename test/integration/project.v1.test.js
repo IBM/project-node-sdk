@@ -80,7 +80,8 @@ describe('ProjectV1_integration', () => {
     // ProjectConfigDefinitionPrototypeDAConfigDefinitionPropertiesPrototype
     const projectConfigDefinitionPrototypeModel = {
       compliance_profile: projectComplianceProfileModel,
-      locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+      locator_id:
+        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
       description: 'The stage account configuration.',
       name: 'account-stage',
       environment_id: 'testString',
@@ -91,7 +92,8 @@ describe('ProjectV1_integration', () => {
 
     // SchematicsWorkspace
     const schematicsWorkspaceModel = {
-      workspace_crn: 'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+      workspace_crn:
+        'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
     };
 
     // ProjectConfigPrototype
@@ -151,18 +153,26 @@ describe('ProjectV1_integration', () => {
     // ProjectConfigDefinitionPrototypeDAConfigDefinitionPropertiesPrototype
     const projectConfigDefinitionPrototypeModel = {
       compliance_profile: projectComplianceProfileModel,
-      locator_id: '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+      locator_id:
+        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
       description: 'The stage environment configuration.',
       name: 'env-stage',
       environment_id: 'testString',
       authorizations: projectConfigAuthModel,
-      inputs: { account_id: 'account_id', resource_group: 'stage', access_tags: ['env:stage'], logdna_name: 'LogDNA_stage_service', sysdig_name: 'SysDig_stage_service' },
+      inputs: {
+        account_id: 'account_id',
+        resource_group: 'stage',
+        access_tags: ['env:stage'],
+        logdna_name: 'LogDNA_stage_service',
+        sysdig_name: 'SysDig_stage_service',
+      },
       settings: { anyKey: 'anyValue' },
     };
 
     // SchematicsWorkspace
     const schematicsWorkspaceModel = {
-      workspace_crn: 'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
+      workspace_crn:
+        'crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::',
     };
 
     const params = {
@@ -487,7 +497,13 @@ describe('ProjectV1_integration', () => {
       name: 'env-stage',
       environment_id: 'testString',
       authorizations: projectConfigAuthModel,
-      inputs: { account_id: 'account_id', resource_group: 'stage', access_tags: ['env:stage'], logdna_name: 'LogDNA_stage_service', sysdig_name: 'SysDig_stage_service' },
+      inputs: {
+        account_id: 'account_id',
+        resource_group: 'stage',
+        access_tags: ['env:stage'],
+        logdna_name: 'LogDNA_stage_service',
+        sysdig_name: 'SysDig_stage_service',
+      },
       settings: { anyKey: 'anyValue' },
     };
 
@@ -570,7 +586,8 @@ describe('ProjectV1_integration', () => {
 
     // SchematicsWorkspace
     const schematicsWorkspaceModel = {
-      workspace_crn: 'crn:v1:staging:public:schematics:us-south:a/38acaf4469814090a4e675dc0c317a0d:95ad49de-ab96-4e7d-a08c-45c38aa448e6:workspace:us-south.workspace.service.e0106139',
+      workspace_crn:
+        'crn:v1:staging:public:schematics:us-south:a/38acaf4469814090a4e675dc0c317a0d:95ad49de-ab96-4e7d-a08c-45c38aa448e6:workspace:us-south.workspace.service.e0106139',
     };
 
     const params = {
