@@ -105,15 +105,17 @@ class ProjectV1 extends BaseService {
    *
    * Create a new project and asynchronously setup the tools to manage it. Add a deployable architecture by customizing
    * the configuration. After the changes are validated and approved, deploy the resources that the project configures.
+   * For more information, see [Creating a
+   * project](/docs/secure-enterprise?topic=secure-enterprise-setup-project&interface=ui/docs-draft/secure-enterprise?topic=secure-enterprise-setup-project).
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {ProjectPrototypeDefinition} params.definition - The definition of the project.
    * @param {string} params.location - The IBM Cloud location where a resource is deployed.
    * @param {string} params.resourceGroup - The resource group name where the project's data and tools are created.
-   * @param {ProjectConfigPrototype[]} [params.configs] - The project configurations. These configurations are only
-   * included in the response of creating a project if a configs array is specified in the request payload.
-   * @param {EnvironmentPrototype[]} [params.environments] - The project environments. These environments are only
-   * included in the response of creating a project if a environments array is specified in the request payload.
+   * @param {ProjectConfigPrototype[]} [params.configs] - The project configurations. These configurations are included
+   * in the response of creating a project only if a configuration array is specified in the request payload.
+   * @param {EnvironmentPrototype[]} [params.environments] - The project environment. These environments are included in
+   * the response of creating a project only if an environment array is specified in the request payload.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.Project>>}
    */
@@ -173,11 +175,10 @@ class ProjectV1 extends BaseService {
    * List existing projects. Projects are sorted by ID.
    *
    * @param {Object} [params] - The parameters to send to the service.
-   * @param {string} [params.start] - Marks the last entry that is returned on the page. The server uses this parameter
-   * to determine the first entry that is returned on the next page. If this parameter is not specified, the logical
-   * first page is returned.
-   * @param {number} [params.limit] - Determine the maximum number of resources to return. The number of resources that
-   * are returned is the same, with the exception of the last page.
+   * @param {string} [params.token] - The server uses this parameter to determine the first entry that is returned on
+   * the next page. If this parameter is not specified, the logical first page is returned.
+   * @param {number} [params.limit] - The maximum number of resources to return. The number of resources that are
+   * returned is the same, except for the last page.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectCollection>>}
    */
@@ -186,14 +187,14 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.ProjectCollection>> {
     const _params = { ...params };
     const _requiredParams = [];
-    const _validParams = ['start', 'limit', 'headers'];
+    const _validParams = ['token', 'limit', 'headers'];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
     }
 
     const query = {
-      'start': _params.start,
+      'token': _params.token,
       'limit': _params.limit,
     };
 
@@ -271,7 +272,7 @@ class ProjectV1 extends BaseService {
   /**
    * Update a project.
    *
-   * Update a project by the ID.
+   * Update a project by specifying its ID.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.id - The unique project ID.
@@ -326,7 +327,8 @@ class ProjectV1 extends BaseService {
   /**
    * Delete a project.
    *
-   * Delete a project document by the ID. A project can only be deleted after deleting all of its resources.
+   * Delete a project document by specifying the ID. A project can be deleted only after you delete all of its
+   * resources.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.id - The unique project ID.
@@ -370,6 +372,65 @@ class ProjectV1 extends BaseService {
 
     return this.createRequest(parameters);
   }
+
+  /**
+   * List all project resources.
+   *
+   * List resources that are added to a project.
+   *
+   * @param {Object} params - The parameters to send to the service.
+   * @param {string} params.id - The unique project ID.
+   * @param {string} [params.start] - The last entry that is returned on the page. The server uses this parameter to
+   * determine the first entry that is returned on the next page. If this parameter is not specified, the logical first
+   * page is returned.
+   * @param {number} [params.limit] - The maximum number of resources to return. The number of resources that are
+   * returned is the same, except for the last page.
+   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectResourceCollection>>}
+   */
+  public listProjectResources(
+    params: ProjectV1.ListProjectResourcesParams
+  ): Promise<ProjectV1.Response<ProjectV1.ProjectResourceCollection>> {
+    const _params = { ...params };
+    const _requiredParams = ['id'];
+    const _validParams = ['id', 'start', 'limit', 'headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
+
+    const query = {
+      'start': _params.start,
+      'limit': _params.limit,
+    };
+
+    const path = {
+      'id': _params.id,
+    };
+
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'listProjectResources');
+
+    const parameters = {
+      options: {
+        url: '/v1/projects/{id}/resources',
+        method: 'GET',
+        qs: query,
+        path,
+      },
+      defaultOptions: extend(true, {}, this.baseOptions, {
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+          },
+          _params.headers
+        ),
+      }),
+    };
+
+    return this.createRequest(parameters);
+  }
   /*************************
    * environments
    ************************/
@@ -377,7 +438,8 @@ class ProjectV1 extends BaseService {
   /**
    * Create an environment.
    *
-   * Create an environment.
+   * Create an environment to group related configurations together and share values across them for easier deployment.
+   * For more information, see [Creating an environment](/docs/secure-enterprise?topic=secure-enterprise-create-env).
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
@@ -436,10 +498,15 @@ class ProjectV1 extends BaseService {
   /**
    * List environments.
    *
-   * Returns all environments.
+   * List all available environments. For more information, see [Creating an
+   * environment](/docs/secure-enterprise?topic=secure-enterprise-create-env).
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
+   * @param {string} [params.token] - The server uses this parameter to determine the first entry that is returned on
+   * the next page. If this parameter is not specified, the logical first page is returned.
+   * @param {number} [params.limit] - The maximum number of resources to return. The number of resources that are
+   * returned is the same, except for the last page.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.EnvironmentCollection>>}
    */
@@ -448,11 +515,16 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.EnvironmentCollection>> {
     const _params = { ...params };
     const _requiredParams = ['projectId'];
-    const _validParams = ['projectId', 'headers'];
+    const _validParams = ['projectId', 'token', 'limit', 'headers'];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
     }
+
+    const query = {
+      'token': _params.token,
+      'limit': _params.limit,
+    };
 
     const path = {
       'project_id': _params.projectId,
@@ -468,6 +540,7 @@ class ProjectV1 extends BaseService {
       options: {
         url: '/v1/projects/{project_id}/environments',
         method: 'GET',
+        qs: query,
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
@@ -488,7 +561,7 @@ class ProjectV1 extends BaseService {
   /**
    * Get an environment.
    *
-   * Returns an environment.
+   * Get an environment. [Learn more](/docs/secure-enterprise?topic=secure-enterprise-create-env).
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
@@ -538,12 +611,14 @@ class ProjectV1 extends BaseService {
   /**
    * Update an environment.
    *
-   * Update an environment by the ID.
+   * Update an environment by specifying its ID. [Learn
+   * more](/docs/secure-enterprise?topic=secure-enterprise-create-env).
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
    * @param {string} params.id - The environment ID.
-   * @param {EnvironmentDefinitionPropertiesPatch} params.definition - The environment definition used for updates.
+   * @param {EnvironmentDefinitionPropertiesPatch} params.definition - The environment definition that is used for
+   * updates.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.Environment>>}
    */
@@ -599,7 +674,7 @@ class ProjectV1 extends BaseService {
   /**
    * Delete an environment.
    *
-   * Delete an environment in a project by ID.
+   * Delete an environment in a project by specifying its ID.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
@@ -660,9 +735,22 @@ class ProjectV1 extends BaseService {
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {ProjectConfigDefinitionBlockPrototype} params.definition -
-   * @param {SchematicsWorkspace} [params.schematics] - A Schematics workspace to use for deploying this configuration.
-   * Either schematics.workspace_crn, definition.locator_id, or both must be specified.
+   * @param {ProjectConfigDefinitionPrototype} params.definition -
+   * @param {SchematicsWorkspace} [params.schematics] - A Schematics workspace to use for deploying this deployable
+   * architecture.
+   * > If you are importing data from an existing Schematics workspace that is not backed by cart, then you must provide
+   * a `locator_id`. If you are using a Schematics workspace that is backed by cart, a `locator_id` is not required
+   * because the Schematics workspace has one.
+   * >
+   * There are 3 scenarios:
+   * > 1. If only a `locator_id` is specified, a new Schematics workspace is instantiated with that `locator_id`.
+   * > 2. If only a schematics `workspace_crn` is specified, a `400` is returned if a `locator_id` is not found in the
+   * existing schematics workspace.
+   * > 3. If both a Schematics `workspace_crn` and a `locator_id` are specified, a `400`code  is returned if the
+   * specified `locator_id` does not agree with the `locator_id` in the existing Schematics workspace.
+   * >
+   * For more information, see [Creating workspaces and importing your Terraform
+   * template](/docs/schematics?topic=schematics-sch-create-wks).
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfig>>}
    */
@@ -714,10 +802,14 @@ class ProjectV1 extends BaseService {
   /**
    * List all project configurations.
    *
-   * The collection of configurations that are returned.
+   * Retrieve the collection of configurations.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
+   * @param {string} [params.token] - The server uses this parameter to determine the first entry that is returned on
+   * the next page. If this parameter is not specified, the logical first page is returned.
+   * @param {number} [params.limit] - The maximum number of resources to return. The number of resources that are
+   * returned is the same, except for the last page.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigCollection>>}
    */
@@ -726,11 +818,16 @@ class ProjectV1 extends BaseService {
   ): Promise<ProjectV1.Response<ProjectV1.ProjectConfigCollection>> {
     const _params = { ...params };
     const _requiredParams = ['projectId'];
-    const _validParams = ['projectId', 'headers'];
+    const _validParams = ['projectId', 'token', 'limit', 'headers'];
     const _validationErrors = validateParams(_params, _requiredParams, _validParams);
     if (_validationErrors) {
       return Promise.reject(_validationErrors);
     }
+
+    const query = {
+      'token': _params.token,
+      'limit': _params.limit,
+    };
 
     const path = {
       'project_id': _params.projectId,
@@ -742,6 +839,7 @@ class ProjectV1 extends BaseService {
       options: {
         url: '/v1/projects/{project_id}/configs',
         method: 'GET',
+        qs: query,
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
@@ -762,11 +860,13 @@ class ProjectV1 extends BaseService {
   /**
    * Get a project configuration.
    *
-   * Returns the specified project configuration in a specific project.
+   * Retrieve the specified project configuration in a specific project. For more information about project
+   * configurations, see [Monitoring the status of a configuration and its
+   * resources](/docs/secure-enterprise?topic=secure-enterprise-monitor-status-projects).
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique config ID.
+   * @param {string} params.id - The unique configuration ID.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfig>>}
    */
@@ -812,12 +912,13 @@ class ProjectV1 extends BaseService {
   /**
    * Update a configuration.
    *
-   * Update a configuration in a project by the ID.
+   * Update a configuration in a project by specifying the ID. [Learn
+   * more](/docs/secure-enterprise?topic=secure-enterprise-config-project).
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique config ID.
-   * @param {ProjectConfigDefinitionBlockPatch} params.definition -
+   * @param {string} params.id - The unique configuration ID.
+   * @param {ProjectConfigDefinitionPatch} params.definition -
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfig>>}
    */
@@ -867,13 +968,13 @@ class ProjectV1 extends BaseService {
   }
 
   /**
-   * Delete a configuration in a project by ID.
+   * Delete a configuration.
    *
-   * Delete a configuration in a project.
+   * Delete a configuration in a project by specifying its ID.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique config ID.
+   * @param {string} params.id - The unique configuration ID.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigDelete>>}
    */
@@ -917,15 +1018,15 @@ class ProjectV1 extends BaseService {
   }
 
   /**
-   * Force approve project configuration.
+   * Force approve a project configuration.
    *
    * Force approve configuration edits to the main configuration with an approving comment.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique config ID.
-   * @param {string} params.comment - Notes on the project draft action. If this is a forced approve on the draft
-   * configuration, a non-empty comment is required.
+   * @param {string} params.id - The unique configuration ID.
+   * @param {string} params.comment - Notes on the project draft action. If this action is a force approve on the draft
+   * configuration, you must include a nonempty comment.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigVersion>>}
    */
@@ -981,9 +1082,9 @@ class ProjectV1 extends BaseService {
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique config ID.
-   * @param {string} [params.comment] - Notes on the project draft action. If this is a forced approve on the draft
-   * configuration, a non-empty comment is required.
+   * @param {string} params.id - The unique configuration ID.
+   * @param {string} [params.comment] - Notes on the project draft action. If this action is a force approve on the
+   * draft configuration, you must include a nonempty comment.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigVersion>>}
    */
@@ -1035,12 +1136,12 @@ class ProjectV1 extends BaseService {
   /**
    * Run a validation check.
    *
-   * Run a validation check on a given configuration in project. The check includes creating or updating the associated
-   * schematics workspace with a plan job, running the CRA scans, and cost estimatation.
+   * Run a validation check on a specific configuration in the project. The check includes creating or updating the
+   * associated Schematics workspace with a plan job, running the CRA scans, and cost estimation.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique config ID.
+   * @param {string} params.id - The unique configuration ID.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigVersion>>}
    */
@@ -1086,12 +1187,12 @@ class ProjectV1 extends BaseService {
   /**
    * Deploy a configuration.
    *
-   * Deploy a project's configuration. It's an asynchronous operation that can be tracked using the get project
+   * Deploy a project's configuration. This operation is asynchronous and can be tracked by using the get project
    * configuration API with full metadata.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique config ID.
+   * @param {string} params.id - The unique configuration ID.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigVersion>>}
    */
@@ -1142,7 +1243,7 @@ class ProjectV1 extends BaseService {
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique config ID.
+   * @param {string} params.id - The unique configuration ID.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigVersion>>}
    */
@@ -1188,14 +1289,27 @@ class ProjectV1 extends BaseService {
   /**
    * Sync a project configuration.
    *
-   * Sync a project configuration by analyzing the associated pipeline runs and schematics workspace logs to get the
+   * Sync a project configuration by analyzing the associated pipeline runs and Schematics workspace logs to get the
    * configuration back to a working state.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique config ID.
-   * @param {SchematicsWorkspace} [params.schematics] - A Schematics workspace to use for deploying this configuration.
-   * Either schematics.workspace_crn, definition.locator_id, or both must be specified.
+   * @param {string} params.id - The unique configuration ID.
+   * @param {SchematicsWorkspace} [params.schematics] - A Schematics workspace to use for deploying this deployable
+   * architecture.
+   * > If you are importing data from an existing Schematics workspace that is not backed by cart, then you must provide
+   * a `locator_id`. If you are using a Schematics workspace that is backed by cart, a `locator_id` is not required
+   * because the Schematics workspace has one.
+   * >
+   * There are 3 scenarios:
+   * > 1. If only a `locator_id` is specified, a new Schematics workspace is instantiated with that `locator_id`.
+   * > 2. If only a schematics `workspace_crn` is specified, a `400` is returned if a `locator_id` is not found in the
+   * existing schematics workspace.
+   * > 3. If both a Schematics `workspace_crn` and a `locator_id` are specified, a `400`code  is returned if the
+   * specified `locator_id` does not agree with the `locator_id` in the existing Schematics workspace.
+   * >
+   * For more information, see [Creating workspaces and importing your Terraform
+   * template](/docs/schematics?topic=schematics-sch-create-wks).
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.EmptyObject>>}
    */
@@ -1244,13 +1358,13 @@ class ProjectV1 extends BaseService {
   }
 
   /**
-   * List the resources deployed by a configuration.
+   * List all deployed resources.
    *
-   * A list of resources deployed by a configuraton.
+   * List resources that are deployed by a configuration.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique config ID.
+   * @param {string} params.id - The unique configuration ID.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigResourceCollection>>}
    */
@@ -1294,13 +1408,13 @@ class ProjectV1 extends BaseService {
   }
 
   /**
-   * Get a list of versions of a project configuration.
+   * Get a list of project configuration versions.
    *
-   * Returns a list of previous and current versions of a project configuration in a specific project.
+   * Retrieve a list of previous and current versions of a project configuration in a specific project.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique config ID.
+   * @param {string} params.id - The unique configuration ID.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigVersionSummaryCollection>>}
    */
@@ -1344,13 +1458,13 @@ class ProjectV1 extends BaseService {
   }
 
   /**
-   * Get a specific version of a project configuration.
+   * Get a specific project configuration version.
    *
-   * Returns a specific version of a project configuration in a specific project.
+   * Retrieve a specific version of a configuration in a project.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique config ID.
+   * @param {string} params.id - The unique configuration ID.
    * @param {number} params.version - The configuration version.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigVersion>>}
@@ -1396,13 +1510,13 @@ class ProjectV1 extends BaseService {
   }
 
   /**
-   * Delete a configuration for the specified project ID and version.
+   * Delete a project configuration version.
    *
-   * Delete a configuration in a project.
+   * Delete a configuration version by specifying the project ID.
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.projectId - The unique project ID.
-   * @param {string} params.id - The unique config ID.
+   * @param {string} params.id - The unique configuration ID.
    * @param {number} params.version - The configuration version.
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectConfigDelete>>}
@@ -1484,12 +1598,12 @@ namespace ProjectV1 {
     location: string;
     /** The resource group name where the project's data and tools are created. */
     resourceGroup: string;
-    /** The project configurations. These configurations are only included in the response of creating a project if
-     *  a configs array is specified in the request payload.
+    /** The project configurations. These configurations are included in the response of creating a project only if
+     *  a configuration array is specified in the request payload.
      */
     configs?: ProjectConfigPrototype[];
-    /** The project environments. These environments are only included in the response of creating a project if a
-     *  environments array is specified in the request payload.
+    /** The project environment. These environments are included in the response of creating a project only if an
+     *  environment array is specified in the request payload.
      */
     environments?: EnvironmentPrototype[];
     headers?: OutgoingHttpHeaders;
@@ -1497,12 +1611,12 @@ namespace ProjectV1 {
 
   /** Parameters for the `listProjects` operation. */
   export interface ListProjectsParams {
-    /** Marks the last entry that is returned on the page. The server uses this parameter to determine the first
-     *  entry that is returned on the next page. If this parameter is not specified, the logical first page is returned.
+    /** The server uses this parameter to determine the first entry that is returned on the next page. If this
+     *  parameter is not specified, the logical first page is returned.
      */
-    start?: string;
-    /** Determine the maximum number of resources to return. The number of resources that are returned is the same,
-     *  with the exception of the last page.
+    token?: string;
+    /** The maximum number of resources to return. The number of resources that are returned is the same, except for
+     *  the last page.
      */
     limit?: number;
     headers?: OutgoingHttpHeaders;
@@ -1531,6 +1645,21 @@ namespace ProjectV1 {
     headers?: OutgoingHttpHeaders;
   }
 
+  /** Parameters for the `listProjectResources` operation. */
+  export interface ListProjectResourcesParams {
+    /** The unique project ID. */
+    id: string;
+    /** The last entry that is returned on the page. The server uses this parameter to determine the first entry
+     *  that is returned on the next page. If this parameter is not specified, the logical first page is returned.
+     */
+    start?: string;
+    /** The maximum number of resources to return. The number of resources that are returned is the same, except for
+     *  the last page.
+     */
+    limit?: number;
+    headers?: OutgoingHttpHeaders;
+  }
+
   /** Parameters for the `createProjectEnvironment` operation. */
   export interface CreateProjectEnvironmentParams {
     /** The unique project ID. */
@@ -1544,6 +1673,14 @@ namespace ProjectV1 {
   export interface ListProjectEnvironmentsParams {
     /** The unique project ID. */
     projectId: string;
+    /** The server uses this parameter to determine the first entry that is returned on the next page. If this
+     *  parameter is not specified, the logical first page is returned.
+     */
+    token?: string;
+    /** The maximum number of resources to return. The number of resources that are returned is the same, except for
+     *  the last page.
+     */
+    limit?: number;
     headers?: OutgoingHttpHeaders;
   }
 
@@ -1562,7 +1699,7 @@ namespace ProjectV1 {
     projectId: string;
     /** The environment ID. */
     id: string;
-    /** The environment definition used for updates. */
+    /** The environment definition that is used for updates. */
     definition: EnvironmentDefinitionPropertiesPatch;
     headers?: OutgoingHttpHeaders;
   }
@@ -1580,9 +1717,21 @@ namespace ProjectV1 {
   export interface CreateConfigParams {
     /** The unique project ID. */
     projectId: string;
-    definition: ProjectConfigDefinitionBlockPrototype;
-    /** A Schematics workspace to use for deploying this configuration.
-     *  Either schematics.workspace_crn, definition.locator_id, or both must be specified.
+    definition: ProjectConfigDefinitionPrototype;
+    /** A Schematics workspace to use for deploying this deployable architecture.
+     *  > If you are importing data from an existing Schematics workspace that is not backed by cart, then you must
+     *  provide a `locator_id`. If you are using a Schematics workspace that is backed by cart, a `locator_id` is not
+     *  required because the Schematics workspace has one.
+     *  >
+     *  There are 3 scenarios:
+     *  > 1. If only a `locator_id` is specified, a new Schematics workspace is instantiated with that `locator_id`.
+     *  > 2. If only a schematics `workspace_crn` is specified, a `400` is returned if a `locator_id` is not found in
+     *  the existing schematics workspace.
+     *  > 3. If both a Schematics `workspace_crn` and a `locator_id` are specified, a `400`code  is returned if the
+     *  specified `locator_id` does not agree with the `locator_id` in the existing Schematics workspace.
+     *  >
+     *  For more information, see [Creating workspaces and importing your Terraform
+     *  template](/docs/schematics?topic=schematics-sch-create-wks).
      */
     schematics?: SchematicsWorkspace;
     headers?: OutgoingHttpHeaders;
@@ -1592,6 +1741,14 @@ namespace ProjectV1 {
   export interface ListConfigsParams {
     /** The unique project ID. */
     projectId: string;
+    /** The server uses this parameter to determine the first entry that is returned on the next page. If this
+     *  parameter is not specified, the logical first page is returned.
+     */
+    token?: string;
+    /** The maximum number of resources to return. The number of resources that are returned is the same, except for
+     *  the last page.
+     */
+    limit?: number;
     headers?: OutgoingHttpHeaders;
   }
 
@@ -1599,7 +1756,7 @@ namespace ProjectV1 {
   export interface GetConfigParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique config ID. */
+    /** The unique configuration ID. */
     id: string;
     headers?: OutgoingHttpHeaders;
   }
@@ -1608,9 +1765,9 @@ namespace ProjectV1 {
   export interface UpdateConfigParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique config ID. */
+    /** The unique configuration ID. */
     id: string;
-    definition: ProjectConfigDefinitionBlockPatch;
+    definition: ProjectConfigDefinitionPatch;
     headers?: OutgoingHttpHeaders;
   }
 
@@ -1618,7 +1775,7 @@ namespace ProjectV1 {
   export interface DeleteConfigParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique config ID. */
+    /** The unique configuration ID. */
     id: string;
     headers?: OutgoingHttpHeaders;
   }
@@ -1627,10 +1784,10 @@ namespace ProjectV1 {
   export interface ForceApproveParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique config ID. */
+    /** The unique configuration ID. */
     id: string;
-    /** Notes on the project draft action. If this is a forced approve on the draft configuration, a non-empty
-     *  comment is required.
+    /** Notes on the project draft action. If this action is a force approve on the draft configuration, you must
+     *  include a nonempty comment.
      */
     comment: string;
     headers?: OutgoingHttpHeaders;
@@ -1640,10 +1797,10 @@ namespace ProjectV1 {
   export interface ApproveParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique config ID. */
+    /** The unique configuration ID. */
     id: string;
-    /** Notes on the project draft action. If this is a forced approve on the draft configuration, a non-empty
-     *  comment is required.
+    /** Notes on the project draft action. If this action is a force approve on the draft configuration, you must
+     *  include a nonempty comment.
      */
     comment?: string;
     headers?: OutgoingHttpHeaders;
@@ -1653,7 +1810,7 @@ namespace ProjectV1 {
   export interface ValidateConfigParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique config ID. */
+    /** The unique configuration ID. */
     id: string;
     headers?: OutgoingHttpHeaders;
   }
@@ -1662,7 +1819,7 @@ namespace ProjectV1 {
   export interface DeployConfigParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique config ID. */
+    /** The unique configuration ID. */
     id: string;
     headers?: OutgoingHttpHeaders;
   }
@@ -1671,7 +1828,7 @@ namespace ProjectV1 {
   export interface UndeployConfigParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique config ID. */
+    /** The unique configuration ID. */
     id: string;
     headers?: OutgoingHttpHeaders;
   }
@@ -1680,10 +1837,22 @@ namespace ProjectV1 {
   export interface SyncConfigParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique config ID. */
+    /** The unique configuration ID. */
     id: string;
-    /** A Schematics workspace to use for deploying this configuration.
-     *  Either schematics.workspace_crn, definition.locator_id, or both must be specified.
+    /** A Schematics workspace to use for deploying this deployable architecture.
+     *  > If you are importing data from an existing Schematics workspace that is not backed by cart, then you must
+     *  provide a `locator_id`. If you are using a Schematics workspace that is backed by cart, a `locator_id` is not
+     *  required because the Schematics workspace has one.
+     *  >
+     *  There are 3 scenarios:
+     *  > 1. If only a `locator_id` is specified, a new Schematics workspace is instantiated with that `locator_id`.
+     *  > 2. If only a schematics `workspace_crn` is specified, a `400` is returned if a `locator_id` is not found in
+     *  the existing schematics workspace.
+     *  > 3. If both a Schematics `workspace_crn` and a `locator_id` are specified, a `400`code  is returned if the
+     *  specified `locator_id` does not agree with the `locator_id` in the existing Schematics workspace.
+     *  >
+     *  For more information, see [Creating workspaces and importing your Terraform
+     *  template](/docs/schematics?topic=schematics-sch-create-wks).
      */
     schematics?: SchematicsWorkspace;
     headers?: OutgoingHttpHeaders;
@@ -1693,7 +1862,7 @@ namespace ProjectV1 {
   export interface ListConfigResourcesParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique config ID. */
+    /** The unique configuration ID. */
     id: string;
     headers?: OutgoingHttpHeaders;
   }
@@ -1702,7 +1871,7 @@ namespace ProjectV1 {
   export interface ListConfigVersionsParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique config ID. */
+    /** The unique configuration ID. */
     id: string;
     headers?: OutgoingHttpHeaders;
   }
@@ -1711,7 +1880,7 @@ namespace ProjectV1 {
   export interface GetConfigVersionParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique config ID. */
+    /** The unique configuration ID. */
     id: string;
     /** The configuration version. */
     version: number;
@@ -1722,7 +1891,7 @@ namespace ProjectV1 {
   export interface DeleteConfigVersionParams {
     /** The unique project ID. */
     projectId: string;
-    /** The unique config ID. */
+    /** The unique configuration ID. */
     id: string;
     /** The configuration version. */
     version: number;
@@ -1735,116 +1904,150 @@ namespace ProjectV1 {
 
   /** The messages of apply jobs on the configuration. */
   export interface ActionJobApplyMessagesSummary {
-    /** The collection of error messages. This is only reported if schematics triggered a terraform apply job. */
+    /** The collection of error messages. This property is reported only if Schematics triggered a Terraform apply
+     *  job.
+     */
     error_messages?: TerraformLogAnalyzerErrorMessage[];
-    /** The collection of success messages. This is only reported if schematics triggered a terraform apply job. */
-    sucess_message?: TerraformLogAnalyzerSuccessMessage[];
+    /** The collection of success messages. This property is reported only if Schematics triggered a Terraform apply
+     *  job.
+     */
+    success_messages?: TerraformLogAnalyzerSuccessMessage[];
   }
 
   /** The summary of the apply jobs on the configuration. */
   export interface ActionJobApplySummary {
-    /** The number of applied resources. This is only reported if schematics triggered a terraform apply job. */
-    success?: number;
-    /** The number of failed resources. The number of applied resources. This is only reported if schematics
-     *  triggered a terraform apply job.
+    /** The number of applied resources. This property is reported only if Schematics triggered a Terraform apply
+     *  job.
      */
-    failed?: number;
-    /** The collection of successfully applied resources. This is only reported if schematics triggered a terraform
+    success?: number;
+    /** The number of failed applied resources. This property is reported only if Schematics triggered a Terraform
      *  apply job.
      */
+    failed?: number;
+    /** The collection of successfully applied resources. This property is reported only if Schematics triggered a
+     *  Terraform apply job.
+     */
     success_resources?: string[];
-    /** The collection of failed applied resources. This is only reported if schematics triggered a terraform apply
-     *  job.
+    /** The collection of failed applied resources. This property is reported only if Schematics triggered a
+     *  Terraform apply job.
      */
     failed_resources?: string[];
   }
 
   /** The messages of destroy jobs on the configuration. */
   export interface ActionJobDestroyMessagesSummary {
-    /** The collection of error messages. This is only reported if schematics triggered a terraform destroy job. */
+    /** The collection of error messages. This property is reported only if Schematics triggered a Terraform destroy
+     *  job.
+     */
     error_messages?: TerraformLogAnalyzerErrorMessage[];
   }
 
   /** The summary of the destroy jobs on the configuration. */
   export interface ActionJobDestroySummary {
-    /** The number of destroyed resources. This is only reported if schematics triggered a terraform destroy job. */
-    success?: number;
-    /** The number of failed resources. This is only reported if schematics triggered a terraform destroy job. */
-    failed?: number;
-    /** The number of tainted resources. This is only reported if schematics triggered a terraform destroy job. */
-    tainted?: number;
-    /** The destroy resources results from the job. This is only reported if schematics triggered a terraform
+    /** The number of destroyed resources. This property is reported only if Schematics triggered a Terraform
      *  destroy job.
+     */
+    success?: number;
+    /** The number of failed resources. This property is reported only if Schematics triggered a Terraform destroy
+     *  job.
+     */
+    failed?: number;
+    /** The number of tainted resources. This property is reported only if Schematics triggered a Terraform destroy
+     *  job.
+     */
+    tainted?: number;
+    /** The summary of results from destroyed resources from the job. This property is reported only if Schematics
+     *  triggered a Terraform destroy job.
      */
     resources?: ActionJobDestroySummaryResources;
   }
 
-  /** The destroy resources results from the job. This is only reported if schematics triggered a terraform destroy job. */
+  /** The summary of results from destroyed resources from the job. This property is reported only if Schematics triggered a Terraform destroy job. */
   export interface ActionJobDestroySummaryResources {
-    /** The collection of destroyed resources. This is only reported if schematics triggered a terraform destroy
-     *  job.
+    /** The collection of destroyed resources. This property is reported only if Schematics triggered a Terraform
+     *  destroy job.
      */
     success?: string[];
-    /** The collection of failed resources. This is only reported if schematics triggered a terraform destroy job. */
+    /** The collection of failed resources. This property is reported only if Schematics triggered a Terraform
+     *  destroy job.
+     */
     failed?: string[];
-    /** The collection of tainted resources. This is only reported if schematics triggered a terraform destroy job. */
+    /** The collection of tainted resources. This property is reported only if Schematics triggered a Terraform
+     *  destroy job.
+     */
     tainted?: string[];
   }
 
   /** The message summaries of jobs on the configuration. */
   export interface ActionJobMessageSummary {
-    /** The number of info messages. This is only reported if schematics triggered a terraform job. */
+    /** The number of information messages. This property is reported only if Schematics triggered a Terraform job. */
     info?: number;
-    /** The number of debug messages. This is only reported if schematics triggered a terraform job. */
+    /** The number of debug messages. This property is reported only if Schematics triggered a Terraform job. */
     debug?: number;
-    /** The number of error messages. This is only reported if schematics triggered a terraform job. */
+    /** The number of error messages. This property is reported only if Schematics triggered a Terraform job. */
     error?: number;
   }
 
   /** The plan messages on the configuration. */
   export interface ActionJobPlanMessagesSummary {
-    /** The collection of error messages. This is only reported if schematics triggered a terraform plan job. */
+    /** The collection of error messages. This property is reported only if Schematics triggered a Terraform plan
+     *  job.
+     */
     error_messages?: TerraformLogAnalyzerErrorMessage[];
-    /** The collection of success messages. This is only reported if schematics triggered a terraform plan job. */
-    sucess_message?: string[];
-    /** The collection of update messages. This is only reported if schematics triggered a terraform plan job. */
-    update_message?: string[];
-    /** The collection of destroy messages. This is only reported if schematics triggered a terraform plan job. */
-    destroy_message?: string[];
+    /** The collection of success messages. This property is reported only if Schematics triggered a Terraform plan
+     *  job.
+     */
+    success_messages?: string[];
+    /** The collection of update messages. This property is reported only if Schematics triggered a Terraform plan
+     *  job.
+     */
+    update_messages?: string[];
+    /** The collection of destroy messages. This property is reported only if Schematics triggered a Terraform plan
+     *  job.
+     */
+    destroy_messages?: string[];
   }
 
   /** The summary of the plan jobs on the configuration. */
   export interface ActionJobPlanSummary {
-    /** The number of resources to be added. This is only reported if schematics triggered a terraform plan job. */
+    /** The number of resources to be added. This property is reported only if Schematics triggered a terraform plan
+     *  job.
+     */
     add?: number;
-    /** The number of resources that failed during the plan job. This is only reported if schematics triggered a
-     *  terraform plan job.
+    /** The number of resources that failed during the plan job. This property is reported only if Schematics
+     *  triggered a Terraform plan job.
      */
     failed?: number;
-    /** The number of resources to be updated. This is only reported if schematics triggered a terraform plan job. */
+    /** The number of resources to be updated. This property is reported only if Schematics triggered a Terraform
+     *  plan job.
+     */
     update?: number;
-    /** The number of resources to be destroyed. This is only reported if schematics triggered a terraform plan job. */
+    /** The number of resources to be destroyed. This property is reported only if Schematics triggered a Terraform
+     *  plan job.
+     */
     destroy?: number;
-    /** The collection of planned added resources. This is only reported if schematics triggered a terraform plan
-     *  job.
+    /** The collection of planned added resources. This property is reported only if Schematics triggered a
+     *  Terraform plan job.
      */
     add_resources?: string[];
-    /** The collection of failed planned resources. This is only reported if schematics triggered a terraform plan
-     *  job.
+    /** The collection of failed planned resources. This property is reported only if Schematics triggered a
+     *  Terraform plan job.
      */
     failed_resources?: string[];
-    /** The collection of planned updated resources. This is only reported if schematics triggered a terraform plan
-     *  job.
+    /** The collection of planned updated resources. This property is reported only if Schematics triggered a
+     *  Terraform plan job.
      */
     updated_resources?: string[];
-    /** The collection of planned destroy resources. This is only reported if schematics triggered a terraform plan
-     *  job.
+    /** The collection of planned destroy resources. This property is reported only if Schematics triggered a
+     *  Terraform plan job.
      */
     destroy_resources?: string[];
   }
 
   /** The summaries of jobs that were performed on the configuration. */
   export interface ActionJobSummary {
+    /** The version of the job summary. */
+    version: string;
     /** The summary of the plan jobs on the configuration. */
     plan_summary: ActionJobPlanSummary;
     /** The summary of the apply jobs on the configuration. */
@@ -1869,7 +2072,7 @@ namespace ProjectV1 {
     summary: ActionJobSummary;
   }
 
-  /** The Code Risk Analyzer logs summary of the configuration. */
+  /** The Code Risk Analyzer logs a summary of the configuration. */
   export interface CodeRiskAnalyzerLogsSummary {
     /** The total number of Code Risk Analyzer rules that were applied in the scan. */
     total?: string;
@@ -1885,7 +2088,7 @@ namespace ProjectV1 {
   export interface CumulativeNeedsAttention {
     /** The event name. */
     event?: string;
-    /** A unique ID for that individual event. */
+    /** A unique ID for this individual event. */
     event_id?: string;
     /** A unique ID for the configuration. */
     config_id?: string;
@@ -1895,43 +2098,51 @@ namespace ProjectV1 {
 
   /** The definition of a project environment. */
   export interface Environment {
-    /** The environment id as a friendly name. */
+    /** The environment ID as a friendly name. */
     id: string;
-    /** The project referenced by this resource. */
+    /** The project that is referenced by this resource. */
     project: ProjectReference;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     created_at: string;
-    /** The target account ID derived from the authentication block values. */
+    /** The target account ID derived from the authentication block values. The target account exists only if the
+     *  environment currently has an authorization block.
+     */
     target_account?: string;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     modified_at: string;
     /** A URL. */
     href: string;
     /** The environment definition. */
-    definition: EnvironmentDefinitionRequiredProperties;
+    definition: EnvironmentDefinitionRequiredPropertiesResponse;
   }
 
   /** The list environment response. */
   export interface EnvironmentCollection {
-    /** The environments. */
+    /** A pagination limit. */
+    limit: number;
+    /** A pagination link. */
+    first: PaginationLink;
+    /** A pagination link. */
+    next?: PaginationLink;
+    /** The environment. */
     environments?: Environment[];
   }
 
-  /** The environment definition used for updates. */
+  /** The environment definition that is used for updates. */
   export interface EnvironmentDefinitionPropertiesPatch {
     /** The description of the environment. */
     description?: string;
-    /** The name of the environment.  It is unique within the account across projects and regions. */
+    /** The name of the environment. It's unique within the account across projects and regions. */
     name?: string;
     /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
     authorizations?: ProjectConfigAuth;
-    /** The input variables for configuration definition and environment. */
+    /** The input variables that are used for configuration definition and environment. */
     inputs?: JsonObject;
-    /** The profile required for compliance. */
+    /** The profile that is required for compliance. */
     compliance_profile?: ProjectComplianceProfile;
   }
 
@@ -1939,19 +2150,33 @@ namespace ProjectV1 {
   export interface EnvironmentDefinitionRequiredProperties {
     /** The description of the environment. */
     description?: string;
-    /** The name of the environment.  It is unique within the account across projects and regions. */
+    /** The name of the environment. It's unique within the account across projects and regions. */
     name: string;
     /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
     authorizations?: ProjectConfigAuth;
-    /** The input variables for configuration definition and environment. */
+    /** The input variables that are used for configuration definition and environment. */
     inputs?: JsonObject;
-    /** The profile required for compliance. */
+    /** The profile that is required for compliance. */
     compliance_profile?: ProjectComplianceProfile;
   }
 
-  /** The delete environment response. */
+  /** The environment definition. */
+  export interface EnvironmentDefinitionRequiredPropertiesResponse {
+    /** The description of the environment. */
+    description: string;
+    /** The name of the environment. It's unique within the account across projects and regions. */
+    name: string;
+    /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
+    authorizations?: ProjectConfigAuth;
+    /** The input variables that are used for configuration definition and environment. */
+    inputs?: JsonObject;
+    /** The profile that is required for compliance. */
+    compliance_profile?: ProjectComplianceProfile;
+  }
+
+  /** The response to a request to delete an environment. */
   export interface EnvironmentDeleteResponse {
-    /** The environment id as a friendly name. */
+    /** The environment ID as a friendly name. */
     id: string;
   }
 
@@ -1961,7 +2186,7 @@ namespace ProjectV1 {
     definition: EnvironmentDefinitionRequiredProperties;
   }
 
-  /** The action job performed on the project configuration. */
+  /** The href and results from the last action job that is performed on the project configuration. */
   export interface LastActionWithSummary {
     /** A URL. */
     href: string;
@@ -1969,29 +2194,29 @@ namespace ProjectV1 {
     result?: string;
     /** A brief summary of an action. */
     job?: ActionJobWithIdAndSummary;
-    /** A brief summary of a pre/post action. */
+    /** A brief summary of a pre- and post-action. */
     pre_job?: PrePostActionJobWithIdAndSummary;
-    /** A brief summary of a pre/post action. */
+    /** A brief summary of a pre- and post-action. */
     post_job?: PrePostActionJobWithIdAndSummary;
   }
 
-  /** The drift detection job performed as part of the monitoring action. */
+  /** The summary for drift detection jobs that are performed as part of the last monitoring action. */
   export interface LastDriftDetectionJobSummary {
     /** A brief summary of an action. */
     job?: ActionJobWithIdAndSummary;
   }
 
-  /** The monitoring action job performed on the project configuration. */
+  /** The summary from the last monitoring action job that is performed on the project configuration. */
   export interface LastMonitoringActionWithSummary {
     /** A URL. */
     href: string;
     /** The result of the last action. */
     result?: string;
-    /** The drift detection job performed as part of the monitoring action. */
+    /** The summary for drift detection jobs that are performed as part of the last monitoring action. */
     drift_detection?: LastDriftDetectionJobSummary;
   }
 
-  /** The action job performed on the project configuration. */
+  /** The href and results from the last action job that is performed on the project configuration. */
   export interface LastValidatedActionWithSummary {
     /** A URL. */
     href: string;
@@ -1999,14 +2224,14 @@ namespace ProjectV1 {
     result?: string;
     /** A brief summary of an action. */
     job?: ActionJobWithIdAndSummary;
-    /** A brief summary of a pre/post action. */
+    /** A brief summary of a pre- and post-action. */
     pre_job?: PrePostActionJobWithIdAndSummary;
-    /** A brief summary of a pre/post action. */
+    /** A brief summary of a pre- and post-action. */
     post_job?: PrePostActionJobWithIdAndSummary;
-    /** The cost estimate of the configuration. It only exists after the first configuration validation. */
+    /** The cost estimate of the configuration. This property exists only after the first configuration validation. */
     cost_estimate?: ProjectConfigMetadataCostEstimate;
-    /** The Code Risk Analyzer logs from the compliance scan run for this validation. This is only populated after
-     *  the compliance scan step is run for the validation. Note: cra is the abbreviated form of Code Risk Analyzer.
+    /** The Code Risk Analyzer logs of the configuration. This property is populated only after the validation step
+     *  when the Code Risk Analyzer is run. Note: `cra` is the abbreviated form of Code Risk Analyzer.
      */
     cra_logs?: ProjectConfigMetadataCodeRiskAnalyzerLogs;
   }
@@ -2017,8 +2242,8 @@ namespace ProjectV1 {
     name: string;
     /** A short explanation of the output value. */
     description?: string;
-    /** Can be any value - a string, number, boolean, array, or object. */
-    value?: JsonObject;
+    /** This property can be any value - a string, number, boolean, array, or object. */
+    value?: any;
   }
 
   /** A pagination link. */
@@ -2027,19 +2252,19 @@ namespace ProjectV1 {
     href: string;
   }
 
-  /** A brief summary of a pre/post action job. This is only populated after an action is run as part of a validation, deployment, or undeployment. */
+  /** A brief summary of a pre- and post-action job. This property is populated only after an action is run as part of a validation, deployment, or undeployment. */
   export interface PrePostActionJobSummary {
-    /** The ID of the Schematics action job that ran as part of the pre/post job. */
+    /** The ID of the Schematics action job that ran as part of the pre- and post-job. */
     job_id: string;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     start_time?: string;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     end_time?: string;
-    /** The number of tasks run in the job. */
+    /** The number of tasks that were run in the job. */
     tasks?: number;
     /** The number of tasks that successfully ran in the job. */
     ok?: number;
@@ -2053,53 +2278,53 @@ namespace ProjectV1 {
     project_error?: PrePostActionJobSystemError;
   }
 
-  /** System level error captured in the Projects Pipelines for pre/post job. */
+  /** The system-level error that OS captured in the project pipelines for the pre- and post-job. */
   export interface PrePostActionJobSystemError {
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     timestamp: string;
-    /** Id of user that triggered pipeline that ran pre/post job. */
+    /** The ID of the user that triggered the pipeline that ran the pre- and post-job. */
     user_id: string;
-    /** HTTP status code for the error. */
+    /** The HTTP status code for the error. */
     status_code: string;
-    /** Summary description of the error. */
+    /** The summary description of the error. */
     description: string;
-    /** Detailed message from the source error. */
+    /** The detailed message from the source error. */
     error_response?: string;
   }
 
-  /** A brief summary of a pre/post action. */
+  /** A brief summary of a pre- and post-action. */
   export interface PrePostActionJobWithIdAndSummary {
     /** The unique ID. */
     id: string;
-    /** A brief summary of a pre/post action job. This is only populated after an action is run as part of a
-     *  validation, deployment, or undeployment.
+    /** A brief summary of a pre- and post-action job. This property is populated only after an action is run as
+     *  part of a validation, deployment, or undeployment.
      */
     summary: PrePostActionJobSummary;
   }
 
-  /** The canonical schema of a project. */
+  /** The standard schema of a project. */
   export interface Project {
-    /** An IBM Cloud resource name, which uniquely identifies a resource. */
+    /** An IBM Cloud resource name that uniquely identifies a resource. */
     crn: string;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     created_at: string;
-    /** The cumulative list of needs attention items for a project. If the view is successfully retrieved, an array
-     *  which could be empty is returned.
+    /** The cumulative list of needs attention items for a project. If the view is successfully retrieved, an empty
+     *  or nonempty array is returned.
      */
     cumulative_needs_attention_view: CumulativeNeedsAttention[];
-    /** True indicates that the fetch of the needs attention items failed. It only exists if there was an error
-     *  while retrieving the cumulative needs attention view.
+    /** A value of `true` indicates that the fetch of the needs attention items failed. This property only exists if
+     *  there was an error when you retrieved the cumulative needs attention view.
      */
     cumulative_needs_attention_view_error?: boolean;
     /** The unique project ID. */
     id: string;
     /** The IBM Cloud location where a resource is deployed. */
     location: string;
-    /** The resource group id where the project's data and tools are created. */
+    /** The resource group ID where the project's data and tools are created. */
     resource_group_id: string;
     /** The project status value. */
     state: string;
@@ -2107,13 +2332,13 @@ namespace ProjectV1 {
     href: string;
     /** The resource group name where the project's data and tools are created. */
     resource_group: string;
-    /** The CRN of the event notifications instance if one is connected to this project. */
+    /** The CRN of the Event Notifications instance if one is connected to this project. */
     event_notifications_crn?: string;
     /** The project configurations. These configurations are only included in the response of creating a project if
-     *  a configs array is specified in the request payload.
+     *  a configuration array is specified in the request payload.
      */
     configs: ProjectConfigSummary[];
-    /** The project environments. These environments are only included in the response if project environments were
+    /** The project environment. These environments are only included in the response if project environments were
      *  created on the project.
      */
     environments: ProjectEnvironmentSummary[];
@@ -2133,11 +2358,11 @@ namespace ProjectV1 {
     projects?: ProjectSummary[];
   }
 
-  /** The profile required for compliance. */
+  /** The profile that is required for compliance. */
   export interface ProjectComplianceProfile {
-    /** The unique ID for that compliance profile. */
+    /** The unique ID for the compliance profile. */
     id?: string;
-    /** A unique ID for an instance of a compliance profile. */
+    /** A unique ID for the instance of a compliance profile. */
     instance_id?: string;
     /** The location of the compliance instance. */
     instance_location?: string;
@@ -2147,7 +2372,7 @@ namespace ProjectV1 {
     profile_name?: string;
   }
 
-  /** The canonical schema of a project configuration. */
+  /** The standard schema of a project configuration. */
   export interface ProjectConfig {
     /** The ID of the configuration. If this parameter is empty, an ID is automatically created for the
      *  configuration.
@@ -2158,49 +2383,47 @@ namespace ProjectV1 {
     /** The flag that indicates whether the version of the configuration is draft, or active. */
     is_draft: boolean;
     /** The needs attention state of a configuration. */
-    needs_attention_state: JsonObject[];
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    needs_attention_state: any[];
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     created_at: string;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     modified_at: string;
     /** The last approved metadata of the configuration. */
     last_approved?: ProjectConfigMetadataLastApproved;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     last_saved_at?: string;
-    /** The action job performed on the project configuration. */
+    /** The href and results from the last action job that is performed on the project configuration. */
     last_validated?: LastValidatedActionWithSummary;
-    /** The action job performed on the project configuration. */
+    /** The href and results from the last action job that is performed on the project configuration. */
     last_deployed?: LastActionWithSummary;
-    /** The action job performed on the project configuration. */
+    /** The href and results from the last action job that is performed on the project configuration. */
     last_undeployed?: LastActionWithSummary;
-    /** The monitoring action job performed on the project configuration. */
+    /** The summary from the last monitoring action job that is performed on the project configuration. */
     last_monitoring?: LastMonitoringActionWithSummary;
     /** The outputs of a Schematics template property. */
     outputs: OutputValue[];
-    /** The project referenced by this resource. */
+    /** The project that is referenced by this resource. */
     project: ProjectReference;
-    /** The references used in the config to resolve input values. */
+    /** The references that are used in the configuration to resolve input values. */
     references?: JsonObject;
-    /** A schematics workspace associated to a project configuration, with scripts. */
+    /** A Schematics workspace that is associated to a project configuration, with scripts. */
     schematics?: SchematicsMetadata;
     /** The state of the configuration. */
     state: string;
     /** The flag that indicates whether a configuration update is available. */
     update_available?: boolean;
-    /** The configuration UUIDs associated to this stack. */
-    members?: string[];
     /** A URL. */
     href: string;
-    definition: ProjectConfigResponseDefinition;
-    /** The project configuration version. */
+    definition: ProjectConfigDefinitionResponse;
+    /** A summary of a project configuration version. */
     approved_version?: ProjectConfigVersionSummary;
-    /** The project configuration version. */
+    /** A summary of a project configuration version. */
     deployed_version?: ProjectConfigVersionSummary;
   }
 
@@ -2210,32 +2433,43 @@ namespace ProjectV1 {
     trusted_profile_id?: string;
     /** The authorization method. You can authorize by using a trusted profile or an API key in Secrets Manager. */
     method?: string;
-    /** The IBM Cloud API Key. */
+    /** The IBM Cloud API Key. It can be either raw or pulled from the catalog via a `CRN` or `JSON` blob. */
     api_key?: string;
   }
 
   /** The project configuration list. */
   export interface ProjectConfigCollection {
-    /** The collection list operation response schema that should define the array property with the name "configs". */
+    /** A pagination limit. */
+    limit: number;
+    /** A pagination link. */
+    first: PaginationLink;
+    /** A pagination link. */
+    next?: PaginationLink;
+    /** The response schema of the collection list operation that defines the array property with the name
+     *  `configs`.
+     */
     configs?: ProjectConfigSummary[];
   }
 
-  /** ProjectConfigDefinitionBlockPatch. */
-  export interface ProjectConfigDefinitionBlockPatch {}
+  /** ProjectConfigDefinitionPatch. */
+  export interface ProjectConfigDefinitionPatch {}
 
-  /** ProjectConfigDefinitionBlockPrototype. */
-  export interface ProjectConfigDefinitionBlockPrototype {}
+  /** ProjectConfigDefinitionPrototype. */
+  export interface ProjectConfigDefinitionPrototype {}
 
-  /** The ID of the deleted config. */
+  /** ProjectConfigDefinitionResponse. */
+  export interface ProjectConfigDefinitionResponse {}
+
+  /** The ID of the deleted configuration. */
   export interface ProjectConfigDelete {
     /** The ID of the deleted project or configuration. */
     id: string;
   }
 
-  /** The Code Risk Analyzer logs of the configuration. This is only populated after the validation step in which the Code Risk Analyzer is run. */
+  /** The Code Risk Analyzer logs of the configuration. This property is populated only after the validation step when the Code Risk Analyzer is run. Note: `cra` is the abbreviated form of Code Risk Analyzer. */
   export interface ProjectConfigMetadataCodeRiskAnalyzerLogs {}
 
-  /** The cost estimate of the configuration. It only exists after the first configuration validation. */
+  /** The cost estimate of the configuration. This property exists only after the first configuration validation. */
   export interface ProjectConfigMetadataCostEstimate {
     /** The version of the cost estimate of the configuration. */
     version?: string;
@@ -2249,11 +2483,11 @@ namespace ProjectV1 {
     pastTotalHourlyCost?: string;
     /** The past total monthly cost estimate of the configuration. */
     pastTotalMonthlyCost?: string;
-    /** The difference between current and past total hourly cost estimates of the configuration. */
+    /** The difference between the current and past total hourly cost estimates of the configuration. */
     diffTotalHourlyCost?: string;
-    /** The difference between current and past total monthly cost estimates of the configuration. */
+    /** The difference between the current and past total monthly cost estimates of the configuration. */
     diffTotalMonthlyCost?: string;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     timeGenerated?: string;
@@ -2263,11 +2497,11 @@ namespace ProjectV1 {
 
   /** The last approved metadata of the configuration. */
   export interface ProjectConfigMetadataLastApproved {
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     at: string;
-    /** The comment left by the user who approved the configuration. */
+    /** The comment that is left by the user who approved the configuration. */
     comment?: string;
     /** The flag that indicates whether the approval was forced approved. */
     is_forced: boolean;
@@ -2277,16 +2511,28 @@ namespace ProjectV1 {
 
   /** The input of a project configuration. */
   export interface ProjectConfigPrototype {
-    definition: ProjectConfigDefinitionBlockPrototype;
-    /** A Schematics workspace to use for deploying this configuration.
-     *  Either schematics.workspace_crn, definition.locator_id, or both must be specified.
+    definition: ProjectConfigDefinitionPrototype;
+    /** A Schematics workspace to use for deploying this deployable architecture.
+     *  > If you are importing data from an existing Schematics workspace that is not backed by cart, then you must
+     *  provide a `locator_id`. If you are using a Schematics workspace that is backed by cart, a `locator_id` is not
+     *  required because the Schematics workspace has one.
+     *  >
+     *  There are 3 scenarios:
+     *  > 1. If only a `locator_id` is specified, a new Schematics workspace is instantiated with that `locator_id`.
+     *  > 2. If only a schematics `workspace_crn` is specified, a `400` is returned if a `locator_id` is not found in
+     *  the existing schematics workspace.
+     *  > 3. If both a Schematics `workspace_crn` and a `locator_id` are specified, a `400`code  is returned if the
+     *  specified `locator_id` does not agree with the `locator_id` in the existing Schematics workspace.
+     *  >
+     *  For more information, see [Creating workspaces and importing your Terraform
+     *  template](/docs/schematics?topic=schematics-sch-create-wks).
      */
     schematics?: SchematicsWorkspace;
   }
 
   /** ProjectConfigResource. */
   export interface ProjectConfigResource {
-    /** An IBM Cloud resource name, which uniquely identifies a resource. */
+    /** An IBM Cloud resource name that uniquely identifies a resource. */
     resource_crn?: string;
     /** The name of the resource. */
     resource_name?: string;
@@ -2302,18 +2548,15 @@ namespace ProjectV1 {
   export interface ProjectConfigResourceCollection {
     /** The collection list operation response schema that defines the array property with the name `resources`. */
     resources: ProjectConfigResource[];
-    /** The total number of resources deployed by the configuration. */
+    /** The total number of resources that are deployed by the configuration. */
     resources_count: number;
   }
 
-  /** ProjectConfigResponseDefinition. */
-  export interface ProjectConfigResponseDefinition {}
-
   /** ProjectConfigSummary. */
   export interface ProjectConfigSummary {
-    /** The project configuration version. */
+    /** A summary of a project configuration version. */
     approved_version?: ProjectConfigVersionSummary;
-    /** The project configuration version. */
+    /** A summary of a project configuration version. */
     deployed_version?: ProjectConfigVersionSummary;
     /** The ID of the configuration. If this parameter is empty, an ID is automatically created for the
      *  configuration.
@@ -2323,30 +2566,44 @@ namespace ProjectV1 {
     version: number;
     /** The state of the configuration. */
     state: string;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     created_at: string;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     modified_at: string;
     /** A URL. */
     href: string;
-    /** The name and description of a project configuration. */
+    /** The description of a project configuration. */
     definition: ProjectConfigSummaryDefinition;
-    /** The project referenced by this resource. */
+    /** The project that is referenced by this resource. */
     project: ProjectReference;
     /** The configuration type. */
     deployment_model?: string;
   }
 
-  /** The name and description of a project configuration. */
+  /** The description of a project configuration. */
   export interface ProjectConfigSummaryDefinition {
     /** A project configuration description. */
-    description?: string;
-    /** The configuration name. It is unique within the account across projects and regions. */
-    name?: string;
+    description: string;
+    /** The configuration name. It's unique within the account across projects and regions. */
+    name: string;
+    /** A unique concatenation of the catalog ID and the version ID that identify the deployable architecture in the
+     *  catalog. I you're importing from an existing Schematics workspace that is not backed by cart, a `locator_id` is
+     *  required. If you're using a Schematics workspace that is backed by cart, a `locator_id` is not necessary because
+     *  the Schematics workspace has one.
+     *  > There are 3 scenarios:
+     *  > 1. If only a `locator_id` is specified, a new Schematics workspace is instantiated with that `locator_id`.
+     *  > 2. If only a schematics `workspace_crn` is specified, a `400` is returned if a `locator_id` is not found in
+     *  the existing schematics workspace.
+     *  > 3. If both a Schematics `workspace_crn` and a `locator_id` are specified, a `400` message is returned if the
+     *  specified `locator_id` does not agree with the `locator_id` in the existing Schematics workspace.
+     *  > For more information of creating a Schematics workspace, see [Creating workspaces and importing your Terraform
+     *  template](/docs/schematics?topic=schematics-sch-create-wks).
+     */
+    locator_id?: string;
   }
 
   /** A specific version of a project configuration. */
@@ -2360,50 +2617,70 @@ namespace ProjectV1 {
     /** The flag that indicates whether the version of the configuration is draft, or active. */
     is_draft: boolean;
     /** The needs attention state of a configuration. */
-    needs_attention_state: JsonObject[];
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    needs_attention_state: any[];
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     created_at: string;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     modified_at: string;
     /** The last approved metadata of the configuration. */
     last_approved?: ProjectConfigMetadataLastApproved;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     last_saved_at?: string;
-    /** The action job performed on the project configuration. */
+    /** The href and results from the last action job that is performed on the project configuration. */
     last_validated?: LastValidatedActionWithSummary;
-    /** The action job performed on the project configuration. */
+    /** The href and results from the last action job that is performed on the project configuration. */
     last_deployed?: LastActionWithSummary;
-    /** The action job performed on the project configuration. */
+    /** The href and results from the last action job that is performed on the project configuration. */
     last_undeployed?: LastActionWithSummary;
-    /** The monitoring action job performed on the project configuration. */
+    /** The summary from the last monitoring action job that is performed on the project configuration. */
     last_monitoring?: LastMonitoringActionWithSummary;
     /** The outputs of a Schematics template property. */
     outputs: OutputValue[];
-    /** The project referenced by this resource. */
+    /** The project that is referenced by this resource. */
     project: ProjectReference;
-    /** The references used in the config to resolve input values. */
+    /** The references that are used in the configuration to resolve input values. */
     references?: JsonObject;
-    /** A schematics workspace associated to a project configuration, with scripts. */
+    /** A Schematics workspace that is associated to a project configuration, with scripts. */
     schematics?: SchematicsMetadata;
     /** The state of the configuration. */
     state: string;
     /** The flag that indicates whether a configuration update is available. */
     update_available?: boolean;
-    /** The configuration UUIDs associated to this stack. */
-    members?: string[];
     /** A URL. */
     href: string;
-    definition: ProjectConfigResponseDefinition;
+    definition: ProjectConfigDefinitionResponse;
   }
 
-  /** The project configuration version. */
+  /** A summary of the definition in a project configuration version. */
+  export interface ProjectConfigVersionDefinitionSummary {
+    /** The ID of the project environment. */
+    environment_id?: string;
+    /** A unique concatenation of the catalog ID and the version ID that identify the deployable architecture in the
+     *  catalog. I you're importing from an existing Schematics workspace that is not backed by cart, a `locator_id` is
+     *  required. If you're using a Schematics workspace that is backed by cart, a `locator_id` is not necessary because
+     *  the Schematics workspace has one.
+     *  > There are 3 scenarios:
+     *  > 1. If only a `locator_id` is specified, a new Schematics workspace is instantiated with that `locator_id`.
+     *  > 2. If only a schematics `workspace_crn` is specified, a `400` is returned if a `locator_id` is not found in
+     *  the existing schematics workspace.
+     *  > 3. If both a Schematics `workspace_crn` and a `locator_id` are specified, a `400` message is returned if the
+     *  specified `locator_id` does not agree with the `locator_id` in the existing Schematics workspace.
+     *  > For more information of creating a Schematics workspace, see [Creating workspaces and importing your Terraform
+     *  template](/docs/schematics?topic=schematics-sch-create-wks).
+     */
+    locator_id?: string;
+  }
+
+  /** A summary of a project configuration version. */
   export interface ProjectConfigVersionSummary {
+    /** A summary of the definition in a project configuration version. */
+    definition: ProjectConfigVersionDefinitionSummary;
     /** The state of the configuration. */
     state: string;
     /** The version number of the configuration. */
@@ -2420,16 +2697,18 @@ namespace ProjectV1 {
 
   /** The definition of the project. */
   export interface ProjectDefinitionProperties {
-    /** The name of the project.  It is unique within the account across regions. */
+    /** The name of the project.  It's unique within the account across regions. */
     name: string;
     /** The policy that indicates whether the resources are destroyed or not when a project is deleted. */
     destroy_on_delete: boolean;
-    /** A brief explanation of the project's use in the configuration of a deployable architecture. It is possible
-     *  to create a project without providing a description.
+    /** A brief explanation of the project's use in the configuration of a deployable architecture. You can create a
+     *  project without providing a description.
      */
     description: string;
-    /** A boolean flag to enable project monitoring. */
-    monitoring_enabled: boolean;
+    /** A boolean flag to enable automatic drift detection. Use this field to run a daily check to compare your
+     *  configurations to your deployed resources to detect any difference.
+     */
+    monitoring_enabled?: boolean;
   }
 
   /** The definition of the project reference. */
@@ -2446,89 +2725,127 @@ namespace ProjectV1 {
 
   /** The environment metadata. */
   export interface ProjectEnvironmentSummary {
-    /** The environment id as a friendly name. */
+    /** The environment ID as a friendly name. */
     id: string;
-    /** The project referenced by this resource. */
+    /** The project that is referenced by this resource. */
     project: ProjectReference;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     created_at: string;
     /** A URL. */
     href: string;
-    /** The environment definition used in the project collection. */
+    /** The environment definition that is used in the project collection. */
     definition: ProjectEnvironmentSummaryDefinition;
   }
 
-  /** The environment definition used in the project collection. */
+  /** The environment definition that is used in the project collection. */
   export interface ProjectEnvironmentSummaryDefinition {
     /** The description of the environment. */
-    description?: string;
-    /** The name of the environment.  It is unique within the account across projects and regions. */
+    description: string;
+    /** The name of the environment. It's unique within the account across projects and regions. */
     name: string;
   }
 
   /** The definition of the project. */
   export interface ProjectPatchDefinitionBlock {
-    /** The name of the project.  It is unique within the account across regions. */
+    /** The name of the project.  It's unique within the account across regions. */
     name?: string;
     /** The policy that indicates whether the resources are destroyed or not when a project is deleted. */
     destroy_on_delete?: boolean;
-    /** A brief explanation of the project's use in the configuration of a deployable architecture. It is possible
-     *  to create a project without providing a description.
+    /** A brief explanation of the project's use in the configuration of a deployable architecture. You can create a
+     *  project without providing a description.
      */
     description?: string;
-    /** A boolean flag to enable project monitoring. */
+    /** A boolean flag to enable automatic drift detection. Use this field to run a daily check to compare your
+     *  configurations to your deployed resources to detect any difference.
+     */
     monitoring_enabled?: boolean;
   }
 
   /** The definition of the project. */
   export interface ProjectPrototypeDefinition {
-    /** The name of the project.  It is unique within the account across regions. */
+    /** The name of the project.  It's unique within the account across regions. */
     name: string;
     /** The policy that indicates whether the resources are undeployed or not when a project is deleted. */
     destroy_on_delete?: boolean;
-    /** A brief explanation of the project's use in the configuration of a deployable architecture. It is possible
-     *  to create a project without providing a description.
+    /** A brief explanation of the project's use in the configuration of a deployable architecture. You can create a
+     *  project without providing a description.
      */
     description?: string;
-    /** A boolean flag to enable project monitoring. */
+    /** A boolean flag to enable automatic drift detection. Use this field to run a daily check to compare your
+     *  configurations to your deployed resources to detect any difference.
+     */
     monitoring_enabled?: boolean;
   }
 
-  /** The project referenced by this resource. */
+  /** The project that is referenced by this resource. */
   export interface ProjectReference {
     /** The unique ID. */
     id: string;
-    /** The definition of the project reference. */
-    definition: ProjectDefinitionReference;
-    /** An IBM Cloud resource name, which uniquely identifies a resource. */
-    crn: string;
     /** A URL. */
     href: string;
+    /** The definition of the project reference. */
+    definition: ProjectDefinitionReference;
+    /** An IBM Cloud resource name that uniquely identifies a resource. */
+    crn: string;
+  }
+
+  /** The project resource list. */
+  export interface ProjectResourceCollection {
+    /** The collection list operation response schema that defines the array property with the name `resources`. */
+    resources: ProjectResourceSummary[];
+    /** A pagination token. */
+    token?: string;
+    /** A pagination link. */
+    first?: PaginationLink;
+    /** A pagination link. */
+    next?: PaginationLink;
+  }
+
+  /** ProjectResourceSummary. */
+  export interface ProjectResourceSummary {
+    /** An IBM Cloud resource name that uniquely identifies a resource. */
+    resource_crn?: string;
+    /** The name of the resource. */
+    resource_name?: string;
+    /** The ID of the account owning of the resource. */
+    account_id?: string;
+    /** The location of the resource. */
+    location?: string;
+    /** The resource type. */
+    resource_type?: string;
+    /** The status of the resource. */
+    resource_status?: string;
+    /** The ID of the resource's resource group. */
+    resource_group_id?: string;
+    /** The collection of tags. */
+    tags?: string[];
+    /** The collection of service tags. */
+    service_tags?: string[];
   }
 
   /** ProjectSummary. */
   export interface ProjectSummary {
-    /** An IBM Cloud resource name, which uniquely identifies a resource. */
+    /** An IBM Cloud resource name that uniquely identifies a resource. */
     crn: string;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     created_at: string;
-    /** The cumulative list of needs attention items for a project. If the view is successfully retrieved, an array
-     *  which could be empty is returned.
+    /** The cumulative list of needs attention items for a project. If the view is successfully retrieved, an empty
+     *  or nonempty array is returned.
      */
     cumulative_needs_attention_view: CumulativeNeedsAttention[];
-    /** True indicates that the fetch of the needs attention items failed. It only exists if there was an error
-     *  while retrieving the cumulative needs attention view.
+    /** A value of `true` indicates that the fetch of the needs attention items failed. This property only exists if
+     *  there was an error when you retrieved the cumulative needs attention view.
      */
     cumulative_needs_attention_view_error?: boolean;
     /** The unique project ID. */
     id: string;
     /** The IBM Cloud location where a resource is deployed. */
     location: string;
-    /** The resource group id where the project's data and tools are created. */
+    /** The resource group ID where the project's data and tools are created. */
     resource_group_id: string;
     /** The project status value. */
     state: string;
@@ -2538,238 +2855,253 @@ namespace ProjectV1 {
     definition: ProjectDefinitionProperties;
   }
 
-  /** A schematics workspace associated to a project configuration, with scripts. */
+  /** A Schematics workspace that is associated to a project configuration, with scripts. */
   export interface SchematicsMetadata {
-    /** An IBM Cloud resource name, which uniquely identifies a resource. */
+    /** An IBM Cloud resource name that uniquely identifies a resource. */
     workspace_crn?: string;
-    /** A script to be run as part of a Project configuration, for a given stage (pre, post) and action (validate,
-     *  deploy, undeploy).
+    /** A script to be run as part of a project configuration for a specific stage (pre or post) and action
+     *  (validate, deploy, or undeploy).
      */
     validate_pre_script?: Script;
-    /** A script to be run as part of a Project configuration, for a given stage (pre, post) and action (validate,
-     *  deploy, undeploy).
+    /** A script to be run as part of a project configuration for a specific stage (pre or post) and action
+     *  (validate, deploy, or undeploy).
      */
     validate_post_script?: Script;
-    /** A script to be run as part of a Project configuration, for a given stage (pre, post) and action (validate,
-     *  deploy, undeploy).
+    /** A script to be run as part of a project configuration for a specific stage (pre or post) and action
+     *  (validate, deploy, or undeploy).
      */
     deploy_pre_script?: Script;
-    /** A script to be run as part of a Project configuration, for a given stage (pre, post) and action (validate,
-     *  deploy, undeploy).
+    /** A script to be run as part of a project configuration for a specific stage (pre or post) and action
+     *  (validate, deploy, or undeploy).
      */
     deploy_post_script?: Script;
-    /** A script to be run as part of a Project configuration, for a given stage (pre, post) and action (validate,
-     *  deploy, undeploy).
+    /** A script to be run as part of a project configuration for a specific stage (pre or post) and action
+     *  (validate, deploy, or undeploy).
      */
     undeploy_pre_script?: Script;
-    /** A script to be run as part of a Project configuration, for a given stage (pre, post) and action (validate,
-     *  deploy, undeploy).
+    /** A script to be run as part of a project configuration for a specific stage (pre or post) and action
+     *  (validate, deploy, or undeploy).
      */
     undeploy_post_script?: Script;
   }
 
-  /** A Schematics workspace to use for deploying this configuration. Either schematics.workspace_crn, definition.locator_id, or both must be specified. */
+  /** A Schematics workspace to use for deploying this deployable architecture. > If you are importing data from an existing Schematics workspace that is not backed by cart, then you must provide a `locator_id`. If you are using a Schematics workspace that is backed by cart, a `locator_id` is not required because the Schematics workspace has one. > There are 3 scenarios: > 1. If only a `locator_id` is specified, a new Schematics workspace is instantiated with that `locator_id`. > 2. If only a schematics `workspace_crn` is specified, a `400` is returned if a `locator_id` is not found in the existing schematics workspace. > 3. If both a Schematics `workspace_crn` and a `locator_id` are specified, a `400`code  is returned if the specified `locator_id` does not agree with the `locator_id` in the existing Schematics workspace. > For more information, see [Creating workspaces and importing your Terraform template](/docs/schematics?topic=schematics-sch-create-wks). */
   export interface SchematicsWorkspace {
-    /** An IBM Cloud resource name, which uniquely identifies a resource. */
+    /** An IBM Cloud resource name that uniquely identifies a resource. */
     workspace_crn?: string;
   }
 
-  /** A script to be run as part of a Project configuration, for a given stage (pre, post) and action (validate, deploy, undeploy). */
+  /** A script to be run as part of a project configuration for a specific stage (pre or post) and action (validate, deploy, or undeploy). */
   export interface Script {
     /** The type of the script. */
     type?: string;
-    /** The path to this script within the current version source. */
+    /** The path to this script is within the current version source. */
     path?: string;
     /** The short description for this script. */
     short_description?: string;
   }
 
-  /** The error message parsed by the Terraform Log Analyzer. */
+  /** The error message that is parsed by the Terraform log analyzer. */
   export interface TerraformLogAnalyzerErrorMessage {
     /** TerraformLogAnalyzerErrorMessage accepts additional properties. */
     [propName: string]: any;
   }
 
-  /** The success message parsed by the Terraform Log Analyzer. */
+  /** The success message that is parsed by the terraform log analyzer. */
   export interface TerraformLogAnalyzerSuccessMessage {
     /** The resource type. */
     resource_type?: string;
-    /** The time taken. */
+    /** The time that is taken. */
     'time-taken'?: string;
-    /** The id. */
+    /** The ID. */
     id?: string;
   }
 
   /** The name and description of a project configuration. */
-  export interface ProjectConfigDefinitionBlockPatchDAConfigDefinitionPropertiesPatch
-    extends ProjectConfigDefinitionBlockPatch {
-    /** The profile required for compliance. */
+  export interface ProjectConfigDefinitionPatchDAConfigDefinitionPropertiesPatch
+    extends ProjectConfigDefinitionPatch {
+    /** The profile that is required for compliance. */
     compliance_profile?: ProjectComplianceProfile;
-    /** A unique concatenation of catalogID.versionID that identifies the DA in the catalog. Either
-     *  schematics.workspace_crn, definition.locator_id, or both must be specified.
+    /** A unique concatenation of the catalog ID and the version ID that identify the deployable architecture in the
+     *  catalog. I you're importing from an existing Schematics workspace that is not backed by cart, a `locator_id` is
+     *  required. If you're using a Schematics workspace that is backed by cart, a `locator_id` is not necessary because
+     *  the Schematics workspace has one.
+     *  > There are 3 scenarios:
+     *  > 1. If only a `locator_id` is specified, a new Schematics workspace is instantiated with that `locator_id`.
+     *  > 2. If only a schematics `workspace_crn` is specified, a `400` is returned if a `locator_id` is not found in
+     *  the existing schematics workspace.
+     *  > 3. If both a Schematics `workspace_crn` and a `locator_id` are specified, a `400` message is returned if the
+     *  specified `locator_id` does not agree with the `locator_id` in the existing Schematics workspace.
+     *  > For more information of creating a Schematics workspace, see [Creating workspaces and importing your Terraform
+     *  template](/docs/schematics?topic=schematics-sch-create-wks).
      */
     locator_id?: string;
     /** A project configuration description. */
     description?: string;
-    /** The configuration name. It is unique within the account across projects and regions. */
+    /** The configuration name. It's unique within the account across projects and regions. */
     name?: string;
     /** The ID of the project environment. */
     environment_id?: string;
     /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
     authorizations?: ProjectConfigAuth;
-    /** The input variables for configuration definition and environment. */
+    /** The input variables that are used for configuration definition and environment. */
     inputs?: JsonObject;
-    /** Schematics environment variables to use to deploy the configuration. Settings are only available if they
-     *  were specified when the configuration was initially created.
+    /** The Schematics environment variables to use to deploy the configuration. Settings are only available if they
+     *  are specified when the configuration is initially created.
      */
     settings?: JsonObject;
   }
 
   /** The name and description of a project configuration. */
-  export interface ProjectConfigDefinitionBlockPatchResourceConfigDefinitionPropertiesPatch
-    extends ProjectConfigDefinitionBlockPatch {
-    /** The CRNs of resources associated with this configuration. */
+  export interface ProjectConfigDefinitionPatchResourceConfigDefinitionPropertiesPatch
+    extends ProjectConfigDefinitionPatch {
+    /** The CRNs of the resources that are associated with this configuration. */
     resource_crns?: string[];
     /** A project configuration description. */
     description?: string;
-    /** The configuration name. It is unique within the account across projects and regions. */
+    /** The configuration name. It's unique within the account across projects and regions. */
     name?: string;
     /** The ID of the project environment. */
     environment_id?: string;
     /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
     authorizations?: ProjectConfigAuth;
-    /** The input variables for configuration definition and environment. */
+    /** The input variables that are used for configuration definition and environment. */
     inputs?: JsonObject;
-    /** Schematics environment variables to use to deploy the configuration. Settings are only available if they
-     *  were specified when the configuration was initially created.
+    /** The Schematics environment variables to use to deploy the configuration. Settings are only available if they
+     *  are specified when the configuration is initially created.
      */
     settings?: JsonObject;
   }
 
-  /** The name and description of a project configuration. */
-  export interface ProjectConfigDefinitionBlockPrototypeDAConfigDefinitionProperties
-    extends ProjectConfigDefinitionBlockPrototype {
-    /** The profile required for compliance. */
+  /** The description of a project configuration. */
+  export interface ProjectConfigDefinitionPrototypeDAConfigDefinitionPropertiesPrototype
+    extends ProjectConfigDefinitionPrototype {
+    /** The profile that is required for compliance. */
     compliance_profile?: ProjectComplianceProfile;
-    /** A unique concatenation of catalogID.versionID that identifies the DA in the catalog. Either
-     *  schematics.workspace_crn, definition.locator_id, or both must be specified.
+    /** A unique concatenation of the catalog ID and the version ID that identify the deployable architecture in the
+     *  catalog. I you're importing from an existing Schematics workspace that is not backed by cart, a `locator_id` is
+     *  required. If you're using a Schematics workspace that is backed by cart, a `locator_id` is not necessary because
+     *  the Schematics workspace has one.
+     *  > There are 3 scenarios:
+     *  > 1. If only a `locator_id` is specified, a new Schematics workspace is instantiated with that `locator_id`.
+     *  > 2. If only a schematics `workspace_crn` is specified, a `400` is returned if a `locator_id` is not found in
+     *  the existing schematics workspace.
+     *  > 3. If both a Schematics `workspace_crn` and a `locator_id` are specified, a `400` message is returned if the
+     *  specified `locator_id` does not agree with the `locator_id` in the existing Schematics workspace.
+     *  > For more information of creating a Schematics workspace, see [Creating workspaces and importing your Terraform
+     *  template](/docs/schematics?topic=schematics-sch-create-wks).
      */
     locator_id?: string;
     /** A project configuration description. */
     description?: string;
-    /** The configuration name. It is unique within the account across projects and regions. */
-    name?: string;
+    /** The configuration name. It's unique within the account across projects and regions. */
+    name: string;
     /** The ID of the project environment. */
     environment_id?: string;
     /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
     authorizations?: ProjectConfigAuth;
-    /** The input variables for configuration definition and environment. */
+    /** The input variables that are used for configuration definition and environment. */
     inputs?: JsonObject;
-    /** Schematics environment variables to use to deploy the configuration. Settings are only available if they
-     *  were specified when the configuration was initially created.
+    /** The Schematics environment variables to use to deploy the configuration. Settings are only available if they
+     *  are specified when the configuration is initially created.
      */
     settings?: JsonObject;
   }
 
-  /** The name and description of a project configuration. */
-  export interface ProjectConfigDefinitionBlockPrototypeResourceConfigDefinitionProperties
-    extends ProjectConfigDefinitionBlockPrototype {
-    /** The CRNs of resources associated with this configuration. */
+  /** The description of a project configuration. */
+  export interface ProjectConfigDefinitionPrototypeResourceConfigDefinitionPropertiesPrototype
+    extends ProjectConfigDefinitionPrototype {
+    /** The CRNs of the resources that are associated with this configuration. */
     resource_crns?: string[];
     /** A project configuration description. */
     description?: string;
-    /** The configuration name. It is unique within the account across projects and regions. */
-    name?: string;
+    /** The configuration name. It's unique within the account across projects and regions. */
+    name: string;
     /** The ID of the project environment. */
     environment_id?: string;
     /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
     authorizations?: ProjectConfigAuth;
-    /** The input variables for configuration definition and environment. */
+    /** The input variables that are used for configuration definition and environment. */
     inputs?: JsonObject;
-    /** Schematics environment variables to use to deploy the configuration. Settings are only available if they
-     *  were specified when the configuration was initially created.
+    /** The Schematics environment variables to use to deploy the configuration. Settings are only available if they
+     *  are specified when the configuration is initially created.
      */
     settings?: JsonObject;
   }
 
-  /** The Code Risk Analyzer logs of the configuration per Code Risk Analyzer Version 2.0.4. */
+  /** The description of a project configuration. */
+  export interface ProjectConfigDefinitionResponseDAConfigDefinitionPropertiesResponse
+    extends ProjectConfigDefinitionResponse {
+    /** The profile that is required for compliance. */
+    compliance_profile?: ProjectComplianceProfile;
+    /** A unique concatenation of the catalog ID and the version ID that identify the deployable architecture in the
+     *  catalog. I you're importing from an existing Schematics workspace that is not backed by cart, a `locator_id` is
+     *  required. If you're using a Schematics workspace that is backed by cart, a `locator_id` is not necessary because
+     *  the Schematics workspace has one.
+     *  > There are 3 scenarios:
+     *  > 1. If only a `locator_id` is specified, a new Schematics workspace is instantiated with that `locator_id`.
+     *  > 2. If only a schematics `workspace_crn` is specified, a `400` is returned if a `locator_id` is not found in
+     *  the existing schematics workspace.
+     *  > 3. If both a Schematics `workspace_crn` and a `locator_id` are specified, a `400` message is returned if the
+     *  specified `locator_id` does not agree with the `locator_id` in the existing Schematics workspace.
+     *  > For more information of creating a Schematics workspace, see [Creating workspaces and importing your Terraform
+     *  template](/docs/schematics?topic=schematics-sch-create-wks).
+     */
+    locator_id?: string;
+    /** A project configuration description. */
+    description: string;
+    /** The configuration name. It's unique within the account across projects and regions. */
+    name: string;
+    /** The ID of the project environment. */
+    environment_id?: string;
+    /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
+    authorizations?: ProjectConfigAuth;
+    /** The input variables that are used for configuration definition and environment. */
+    inputs?: JsonObject;
+    /** The Schematics environment variables to use to deploy the configuration. Settings are only available if they
+     *  are specified when the configuration is initially created.
+     */
+    settings?: JsonObject;
+  }
+
+  /** The description of a project configuration. */
+  export interface ProjectConfigDefinitionResponseResourceConfigDefinitionPropertiesResponse
+    extends ProjectConfigDefinitionResponse {
+    /** The CRNs of the resources that are associated with this configuration. */
+    resource_crns?: string[];
+    /** A project configuration description. */
+    description: string;
+    /** The configuration name. It's unique within the account across projects and regions. */
+    name: string;
+    /** The ID of the project environment. */
+    environment_id?: string;
+    /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
+    authorizations?: ProjectConfigAuth;
+    /** The input variables that are used for configuration definition and environment. */
+    inputs?: JsonObject;
+    /** The Schematics environment variables to use to deploy the configuration. Settings are only available if they
+     *  are specified when the configuration is initially created.
+     */
+    settings?: JsonObject;
+  }
+
+  /** The Code Risk Analyzer logs of the configuration based on Code Risk Analyzer version 2.0.4. */
   export interface ProjectConfigMetadataCodeRiskAnalyzerLogsVersion204
     extends ProjectConfigMetadataCodeRiskAnalyzerLogs {
     /** The version of the Code Risk Analyzer logs of the configuration. The metadata for this schema is specific to
-     *  cra version 2.0.4.
+     *  Code Risk Analyzer version 2.0.4.
      */
     cra_version?: string;
     /** The schema version of Code Risk Analyzer logs of the configuration. */
     schema_version?: string;
     /** The status of the Code Risk Analyzer logs of the configuration. */
     status?: string;
-    /** The Code Risk Analyzer logs summary of the configuration. */
+    /** The Code Risk Analyzer logs a summary of the configuration. */
     summary?: CodeRiskAnalyzerLogsSummary;
-    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ, matching the date and
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     timestamp?: string;
-  }
-
-  /** The name and description of a project configuration. */
-  export interface ProjectConfigResponseDefinitionDAConfigDefinitionProperties
-    extends ProjectConfigResponseDefinition {
-    /** The profile required for compliance. */
-    compliance_profile?: ProjectComplianceProfile;
-    /** A unique concatenation of catalogID.versionID that identifies the DA in the catalog. Either
-     *  schematics.workspace_crn, definition.locator_id, or both must be specified.
-     */
-    locator_id?: string;
-    /** A project configuration description. */
-    description?: string;
-    /** The configuration name. It is unique within the account across projects and regions. */
-    name?: string;
-    /** The ID of the project environment. */
-    environment_id?: string;
-    /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
-    authorizations?: ProjectConfigAuth;
-    /** The input variables for configuration definition and environment. */
-    inputs?: JsonObject;
-    /** Schematics environment variables to use to deploy the configuration. Settings are only available if they
-     *  were specified when the configuration was initially created.
-     */
-    settings?: JsonObject;
-  }
-
-  /** The name and description of a project configuration. */
-  export interface ProjectConfigResponseDefinitionResourceConfigDefinitionProperties
-    extends ProjectConfigResponseDefinition {
-    /** The CRNs of resources associated with this configuration. */
-    resource_crns?: string[];
-    /** A project configuration description. */
-    description?: string;
-    /** The configuration name. It is unique within the account across projects and regions. */
-    name?: string;
-    /** The ID of the project environment. */
-    environment_id?: string;
-    /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
-    authorizations?: ProjectConfigAuth;
-    /** The input variables for configuration definition and environment. */
-    inputs?: JsonObject;
-    /** Schematics environment variables to use to deploy the configuration. Settings are only available if they
-     *  were specified when the configuration was initially created.
-     */
-    settings?: JsonObject;
-  }
-
-  /** The name and description of a project configuration. */
-  export interface ProjectConfigResponseDefinitionStackConfigDefinitionProperties
-    extends ProjectConfigResponseDefinition {
-    /** A project configuration description. */
-    description?: string;
-    /** The configuration name. It is unique within the account across projects and regions. */
-    name?: string;
-    /** A unique concatenation of catalogID.versionID that identifies the DA in the catalog. Either
-     *  schematics.workspace_crn, definition.locator_id, or both must be specified.
-     */
-    locator_id?: string;
-    /** The ID of the project environment. */
-    environment_id?: string;
   }
 
   /*************************
@@ -2797,8 +3129,8 @@ namespace ProjectV1 {
      * @returns {ProjectsPager}
      */
     constructor(client: ProjectV1, params?: ProjectV1.ListProjectsParams) {
-      if (params && params.start) {
-        throw new Error(`the params.start field should not be set`);
+      if (params && params.token) {
+        throw new Error(`the params.token field should not be set`);
       }
 
       this._hasNext = true;
@@ -2825,7 +3157,7 @@ namespace ProjectV1 {
       }
 
       if (this.pageContext.next) {
-        this.params.start = this.pageContext.next;
+        this.params.token = this.pageContext.next;
       }
       const response = await this.client.listProjects(this.params);
       const { result } = response;
@@ -2833,7 +3165,7 @@ namespace ProjectV1 {
       let next;
       if (result && result.next) {
         if (result.next.href) {
-          next = getQueryParam(result.next.href, 'start');
+          next = getQueryParam(result.next.href, 'token');
         }
       }
       this.pageContext.next = next;
@@ -2849,6 +3181,249 @@ namespace ProjectV1 {
      */
     public async getAll(): Promise<ProjectV1.ProjectSummary[]> {
       const results: ProjectSummary[] = [];
+      while (this.hasNext()) {
+        const nextPage = await this.getNext();
+        results.push(...nextPage);
+      }
+      return results;
+    }
+  }
+
+  /**
+   * ProjectResourcesPager can be used to simplify the use of listProjectResources().
+   */
+  export class ProjectResourcesPager {
+    protected _hasNext: boolean;
+
+    protected pageContext: any;
+
+    protected client: ProjectV1;
+
+    protected params: ProjectV1.ListProjectResourcesParams;
+
+    /**
+     * Construct a ProjectResourcesPager object.
+     *
+     * @param {ProjectV1}  client - The service client instance used to invoke listProjectResources()
+     * @param {Object} params - The parameters to be passed to listProjectResources()
+     * @constructor
+     * @returns {ProjectResourcesPager}
+     */
+    constructor(client: ProjectV1, params: ProjectV1.ListProjectResourcesParams) {
+      if (params && params.start) {
+        throw new Error(`the params.start field should not be set`);
+      }
+
+      this._hasNext = true;
+      this.pageContext = { next: undefined };
+      this.client = client;
+      this.params = JSON.parse(JSON.stringify(params || {}));
+    }
+
+    /**
+     * Returns true if there are potentially more results to be retrieved by invoking getNext().
+     * @returns {boolean}
+     */
+    public hasNext(): boolean {
+      return this._hasNext;
+    }
+
+    /**
+     * Returns the next page of results by invoking listProjectResources().
+     * @returns {Promise<ProjectV1.ProjectResourceSummary[]>}
+     */
+    public async getNext(): Promise<ProjectV1.ProjectResourceSummary[]> {
+      if (!this.hasNext()) {
+        throw new Error('No more results available');
+      }
+
+      if (this.pageContext.next) {
+        this.params.start = this.pageContext.next;
+      }
+      const response = await this.client.listProjectResources(this.params);
+      const { result } = response;
+
+      let next;
+      if (result && result.next) {
+        if (result.next.href) {
+          next = getQueryParam(result.next.href, 'start');
+        }
+      }
+      this.pageContext.next = next;
+      if (!this.pageContext.next) {
+        this._hasNext = false;
+      }
+      return result.resources;
+    }
+
+    /**
+     * Returns all results by invoking listProjectResources() repeatedly until all pages of results have been retrieved.
+     * @returns {Promise<ProjectV1.ProjectResourceSummary[]>}
+     */
+    public async getAll(): Promise<ProjectV1.ProjectResourceSummary[]> {
+      const results: ProjectResourceSummary[] = [];
+      while (this.hasNext()) {
+        const nextPage = await this.getNext();
+        results.push(...nextPage);
+      }
+      return results;
+    }
+  }
+
+  /**
+   * ProjectEnvironmentsPager can be used to simplify the use of listProjectEnvironments().
+   */
+  export class ProjectEnvironmentsPager {
+    protected _hasNext: boolean;
+
+    protected pageContext: any;
+
+    protected client: ProjectV1;
+
+    protected params: ProjectV1.ListProjectEnvironmentsParams;
+
+    /**
+     * Construct a ProjectEnvironmentsPager object.
+     *
+     * @param {ProjectV1}  client - The service client instance used to invoke listProjectEnvironments()
+     * @param {Object} params - The parameters to be passed to listProjectEnvironments()
+     * @constructor
+     * @returns {ProjectEnvironmentsPager}
+     */
+    constructor(client: ProjectV1, params: ProjectV1.ListProjectEnvironmentsParams) {
+      if (params && params.token) {
+        throw new Error(`the params.token field should not be set`);
+      }
+
+      this._hasNext = true;
+      this.pageContext = { next: undefined };
+      this.client = client;
+      this.params = JSON.parse(JSON.stringify(params || {}));
+    }
+
+    /**
+     * Returns true if there are potentially more results to be retrieved by invoking getNext().
+     * @returns {boolean}
+     */
+    public hasNext(): boolean {
+      return this._hasNext;
+    }
+
+    /**
+     * Returns the next page of results by invoking listProjectEnvironments().
+     * @returns {Promise<ProjectV1.Environment[]>}
+     */
+    public async getNext(): Promise<ProjectV1.Environment[]> {
+      if (!this.hasNext()) {
+        throw new Error('No more results available');
+      }
+
+      if (this.pageContext.next) {
+        this.params.token = this.pageContext.next;
+      }
+      const response = await this.client.listProjectEnvironments(this.params);
+      const { result } = response;
+
+      let next;
+      if (result && result.next) {
+        if (result.next.href) {
+          next = getQueryParam(result.next.href, 'token');
+        }
+      }
+      this.pageContext.next = next;
+      if (!this.pageContext.next) {
+        this._hasNext = false;
+      }
+      return result.environments;
+    }
+
+    /**
+     * Returns all results by invoking listProjectEnvironments() repeatedly until all pages of results have been retrieved.
+     * @returns {Promise<ProjectV1.Environment[]>}
+     */
+    public async getAll(): Promise<ProjectV1.Environment[]> {
+      const results: Environment[] = [];
+      while (this.hasNext()) {
+        const nextPage = await this.getNext();
+        results.push(...nextPage);
+      }
+      return results;
+    }
+  }
+
+  /**
+   * ConfigsPager can be used to simplify the use of listConfigs().
+   */
+  export class ConfigsPager {
+    protected _hasNext: boolean;
+
+    protected pageContext: any;
+
+    protected client: ProjectV1;
+
+    protected params: ProjectV1.ListConfigsParams;
+
+    /**
+     * Construct a ConfigsPager object.
+     *
+     * @param {ProjectV1}  client - The service client instance used to invoke listConfigs()
+     * @param {Object} params - The parameters to be passed to listConfigs()
+     * @constructor
+     * @returns {ConfigsPager}
+     */
+    constructor(client: ProjectV1, params: ProjectV1.ListConfigsParams) {
+      if (params && params.token) {
+        throw new Error(`the params.token field should not be set`);
+      }
+
+      this._hasNext = true;
+      this.pageContext = { next: undefined };
+      this.client = client;
+      this.params = JSON.parse(JSON.stringify(params || {}));
+    }
+
+    /**
+     * Returns true if there are potentially more results to be retrieved by invoking getNext().
+     * @returns {boolean}
+     */
+    public hasNext(): boolean {
+      return this._hasNext;
+    }
+
+    /**
+     * Returns the next page of results by invoking listConfigs().
+     * @returns {Promise<ProjectV1.ProjectConfigSummary[]>}
+     */
+    public async getNext(): Promise<ProjectV1.ProjectConfigSummary[]> {
+      if (!this.hasNext()) {
+        throw new Error('No more results available');
+      }
+
+      if (this.pageContext.next) {
+        this.params.token = this.pageContext.next;
+      }
+      const response = await this.client.listConfigs(this.params);
+      const { result } = response;
+
+      let next;
+      if (result && result.next) {
+        if (result.next.href) {
+          next = getQueryParam(result.next.href, 'token');
+        }
+      }
+      this.pageContext.next = next;
+      if (!this.pageContext.next) {
+        this._hasNext = false;
+      }
+      return result.configs;
+    }
+
+    /**
+     * Returns all results by invoking listConfigs() repeatedly until all pages of results have been retrieved.
+     * @returns {Promise<ProjectV1.ProjectConfigSummary[]>}
+     */
+    public async getAll(): Promise<ProjectV1.ProjectConfigSummary[]> {
+      const results: ProjectConfigSummary[] = [];
       while (this.hasNext()) {
         const nextPage = await this.getNext();
         results.push(...nextPage);

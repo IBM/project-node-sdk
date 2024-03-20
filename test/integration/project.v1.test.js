@@ -58,7 +58,7 @@ describe('ProjectV1_integration', () => {
       name: 'acme-microservice',
       destroy_on_delete: true,
       description: 'A microservice to deploy on top of ACME infrastructure.',
-      monitoring_enabled: true,
+      monitoring_enabled: false,
     };
 
     // ProjectComplianceProfile
@@ -77,12 +77,13 @@ describe('ProjectV1_integration', () => {
       api_key: 'testString',
     };
 
-    // ProjectConfigDefinitionBlockPrototypeDAConfigDefinitionProperties
-    const projectConfigDefinitionBlockPrototypeModel = {
+    // ProjectConfigDefinitionPrototypeDAConfigDefinitionPropertiesPrototype
+    const projectConfigDefinitionPrototypeModel = {
       compliance_profile: projectComplianceProfileModel,
-      locator_id: 'testString',
-      description: 'testString',
-      name: 'testString',
+      locator_id:
+        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+      description: 'The stage account configuration.',
+      name: 'account-stage',
       environment_id: 'testString',
       authorizations: projectConfigAuthModel,
       inputs: { anyKey: 'anyValue' },
@@ -97,7 +98,7 @@ describe('ProjectV1_integration', () => {
 
     // ProjectConfigPrototype
     const projectConfigPrototypeModel = {
-      definition: projectConfigDefinitionBlockPrototypeModel,
+      definition: projectConfigDefinitionPrototypeModel,
       schematics: schematicsWorkspaceModel,
     };
 
@@ -149,12 +150,12 @@ describe('ProjectV1_integration', () => {
       api_key: 'testString',
     };
 
-    // ProjectConfigDefinitionBlockPrototypeDAConfigDefinitionProperties
-    const projectConfigDefinitionBlockPrototypeModel = {
+    // ProjectConfigDefinitionPrototypeDAConfigDefinitionPropertiesPrototype
+    const projectConfigDefinitionPrototypeModel = {
       compliance_profile: projectComplianceProfileModel,
       locator_id:
         '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
-      description: 'Stage environment configuration.',
+      description: 'The stage environment configuration.',
       name: 'env-stage',
       environment_id: 'testString',
       authorizations: projectConfigAuthModel,
@@ -165,7 +166,7 @@ describe('ProjectV1_integration', () => {
         logdna_name: 'LogDNA_stage_service',
         sysdig_name: 'SysDig_stage_service',
       },
-      settings: { IBMCLOUD_TOOLCHAIN_ENDPOINT: 'https://api.us-south.devops.dev.cloud.ibm.com' },
+      settings: { anyKey: 'anyValue' },
     };
 
     // SchematicsWorkspace
@@ -176,7 +177,7 @@ describe('ProjectV1_integration', () => {
 
     const params = {
       projectId: projectIdLink,
-      definition: projectConfigDefinitionBlockPrototypeModel,
+      definition: projectConfigDefinitionPrototypeModel,
       schematics: schematicsWorkspaceModel,
     };
 
@@ -189,7 +190,7 @@ describe('ProjectV1_integration', () => {
 
   test('listProjects()', async () => {
     const params = {
-      start: 'testString',
+      token: 'testString',
       limit: 10,
     };
 
@@ -255,14 +256,51 @@ describe('ProjectV1_integration', () => {
     expect(res.result).toBeDefined();
   });
 
+  test('listProjectResources()', async () => {
+    const params = {
+      id: projectIdLink,
+      start: 'testString',
+      limit: 10,
+    };
+
+    const res = await projectService.listProjectResources(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(200);
+    expect(res.result).toBeDefined();
+  });
+
+  test('listProjectResources() via ProjectResourcesPager', async () => {
+    const params = {
+      id: projectIdLink,
+      limit: 10,
+    };
+
+    const allResults = [];
+
+    // Test getNext().
+    let pager = new ProjectV1.ProjectResourcesPager(projectService, params);
+    while (pager.hasNext()) {
+      const nextPage = await pager.getNext();
+      expect(nextPage).not.toBeNull();
+      allResults.push(...nextPage);
+    }
+
+    // Test getAll().
+    pager = new ProjectV1.ProjectResourcesPager(projectService, params);
+    const allItems = await pager.getAll();
+    expect(allItems).not.toBeNull();
+    expect(allItems).toHaveLength(allResults.length);
+    console.log(`Retrieved a total of ${allResults.length} items(s) with pagination.`);
+  });
+
   test('createProjectEnvironment()', async () => {
     // Request models needed by this operation.
 
     // ProjectConfigAuth
     const projectConfigAuthModel = {
-      trusted_profile_id: 'testString',
-      method: 'api_key',
-      api_key: 'TbcdlprpFODhkpns9e0daOWnAwd2tXwSYtPn8rpEd8d9',
+      trusted_profile_id: 'Profile-9ac10c5c-195c-41ef-b465-68a6b6dg5f12',
+      method: 'trusted_profile',
+      api_key: 'testString',
     };
 
     // ProjectComplianceProfile
@@ -276,7 +314,7 @@ describe('ProjectV1_integration', () => {
 
     // EnvironmentDefinitionRequiredProperties
     const environmentDefinitionRequiredPropertiesModel = {
-      description: "The environment 'development'",
+      description: 'The environment development.',
       name: 'development',
       authorizations: projectConfigAuthModel,
       inputs: { resource_group: 'stage', region: 'us-south' },
@@ -297,12 +335,38 @@ describe('ProjectV1_integration', () => {
   test('listProjectEnvironments()', async () => {
     const params = {
       projectId: projectIdLink,
+      token: 'testString',
+      limit: 10,
     };
 
     const res = await projectService.listProjectEnvironments(params);
     expect(res).toBeDefined();
     expect(res.status).toBe(200);
     expect(res.result).toBeDefined();
+  });
+
+  test('listProjectEnvironments() via ProjectEnvironmentsPager', async () => {
+    const params = {
+      projectId: projectIdLink,
+      limit: 10,
+    };
+
+    const allResults = [];
+
+    // Test getNext().
+    let pager = new ProjectV1.ProjectEnvironmentsPager(projectService, params);
+    while (pager.hasNext()) {
+      const nextPage = await pager.getNext();
+      expect(nextPage).not.toBeNull();
+      allResults.push(...nextPage);
+    }
+
+    // Test getAll().
+    pager = new ProjectV1.ProjectEnvironmentsPager(projectService, params);
+    const allItems = await pager.getAll();
+    expect(allItems).not.toBeNull();
+    expect(allItems).toHaveLength(allResults.length);
+    console.log(`Retrieved a total of ${allResults.length} items(s) with pagination.`);
   });
 
   test('getProjectEnvironment()', async () => {
@@ -322,9 +386,9 @@ describe('ProjectV1_integration', () => {
 
     // ProjectConfigAuth
     const projectConfigAuthModel = {
-      trusted_profile_id: 'testString',
-      method: 'api_key',
-      api_key: 'TbcdlprpFODhkpns9e0daOWnAwd2tXwSYtPn8rpEd8d9',
+      trusted_profile_id: 'Profile-9ac10c5c-195c-41ef-b465-68a6b6dg5f12',
+      method: 'trusted_profile',
+      api_key: 'testString',
     };
 
     // ProjectComplianceProfile
@@ -338,7 +402,7 @@ describe('ProjectV1_integration', () => {
 
     // EnvironmentDefinitionPropertiesPatch
     const environmentDefinitionPropertiesPatchModel = {
-      description: "The environment 'development'",
+      description: 'The environment development.',
       name: 'development',
       authorizations: projectConfigAuthModel,
       inputs: { resource_group: 'stage', region: 'us-south' },
@@ -360,12 +424,38 @@ describe('ProjectV1_integration', () => {
   test('listConfigs()', async () => {
     const params = {
       projectId: projectIdLink,
+      token: 'testString',
+      limit: 10,
     };
 
     const res = await projectService.listConfigs(params);
     expect(res).toBeDefined();
     expect(res.status).toBe(200);
     expect(res.result).toBeDefined();
+  });
+
+  test('listConfigs() via ConfigsPager', async () => {
+    const params = {
+      projectId: projectIdLink,
+      limit: 10,
+    };
+
+    const allResults = [];
+
+    // Test getNext().
+    let pager = new ProjectV1.ConfigsPager(projectService, params);
+    while (pager.hasNext()) {
+      const nextPage = await pager.getNext();
+      expect(nextPage).not.toBeNull();
+      allResults.push(...nextPage);
+    }
+
+    // Test getAll().
+    pager = new ProjectV1.ConfigsPager(projectService, params);
+    const allItems = await pager.getAll();
+    expect(allItems).not.toBeNull();
+    expect(allItems).toHaveLength(allResults.length);
+    console.log(`Retrieved a total of ${allResults.length} items(s) with pagination.`);
   });
 
   test('getConfig()', async () => {
@@ -399,8 +489,8 @@ describe('ProjectV1_integration', () => {
       api_key: 'testString',
     };
 
-    // ProjectConfigDefinitionBlockPatchDAConfigDefinitionPropertiesPatch
-    const projectConfigDefinitionBlockPatchModel = {
+    // ProjectConfigDefinitionPatchDAConfigDefinitionPropertiesPatch
+    const projectConfigDefinitionPatchModel = {
       compliance_profile: projectComplianceProfileModel,
       locator_id: 'testString',
       description: 'testString',
@@ -420,7 +510,7 @@ describe('ProjectV1_integration', () => {
     const params = {
       projectId: projectIdLink,
       id: configIdLink,
-      definition: projectConfigDefinitionBlockPatchModel,
+      definition: projectConfigDefinitionPatchModel,
     };
 
     const res = await projectService.updateConfig(params);

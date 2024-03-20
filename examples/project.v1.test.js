@@ -91,10 +91,24 @@ describe('ProjectV1', () => {
       description: 'A microservice to deploy on top of ACME infrastructure.',
     };
 
+    // ProjectConfigDefinitionPrototypeDAConfigDefinitionPropertiesPrototype
+    const projectConfigDefinitionPrototypeModel = {
+      locator_id:
+        '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
+      description: 'The stage account configuration.',
+      name: 'account-stage',
+    };
+
+    // ProjectConfigPrototype
+    const projectConfigPrototypeModel = {
+      definition: projectConfigDefinitionPrototypeModel,
+    };
+
     const params = {
       definition: projectPrototypeDefinitionModel,
       location: 'us-south',
       resourceGroup: 'Default',
+      configs: [projectConfigPrototypeModel],
     };
 
     let res;
@@ -125,11 +139,11 @@ describe('ProjectV1', () => {
 
     // Request models needed by this operation.
 
-    // ProjectConfigDefinitionBlockPrototypeDAConfigDefinitionProperties
-    const projectConfigDefinitionBlockPrototypeModel = {
+    // ProjectConfigDefinitionPrototypeDAConfigDefinitionPropertiesPrototype
+    const projectConfigDefinitionPrototypeModel = {
       locator_id:
         '1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.018edf04-e772-4ca2-9785-03e8e03bef72-global',
-      description: 'Stage environment configuration.',
+      description: 'The stage environment configuration.',
       name: 'env-stage',
       inputs: {
         account_id: 'account_id',
@@ -138,12 +152,11 @@ describe('ProjectV1', () => {
         logdna_name: 'LogDNA_stage_service',
         sysdig_name: 'SysDig_stage_service',
       },
-      settings: { IBMCLOUD_TOOLCHAIN_ENDPOINT: 'https://api.us-south.devops.dev.cloud.ibm.com' },
     };
 
     const params = {
       projectId: projectIdLink,
-      definition: projectConfigDefinitionBlockPrototypeModel,
+      definition: projectConfigDefinitionPrototypeModel,
     };
 
     let res;
@@ -257,6 +270,40 @@ describe('ProjectV1', () => {
     // end-update_project
   });
 
+  test('listProjectResources request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('listProjectResources() result:');
+    // begin-list_project_resources
+
+    const params = {
+      id: projectIdLink,
+      limit: 10,
+    };
+
+    const allResults = [];
+    try {
+      const pager = new ProjectV1.ProjectResourcesPager(projectService, params);
+      while (pager.hasNext()) {
+        const nextPage = await pager.getNext();
+        expect(nextPage).not.toBeNull();
+        allResults.push(...nextPage);
+      }
+      console.log(JSON.stringify(allResults, null, 2));
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-list_project_resources
+  });
+
   test('createProjectEnvironment request example', async () => {
     consoleLogMock.mockImplementation((output) => {
       originalLog(output);
@@ -274,8 +321,8 @@ describe('ProjectV1', () => {
 
     // ProjectConfigAuth
     const projectConfigAuthModel = {
-      method: 'api_key',
-      api_key: 'TbcdlprpFODhkpns9e0daOWnAwd2tXwSYtPn8rpEd8d9',
+      trusted_profile_id: 'Profile-9ac10c5c-195c-41ef-b465-68a6b6dg5f12',
+      method: 'trusted_profile',
     };
 
     // ProjectComplianceProfile
@@ -289,7 +336,7 @@ describe('ProjectV1', () => {
 
     // EnvironmentDefinitionRequiredProperties
     const environmentDefinitionRequiredPropertiesModel = {
-      description: "The environment 'development'",
+      description: 'The environment development.',
       name: 'development',
       authorizations: projectConfigAuthModel,
       inputs: { resource_group: 'stage', region: 'us-south' },
@@ -327,12 +374,18 @@ describe('ProjectV1', () => {
 
     const params = {
       projectId: projectIdLink,
+      limit: 10,
     };
 
-    let res;
+    const allResults = [];
     try {
-      res = await projectService.listProjectEnvironments(params);
-      console.log(JSON.stringify(res.result, null, 2));
+      const pager = new ProjectV1.ProjectEnvironmentsPager(projectService, params);
+      while (pager.hasNext()) {
+        const nextPage = await pager.getNext();
+        expect(nextPage).not.toBeNull();
+        allResults.push(...nextPage);
+      }
+      console.log(JSON.stringify(allResults, null, 2));
     } catch (err) {
       console.warn(err);
     }
@@ -386,8 +439,8 @@ describe('ProjectV1', () => {
 
     // ProjectConfigAuth
     const projectConfigAuthModel = {
-      method: 'api_key',
-      api_key: 'TbcdlprpFODhkpns9e0daOWnAwd2tXwSYtPn8rpEd8d9',
+      trusted_profile_id: 'Profile-9ac10c5c-195c-41ef-b465-68a6b6dg5f12',
+      method: 'trusted_profile',
     };
 
     // ProjectComplianceProfile
@@ -401,7 +454,7 @@ describe('ProjectV1', () => {
 
     // EnvironmentDefinitionPropertiesPatch
     const environmentDefinitionPropertiesPatchModel = {
-      description: "The environment 'development'",
+      description: 'The environment development.',
       name: 'development',
       authorizations: projectConfigAuthModel,
       inputs: { resource_group: 'stage', region: 'us-south' },
@@ -440,12 +493,18 @@ describe('ProjectV1', () => {
 
     const params = {
       projectId: projectIdLink,
+      limit: 10,
     };
 
-    let res;
+    const allResults = [];
     try {
-      res = await projectService.listConfigs(params);
-      console.log(JSON.stringify(res.result, null, 2));
+      const pager = new ProjectV1.ConfigsPager(projectService, params);
+      while (pager.hasNext()) {
+        const nextPage = await pager.getNext();
+        expect(nextPage).not.toBeNull();
+        allResults.push(...nextPage);
+      }
+      console.log(JSON.stringify(allResults, null, 2));
     } catch (err) {
       console.warn(err);
     }
@@ -497,8 +556,8 @@ describe('ProjectV1', () => {
 
     // Request models needed by this operation.
 
-    // ProjectConfigDefinitionBlockPatchDAConfigDefinitionPropertiesPatch
-    const projectConfigDefinitionBlockPatchModel = {
+    // ProjectConfigDefinitionPatchDAConfigDefinitionPropertiesPatch
+    const projectConfigDefinitionPatchModel = {
       name: 'env-stage',
       inputs: {
         account_id: 'account_id',
@@ -512,7 +571,7 @@ describe('ProjectV1', () => {
     const params = {
       projectId: projectIdLink,
       id: configIdLink,
-      definition: projectConfigDefinitionBlockPatchModel,
+      definition: projectConfigDefinitionPatchModel,
     };
 
     let res;
