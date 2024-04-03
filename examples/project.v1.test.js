@@ -270,40 +270,6 @@ describe('ProjectV1', () => {
     // end-update_project
   });
 
-  test('listProjectResources request example', async () => {
-    consoleLogMock.mockImplementation((output) => {
-      originalLog(output);
-    });
-    consoleWarnMock.mockImplementation((output) => {
-      // if an error occurs, display the message and then fail the test
-      originalWarn(output);
-      expect(true).toBeFalsy();
-    });
-
-    originalLog('listProjectResources() result:');
-    // begin-list_project_resources
-
-    const params = {
-      id: projectIdLink,
-      limit: 10,
-    };
-
-    const allResults = [];
-    try {
-      const pager = new ProjectV1.ProjectResourcesPager(projectService, params);
-      while (pager.hasNext()) {
-        const nextPage = await pager.getNext();
-        expect(nextPage).not.toBeNull();
-        allResults.push(...nextPage);
-      }
-      console.log(JSON.stringify(allResults, null, 2));
-    } catch (err) {
-      console.warn(err);
-    }
-
-    // end-list_project_resources
-  });
-
   test('createProjectEnvironment request example', async () => {
     consoleLogMock.mockImplementation((output) => {
       originalLog(output);
@@ -794,6 +760,196 @@ describe('ProjectV1', () => {
     }
 
     // end-list_config_resources
+  });
+
+  test('createStackDefinition request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('createStackDefinition() result:');
+    // begin-create_stack_definition
+
+    // Request models needed by this operation.
+
+    // StackDefinitionInputVariable
+    const stackDefinitionInputVariableModel = {
+      name: 'region',
+      type: 'string',
+      default: 'us-south',
+      required: true,
+      hidden: false,
+    };
+
+    // StackDefinitionOutputVariable
+    const stackDefinitionOutputVariableModel = {
+      name: 'vpc_cluster_id',
+      value: 'cluster_id',
+    };
+
+    // StackDefinitionMemberInputPrototype
+    const stackDefinitionMemberInputPrototypeModel = {
+      name: 'region',
+    };
+
+    // StackDefinitionMemberPrototype
+    const stackDefinitionMemberPrototypeModel = {
+      name: 'foundation-deployable-architecture',
+      inputs: [stackDefinitionMemberInputPrototypeModel],
+    };
+
+    // StackDefinitionBlockPrototype
+    const stackDefinitionBlockPrototypeModel = {
+      inputs: [stackDefinitionInputVariableModel],
+      outputs: [stackDefinitionOutputVariableModel],
+      members: [stackDefinitionMemberPrototypeModel],
+    };
+
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
+      stackDefinition: stackDefinitionBlockPrototypeModel,
+    };
+
+    let res;
+    try {
+      res = await projectService.createStackDefinition(params);
+      console.log(JSON.stringify(res.result, null, 2));
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-create_stack_definition
+  });
+
+  test('getStackDefinition request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('getStackDefinition() result:');
+    // begin-get_stack_definition
+
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
+    };
+
+    let res;
+    try {
+      res = await projectService.getStackDefinition(params);
+      console.log(JSON.stringify(res.result, null, 2));
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-get_stack_definition
+  });
+
+  test('updateStackDefinition request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('updateStackDefinition() result:');
+    // begin-update_stack_definition
+
+    // Request models needed by this operation.
+
+    // StackDefinitionInputVariable
+    const stackDefinitionInputVariableModel = {
+      name: 'region',
+      type: 'string',
+      default: 'eu-gb',
+      required: true,
+      hidden: false,
+    };
+
+    // StackDefinitionMemberInputPrototype
+    const stackDefinitionMemberInputPrototypeModel = {
+      name: 'cluster_name',
+    };
+
+    // StackDefinitionMemberPrototype
+    const stackDefinitionMemberPrototypeModel = {
+      name: 'foundation-deployable-architecture',
+      inputs: [stackDefinitionMemberInputPrototypeModel],
+    };
+
+    // StackDefinitionBlockPrototype
+    const stackDefinitionBlockPrototypeModel = {
+      inputs: [stackDefinitionInputVariableModel],
+      members: [stackDefinitionMemberPrototypeModel],
+    };
+
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
+      stackDefinition: stackDefinitionBlockPrototypeModel,
+    };
+
+    let res;
+    try {
+      res = await projectService.updateStackDefinition(params);
+      console.log(JSON.stringify(res.result, null, 2));
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-update_stack_definition
+  });
+
+  test('exportStackDefinition request example', async () => {
+    consoleLogMock.mockImplementation((output) => {
+      originalLog(output);
+    });
+    consoleWarnMock.mockImplementation((output) => {
+      // if an error occurs, display the message and then fail the test
+      originalWarn(output);
+      expect(true).toBeFalsy();
+    });
+
+    originalLog('exportStackDefinition() result:');
+    // begin-export_stack_definition
+
+    // Request models needed by this operation.
+
+    // StackDefinitionExportRequestStackDefinitionExportCatalogRequest
+    const stackDefinitionExportRequestModel = {
+      catalog_id: '01e1a9ad-534b-4ab9-996a-b8f2a8653d5c',
+      label: 'Stack Deployable Architecture',
+    };
+
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
+      settings: stackDefinitionExportRequestModel,
+    };
+
+    let res;
+    try {
+      res = await projectService.exportStackDefinition(params);
+      console.log(JSON.stringify(res.result, null, 2));
+    } catch (err) {
+      console.warn(err);
+    }
+
+    // end-export_stack_definition
   });
 
   test('listConfigVersions request example', async () => {
