@@ -15,7 +15,7 @@
  */
 
 /**
- * IBM OpenAPI SDK Code Generator Version: 3.80.0-29334a73-20230925-151553
+ * IBM OpenAPI SDK Code Generator Version: 3.87.0-91c7c775-20240320-213027
  */
 
 /* eslint-disable max-classes-per-file */
@@ -54,7 +54,7 @@ class ProjectV1 extends BaseService {
    * @param {UserOptions} [options] - The parameters to send to the service.
    * @param {string} [options.serviceName] - The name of the service to configure
    * @param {Authenticator} [options.authenticator] - The Authenticator object used to authenticate requests to the service
-   * @param {string} [options.serviceUrl] - The URL for the service
+   * @param {string} [options.serviceUrl] - The base URL for the service
    * @returns {ProjectV1}
    */
 
@@ -79,7 +79,7 @@ class ProjectV1 extends BaseService {
    * Construct a ProjectV1 object.
    *
    * @param {Object} options - Options for the service.
-   * @param {string} [options.serviceUrl] - The base url to use when contacting the service. The base url may differ between IBM Cloud regions.
+   * @param {string} [options.serviceUrl] - The base URL for the service
    * @param {OutgoingHttpHeaders} [options.headers] - Default headers that shall be included with every request to the service.
    * @param {Authenticator} options.authenticator - The Authenticator object used to authenticate requests to the service
    * @constructor
@@ -356,65 +356,6 @@ class ProjectV1 extends BaseService {
       options: {
         url: '/v1/projects/{id}',
         method: 'DELETE',
-        path,
-      },
-      defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(
-          true,
-          sdkHeaders,
-          {
-            'Accept': 'application/json',
-          },
-          _params.headers
-        ),
-      }),
-    };
-
-    return this.createRequest(parameters);
-  }
-
-  /**
-   * List all project resources.
-   *
-   * List resources that are added to a project.
-   *
-   * @param {Object} params - The parameters to send to the service.
-   * @param {string} params.id - The unique project ID.
-   * @param {string} [params.start] - The last entry that is returned on the page. The server uses this parameter to
-   * determine the first entry that is returned on the next page. If this parameter is not specified, the logical first
-   * page is returned.
-   * @param {number} [params.limit] - The maximum number of resources to return. The number of resources that are
-   * returned is the same, except for the last page.
-   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
-   * @returns {Promise<ProjectV1.Response<ProjectV1.ProjectResourceCollection>>}
-   */
-  public listProjectResources(
-    params: ProjectV1.ListProjectResourcesParams
-  ): Promise<ProjectV1.Response<ProjectV1.ProjectResourceCollection>> {
-    const _params = { ...params };
-    const _requiredParams = ['id'];
-    const _validParams = ['id', 'start', 'limit', 'headers'];
-    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
-    if (_validationErrors) {
-      return Promise.reject(_validationErrors);
-    }
-
-    const query = {
-      'start': _params.start,
-      'limit': _params.limit,
-    };
-
-    const path = {
-      'id': _params.id,
-    };
-
-    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'listProjectResources');
-
-    const parameters = {
-      options: {
-        url: '/v1/projects/{id}/resources',
-        method: 'GET',
-        qs: query,
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
@@ -1408,6 +1349,229 @@ class ProjectV1 extends BaseService {
   }
 
   /**
+   * Create a stack definition.
+   *
+   * Defines inputs at the stack level that users need to configure along with input values at the member level. These
+   * values are included in the catalog entry when the deployable architecture stack is exported to a private catalog
+   * and are required for the deployable architecture stack to deploy. You can add a reference to a value, or add the
+   * value explicitly at the member level.
+   *
+   * @param {Object} params - The parameters to send to the service.
+   * @param {string} params.projectId - The unique project ID.
+   * @param {string} params.id - The unique configuration ID.
+   * @param {StackDefinitionBlockPrototype} params.stackDefinition - The definition block for a stack definition.
+   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+   * @returns {Promise<ProjectV1.Response<ProjectV1.StackDefinition>>}
+   */
+  public createStackDefinition(
+    params: ProjectV1.CreateStackDefinitionParams
+  ): Promise<ProjectV1.Response<ProjectV1.StackDefinition>> {
+    const _params = { ...params };
+    const _requiredParams = ['projectId', 'id', 'stackDefinition'];
+    const _validParams = ['projectId', 'id', 'stackDefinition', 'headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
+
+    const body = {
+      'stack_definition': _params.stackDefinition,
+    };
+
+    const path = {
+      'project_id': _params.projectId,
+      'id': _params.id,
+    };
+
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'createStackDefinition');
+
+    const parameters = {
+      options: {
+        url: '/v1/projects/{project_id}/configs/{id}/stack_definition',
+        method: 'POST',
+        body,
+        path,
+      },
+      defaultOptions: extend(true, {}, this.baseOptions, {
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          _params.headers
+        ),
+      }),
+    };
+
+    return this.createRequest(parameters);
+  }
+
+  /**
+   * Get a stack definition.
+   *
+   * Retrieve the stack definition that is associated to the configuration.
+   *
+   * @param {Object} params - The parameters to send to the service.
+   * @param {string} params.projectId - The unique project ID.
+   * @param {string} params.id - The unique configuration ID.
+   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+   * @returns {Promise<ProjectV1.Response<ProjectV1.StackDefinition>>}
+   */
+  public getStackDefinition(
+    params: ProjectV1.GetStackDefinitionParams
+  ): Promise<ProjectV1.Response<ProjectV1.StackDefinition>> {
+    const _params = { ...params };
+    const _requiredParams = ['projectId', 'id'];
+    const _validParams = ['projectId', 'id', 'headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
+
+    const path = {
+      'project_id': _params.projectId,
+      'id': _params.id,
+    };
+
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'getStackDefinition');
+
+    const parameters = {
+      options: {
+        url: '/v1/projects/{project_id}/configs/{id}/stack_definition',
+        method: 'GET',
+        path,
+      },
+      defaultOptions: extend(true, {}, this.baseOptions, {
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+          },
+          _params.headers
+        ),
+      }),
+    };
+
+    return this.createRequest(parameters);
+  }
+
+  /**
+   * Update a stack definition.
+   *
+   * Update the stack definition that is associated with the configuration.
+   *
+   * @param {Object} params - The parameters to send to the service.
+   * @param {string} params.projectId - The unique project ID.
+   * @param {string} params.id - The unique configuration ID.
+   * @param {StackDefinitionBlockPrototype} params.stackDefinition - The definition block for a stack definition.
+   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+   * @returns {Promise<ProjectV1.Response<ProjectV1.StackDefinition>>}
+   */
+  public updateStackDefinition(
+    params: ProjectV1.UpdateStackDefinitionParams
+  ): Promise<ProjectV1.Response<ProjectV1.StackDefinition>> {
+    const _params = { ...params };
+    const _requiredParams = ['projectId', 'id', 'stackDefinition'];
+    const _validParams = ['projectId', 'id', 'stackDefinition', 'headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
+
+    const body = {
+      'stack_definition': _params.stackDefinition,
+    };
+
+    const path = {
+      'project_id': _params.projectId,
+      'id': _params.id,
+    };
+
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'updateStackDefinition');
+
+    const parameters = {
+      options: {
+        url: '/v1/projects/{project_id}/configs/{id}/stack_definition',
+        method: 'PATCH',
+        body,
+        path,
+      },
+      defaultOptions: extend(true, {}, this.baseOptions, {
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          _params.headers
+        ),
+      }),
+    };
+
+    return this.createRequest(parameters);
+  }
+
+  /**
+   * Export a deployable architecture stack to the private catalog.
+   *
+   * Exports the deployable architecture stack to a private catalog. All member deployable architectures within the
+   * stack must be validated and deployed before the stack is exported. The stack definition must also exist before the
+   * stack is exported. You can export the stack as a new product, or as a new version of an existing product.
+   *
+   * @param {Object} params - The parameters to send to the service.
+   * @param {string} params.projectId - The unique project ID.
+   * @param {string} params.id - The unique configuration ID.
+   * @param {StackDefinitionExportRequest} params.settings - The payload for the private catalog export request.
+   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+   * @returns {Promise<ProjectV1.Response<ProjectV1.StackDefinitionExportResponse>>}
+   */
+  public exportStackDefinition(
+    params: ProjectV1.ExportStackDefinitionParams
+  ): Promise<ProjectV1.Response<ProjectV1.StackDefinitionExportResponse>> {
+    const _params = { ...params };
+    const _requiredParams = ['projectId', 'id', 'settings'];
+    const _validParams = ['projectId', 'id', 'settings', 'headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
+
+    const body = _params.settings;
+    const path = {
+      'project_id': _params.projectId,
+      'id': _params.id,
+    };
+
+    const sdkHeaders = getSdkHeaders(ProjectV1.DEFAULT_SERVICE_NAME, 'v1', 'exportStackDefinition');
+
+    const parameters = {
+      options: {
+        url: '/v1/projects/{project_id}/configs/{id}/stack_definition/export',
+        method: 'POST',
+        body,
+        path,
+      },
+      defaultOptions: extend(true, {}, this.baseOptions, {
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          _params.headers
+        ),
+      }),
+    };
+
+    return this.createRequest(parameters);
+  }
+
+  /**
    * Get a list of project configuration versions.
    *
    * Retrieve a list of previous and current versions of a project configuration in a specific project.
@@ -1645,21 +1809,6 @@ namespace ProjectV1 {
     headers?: OutgoingHttpHeaders;
   }
 
-  /** Parameters for the `listProjectResources` operation. */
-  export interface ListProjectResourcesParams {
-    /** The unique project ID. */
-    id: string;
-    /** The last entry that is returned on the page. The server uses this parameter to determine the first entry
-     *  that is returned on the next page. If this parameter is not specified, the logical first page is returned.
-     */
-    start?: string;
-    /** The maximum number of resources to return. The number of resources that are returned is the same, except for
-     *  the last page.
-     */
-    limit?: number;
-    headers?: OutgoingHttpHeaders;
-  }
-
   /** Parameters for the `createProjectEnvironment` operation. */
   export interface CreateProjectEnvironmentParams {
     /** The unique project ID. */
@@ -1864,6 +2013,48 @@ namespace ProjectV1 {
     projectId: string;
     /** The unique configuration ID. */
     id: string;
+    headers?: OutgoingHttpHeaders;
+  }
+
+  /** Parameters for the `createStackDefinition` operation. */
+  export interface CreateStackDefinitionParams {
+    /** The unique project ID. */
+    projectId: string;
+    /** The unique configuration ID. */
+    id: string;
+    /** The definition block for a stack definition. */
+    stackDefinition: StackDefinitionBlockPrototype;
+    headers?: OutgoingHttpHeaders;
+  }
+
+  /** Parameters for the `getStackDefinition` operation. */
+  export interface GetStackDefinitionParams {
+    /** The unique project ID. */
+    projectId: string;
+    /** The unique configuration ID. */
+    id: string;
+    headers?: OutgoingHttpHeaders;
+  }
+
+  /** Parameters for the `updateStackDefinition` operation. */
+  export interface UpdateStackDefinitionParams {
+    /** The unique project ID. */
+    projectId: string;
+    /** The unique configuration ID. */
+    id: string;
+    /** The definition block for a stack definition. */
+    stackDefinition: StackDefinitionBlockPrototype;
+    headers?: OutgoingHttpHeaders;
+  }
+
+  /** Parameters for the `exportStackDefinition` operation. */
+  export interface ExportStackDefinitionParams {
+    /** The unique project ID. */
+    projectId: string;
+    /** The unique configuration ID. */
+    id: string;
+    /** The payload for the private catalog export request. */
+    settings: StackDefinitionExportRequest;
     headers?: OutgoingHttpHeaders;
   }
 
@@ -2084,6 +2275,12 @@ namespace ProjectV1 {
     skipped?: string;
   }
 
+  /** The definition of the config reference. */
+  export interface ConfigDefinitionReference {
+    /** The name of the configuration. */
+    name: string;
+  }
+
   /** CumulativeNeedsAttention. */
   export interface CumulativeNeedsAttention {
     /** The event name. */
@@ -2191,13 +2388,22 @@ namespace ProjectV1 {
     /** A URL. */
     href: string;
     /** The result of the last action. */
-    result?: string;
+    result?: LastActionWithSummary.Constants.Result | string;
     /** A brief summary of an action. */
     job?: ActionJobWithIdAndSummary;
     /** A brief summary of a pre- and post-action. */
     pre_job?: PrePostActionJobWithIdAndSummary;
     /** A brief summary of a pre- and post-action. */
     post_job?: PrePostActionJobWithIdAndSummary;
+  }
+  export namespace LastActionWithSummary {
+    export namespace Constants {
+      /** The result of the last action. */
+      export enum Result {
+        FAILED = 'failed',
+        PASSED = 'passed',
+      }
+    }
   }
 
   /** The summary for drift detection jobs that are performed as part of the last monitoring action. */
@@ -2211,9 +2417,18 @@ namespace ProjectV1 {
     /** A URL. */
     href: string;
     /** The result of the last action. */
-    result?: string;
+    result?: LastMonitoringActionWithSummary.Constants.Result | string;
     /** The summary for drift detection jobs that are performed as part of the last monitoring action. */
     drift_detection?: LastDriftDetectionJobSummary;
+  }
+  export namespace LastMonitoringActionWithSummary {
+    export namespace Constants {
+      /** The result of the last action. */
+      export enum Result {
+        FAILED = 'failed',
+        PASSED = 'passed',
+      }
+    }
   }
 
   /** The href and results from the last action job that is performed on the project configuration. */
@@ -2221,7 +2436,7 @@ namespace ProjectV1 {
     /** A URL. */
     href: string;
     /** The result of the last action. */
-    result?: string;
+    result?: LastValidatedActionWithSummary.Constants.Result | string;
     /** A brief summary of an action. */
     job?: ActionJobWithIdAndSummary;
     /** A brief summary of a pre- and post-action. */
@@ -2234,6 +2449,15 @@ namespace ProjectV1 {
      *  when the Code Risk Analyzer is run. Note: `cra` is the abbreviated form of Code Risk Analyzer.
      */
     cra_logs?: ProjectConfigMetadataCodeRiskAnalyzerLogs;
+  }
+  export namespace LastValidatedActionWithSummary {
+    export namespace Constants {
+      /** The result of the last action. */
+      export enum Result {
+        FAILED = 'failed',
+        PASSED = 'passed',
+      }
+    }
   }
 
   /** OutputValue. */
@@ -2327,7 +2551,7 @@ namespace ProjectV1 {
     /** The resource group ID where the project's data and tools are created. */
     resource_group_id: string;
     /** The project status value. */
-    state: string;
+    state: Project.Constants.State | string;
     /** A URL. */
     href: string;
     /** The resource group name where the project's data and tools are created. */
@@ -2344,6 +2568,16 @@ namespace ProjectV1 {
     environments: ProjectEnvironmentSummary[];
     /** The definition of the project. */
     definition: ProjectDefinitionProperties;
+  }
+  export namespace Project {
+    export namespace Constants {
+      /** The project status value. */
+      export enum State {
+        READY = 'ready',
+        DELETING = 'deleting',
+        DELETING_FAILED = 'deleting_failed',
+      }
+    }
   }
 
   /** Projects list. */
@@ -2383,7 +2617,7 @@ namespace ProjectV1 {
     /** The flag that indicates whether the version of the configuration is draft, or active. */
     is_draft: boolean;
     /** The needs attention state of a configuration. */
-    needs_attention_state: any[];
+    needs_attention_state: ProjectConfigNeedsAttentionState[];
     /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
@@ -2415,9 +2649,11 @@ namespace ProjectV1 {
     /** A Schematics workspace that is associated to a project configuration, with scripts. */
     schematics?: SchematicsMetadata;
     /** The state of the configuration. */
-    state: string;
+    state: ProjectConfig.Constants.State | string;
     /** The flag that indicates whether a configuration update is available. */
     update_available?: boolean;
+    /** The template reference. */
+    template?: ProjectObjectReference;
     /** A URL. */
     href: string;
     definition: ProjectConfigDefinitionResponse;
@@ -2426,15 +2662,48 @@ namespace ProjectV1 {
     /** A summary of a project configuration version. */
     deployed_version?: ProjectConfigVersionSummary;
   }
+  export namespace ProjectConfig {
+    export namespace Constants {
+      /** The state of the configuration. */
+      export enum State {
+        APPROVED = 'approved',
+        DELETED = 'deleted',
+        DELETING = 'deleting',
+        DELETING_FAILED = 'deleting_failed',
+        DISCARDED = 'discarded',
+        DRAFT = 'draft',
+        DEPLOYED = 'deployed',
+        DEPLOYING_FAILED = 'deploying_failed',
+        DEPLOYING = 'deploying',
+        SUPERSEDED = 'superseded',
+        UNDEPLOYING = 'undeploying',
+        UNDEPLOYING_FAILED = 'undeploying_failed',
+        VALIDATED = 'validated',
+        VALIDATING = 'validating',
+        VALIDATING_FAILED = 'validating_failed',
+        APPLIED = 'applied',
+        APPLY_FAILED = 'apply_failed',
+      }
+    }
+  }
 
   /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
   export interface ProjectConfigAuth {
     /** The trusted profile ID. */
     trusted_profile_id?: string;
     /** The authorization method. You can authorize by using a trusted profile or an API key in Secrets Manager. */
-    method?: string;
+    method?: ProjectConfigAuth.Constants.Method | string;
     /** The IBM Cloud API Key. It can be either raw or pulled from the catalog via a `CRN` or `JSON` blob. */
     api_key?: string;
+  }
+  export namespace ProjectConfigAuth {
+    export namespace Constants {
+      /** The authorization method. You can authorize by using a trusted profile or an API key in Secrets Manager. */
+      export enum Method {
+        API_KEY = 'api_key',
+        TRUSTED_PROFILE = 'trusted_profile',
+      }
+    }
   }
 
   /** The project configuration list. */
@@ -2509,6 +2778,42 @@ namespace ProjectV1 {
     user_id: string;
   }
 
+  /** A needs attention state item shown to users is a specific actionable event that occurs during the lifecycle of a configuration. */
+  export interface ProjectConfigNeedsAttentionState {
+    /** The id of the event. */
+    event_id: string;
+    /** The name of the event. */
+    event: string;
+    /** The severity of the event. This is a system generated field. For user triggered events the field is not
+     *  present.
+     */
+    severity?: ProjectConfigNeedsAttentionState.Constants.Severity | string;
+    /** An actionable URL that users can access in response to the event. This is a system generated field. For user
+     *  triggered events the field is not present.
+     */
+    action_url?: string;
+    /** The configuration id and version for which the event occurred. This field is only available for user
+     *  generated events. For system triggered events the field is not present.
+     */
+    target?: string;
+    /** The IAM id of the user that triggered the event. This field is only available for user generated events. For
+     *  system triggered events the field is not present.
+     */
+    triggered_by?: string;
+    /** The timestamp of the event. */
+    timestamp: string;
+  }
+  export namespace ProjectConfigNeedsAttentionState {
+    export namespace Constants {
+      /** The severity of the event. This is a system generated field. For user triggered events the field is not present. */
+      export enum Severity {
+        INFO = 'INFO',
+        WARNING = 'WARNING',
+        ERROR = 'ERROR',
+      }
+    }
+  }
+
   /** The input of a project configuration. */
   export interface ProjectConfigPrototype {
     definition: ProjectConfigDefinitionPrototype;
@@ -2565,7 +2870,7 @@ namespace ProjectV1 {
     /** The version of the configuration. */
     version: number;
     /** The state of the configuration. */
-    state: string;
+    state: ProjectConfigSummary.Constants.State | string;
     /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
@@ -2581,7 +2886,37 @@ namespace ProjectV1 {
     /** The project that is referenced by this resource. */
     project: ProjectReference;
     /** The configuration type. */
-    deployment_model?: string;
+    deployment_model?: ProjectConfigSummary.Constants.DeploymentModel | string;
+  }
+  export namespace ProjectConfigSummary {
+    export namespace Constants {
+      /** The state of the configuration. */
+      export enum State {
+        APPROVED = 'approved',
+        DELETED = 'deleted',
+        DELETING = 'deleting',
+        DELETING_FAILED = 'deleting_failed',
+        DISCARDED = 'discarded',
+        DRAFT = 'draft',
+        DEPLOYED = 'deployed',
+        DEPLOYING_FAILED = 'deploying_failed',
+        DEPLOYING = 'deploying',
+        SUPERSEDED = 'superseded',
+        UNDEPLOYING = 'undeploying',
+        UNDEPLOYING_FAILED = 'undeploying_failed',
+        VALIDATED = 'validated',
+        VALIDATING = 'validating',
+        VALIDATING_FAILED = 'validating_failed',
+        APPLIED = 'applied',
+        APPLY_FAILED = 'apply_failed',
+      }
+      /** The configuration type. */
+      export enum DeploymentModel {
+        PROJECT_DEPLOYED = 'project_deployed',
+        USER_DEPLOYED = 'user_deployed',
+        STACK = 'stack',
+      }
+    }
   }
 
   /** The description of a project configuration. */
@@ -2617,7 +2952,7 @@ namespace ProjectV1 {
     /** The flag that indicates whether the version of the configuration is draft, or active. */
     is_draft: boolean;
     /** The needs attention state of a configuration. */
-    needs_attention_state: any[];
+    needs_attention_state: ProjectConfigNeedsAttentionState[];
     /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
@@ -2649,12 +2984,38 @@ namespace ProjectV1 {
     /** A Schematics workspace that is associated to a project configuration, with scripts. */
     schematics?: SchematicsMetadata;
     /** The state of the configuration. */
-    state: string;
+    state: ProjectConfigVersion.Constants.State | string;
     /** The flag that indicates whether a configuration update is available. */
     update_available?: boolean;
+    /** The template reference. */
+    template?: ProjectObjectReference;
     /** A URL. */
     href: string;
     definition: ProjectConfigDefinitionResponse;
+  }
+  export namespace ProjectConfigVersion {
+    export namespace Constants {
+      /** The state of the configuration. */
+      export enum State {
+        APPROVED = 'approved',
+        DELETED = 'deleted',
+        DELETING = 'deleting',
+        DELETING_FAILED = 'deleting_failed',
+        DISCARDED = 'discarded',
+        DRAFT = 'draft',
+        DEPLOYED = 'deployed',
+        DEPLOYING_FAILED = 'deploying_failed',
+        DEPLOYING = 'deploying',
+        SUPERSEDED = 'superseded',
+        UNDEPLOYING = 'undeploying',
+        UNDEPLOYING_FAILED = 'undeploying_failed',
+        VALIDATED = 'validated',
+        VALIDATING = 'validating',
+        VALIDATING_FAILED = 'validating_failed',
+        APPLIED = 'applied',
+        APPLY_FAILED = 'apply_failed',
+      }
+    }
   }
 
   /** A summary of the definition in a project configuration version. */
@@ -2682,11 +3043,35 @@ namespace ProjectV1 {
     /** A summary of the definition in a project configuration version. */
     definition: ProjectConfigVersionDefinitionSummary;
     /** The state of the configuration. */
-    state: string;
+    state: ProjectConfigVersionSummary.Constants.State | string;
     /** The version number of the configuration. */
     version: number;
     /** A URL. */
     href: string;
+  }
+  export namespace ProjectConfigVersionSummary {
+    export namespace Constants {
+      /** The state of the configuration. */
+      export enum State {
+        APPROVED = 'approved',
+        DELETED = 'deleted',
+        DELETING = 'deleting',
+        DELETING_FAILED = 'deleting_failed',
+        DISCARDED = 'discarded',
+        DRAFT = 'draft',
+        DEPLOYED = 'deployed',
+        DEPLOYING_FAILED = 'deploying_failed',
+        DEPLOYING = 'deploying',
+        SUPERSEDED = 'superseded',
+        UNDEPLOYING = 'undeploying',
+        UNDEPLOYING_FAILED = 'undeploying_failed',
+        VALIDATED = 'validated',
+        VALIDATING = 'validating',
+        VALIDATING_FAILED = 'validating_failed',
+        APPLIED = 'applied',
+        APPLY_FAILED = 'apply_failed',
+      }
+    }
   }
 
   /** The project configuration version list. */
@@ -2747,6 +3132,14 @@ namespace ProjectV1 {
     name: string;
   }
 
+  /** ProjectObjectReference. */
+  export interface ProjectObjectReference {
+    /** The unique ID. */
+    id: string;
+    /** A URL. */
+    href: string;
+  }
+
   /** The definition of the project. */
   export interface ProjectPatchDefinitionBlock {
     /** The name of the project.  It's unique within the account across regions. */
@@ -2791,40 +3184,6 @@ namespace ProjectV1 {
     crn: string;
   }
 
-  /** The project resource list. */
-  export interface ProjectResourceCollection {
-    /** The collection list operation response schema that defines the array property with the name `resources`. */
-    resources: ProjectResourceSummary[];
-    /** A pagination token. */
-    token?: string;
-    /** A pagination link. */
-    first?: PaginationLink;
-    /** A pagination link. */
-    next?: PaginationLink;
-  }
-
-  /** ProjectResourceSummary. */
-  export interface ProjectResourceSummary {
-    /** An IBM Cloud resource name that uniquely identifies a resource. */
-    resource_crn?: string;
-    /** The name of the resource. */
-    resource_name?: string;
-    /** The ID of the account owning of the resource. */
-    account_id?: string;
-    /** The location of the resource. */
-    location?: string;
-    /** The resource type. */
-    resource_type?: string;
-    /** The status of the resource. */
-    resource_status?: string;
-    /** The ID of the resource's resource group. */
-    resource_group_id?: string;
-    /** The collection of tags. */
-    tags?: string[];
-    /** The collection of service tags. */
-    service_tags?: string[];
-  }
-
   /** ProjectSummary. */
   export interface ProjectSummary {
     /** An IBM Cloud resource name that uniquely identifies a resource. */
@@ -2848,11 +3207,21 @@ namespace ProjectV1 {
     /** The resource group ID where the project's data and tools are created. */
     resource_group_id: string;
     /** The project status value. */
-    state: string;
+    state: ProjectSummary.Constants.State | string;
     /** A URL. */
     href: string;
     /** The definition of the project. */
     definition: ProjectDefinitionProperties;
+  }
+  export namespace ProjectSummary {
+    export namespace Constants {
+      /** The project status value. */
+      export enum State {
+        READY = 'ready',
+        DELETING = 'deleting',
+        DELETING_FAILED = 'deleting_failed',
+      }
+    }
   }
 
   /** A Schematics workspace that is associated to a project configuration, with scripts. */
@@ -2899,6 +3268,167 @@ namespace ProjectV1 {
     path?: string;
     /** The short description for this script. */
     short_description?: string;
+  }
+
+  /** A member deployable architecture that is included in your stack. */
+  export interface StackConfigMember {
+    /** The name matching the alias in the stack definition. */
+    name: string;
+    /** The unique ID. */
+    config_id: string;
+  }
+
+  /** The stack definition. */
+  export interface StackDefinition {
+    /** The ID of the stack definition. */
+    id: string;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
+     *  time format as specified by RFC 3339.
+     */
+    created_at: string;
+    /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
+     *  time format as specified by RFC 3339.
+     */
+    modified_at: string;
+    /** The state for the stack definition. */
+    state: StackDefinition.Constants.State | string;
+    /** The configuration reference. */
+    configuration: StackDefinitionMetadataConfiguration;
+    /** A URL. */
+    href: string;
+    /** The definition block for a stack definition. */
+    stack_definition: StackDefinitionBlock;
+  }
+  export namespace StackDefinition {
+    export namespace Constants {
+      /** The state for the stack definition. */
+      export enum State {
+        DRAFT = 'draft',
+        PUBLISHED = 'published',
+      }
+    }
+  }
+
+  /** The definition block for a stack definition. */
+  export interface StackDefinitionBlock {
+    /** Defines the inputs that users need to configure at the stack level. These inputs are included in the catalog
+     *  entry when the deployable architecture stack is exported to a private catalog.
+     */
+    inputs?: StackDefinitionInputVariable[];
+    /** The outputs associated with this stack definition. */
+    outputs?: StackDefinitionOutputVariable[];
+    /** The member deployabe architectures that are included in your stack. */
+    members?: StackDefinitionMember[];
+  }
+
+  /** The definition block for a stack definition. */
+  export interface StackDefinitionBlockPrototype {
+    /** Defines the inputs that users need to configure at the stack level. These inputs are included in the catalog
+     *  entry when the deployable architecture stack is exported to a private catalog.
+     */
+    inputs?: StackDefinitionInputVariable[];
+    /** The outputs associated with this stack definition. */
+    outputs?: StackDefinitionOutputVariable[];
+    /** Defines the member deployable architectures that are included in your stack. */
+    members?: StackDefinitionMemberPrototype[];
+  }
+
+  /** The payload for the stack definition export request. */
+  export interface StackDefinitionExportRequest {}
+
+  /** The payload for the stack definition export response. */
+  export interface StackDefinitionExportResponse {
+    /** The catalog ID to publish. */
+    catalog_id?: string;
+    /** The product ID to publish. */
+    product_id?: string;
+    /** The version locator of the created deployable architecture. */
+    version_locator?: string;
+    /** The product target kind value. */
+    kind?: string;
+    /** The product format kind value. */
+    format?: string;
+  }
+
+  /** The input variables for a stack definition. */
+  export interface StackDefinitionInputVariable {
+    /** The stack definition input name. */
+    name: string;
+    /** The variable type. */
+    type: StackDefinitionInputVariable.Constants.Type | string;
+    /** The description of the variable. */
+    description?: string;
+    /** This property can be any value - a string, number, boolean, array, or object. */
+    default: any;
+    /** A boolean value to denote if the property is required. */
+    required?: boolean;
+    /** A boolean value to denote whether the property is hidden, as in not exposed to the user. */
+    hidden?: boolean;
+  }
+  export namespace StackDefinitionInputVariable {
+    export namespace Constants {
+      /** The variable type. */
+      export enum Type {
+        ARRAY = 'array',
+        BOOLEAN = 'boolean',
+        FLOAT = 'float',
+        INT = 'int',
+        NUMBER = 'number',
+        PASSWORD = 'password',
+        STRING = 'string',
+        OBJECT = 'object',
+      }
+    }
+  }
+
+  /** The member definition associated with this stack definition. */
+  export interface StackDefinitionMember {
+    /** The name matching the alias in the stack definition. */
+    name: string;
+    /** The version locator of the member deployable architecture. */
+    version_locator: string;
+    /** The member input names to use for the stack definition. */
+    inputs?: StackDefinitionMemberInput[];
+  }
+
+  /** The member input definition. */
+  export interface StackDefinitionMemberInput {
+    /** The member input name to use. */
+    name: string;
+    /** The value of the stack definition output. */
+    value: any;
+  }
+
+  /** The member input definition. */
+  export interface StackDefinitionMemberInputPrototype {
+    /** The member input name to use. */
+    name: string;
+  }
+
+  /** Defines the input values from member deployable architectures that are included in the catalog entry when the stack is exported to a private catalog. */
+  export interface StackDefinitionMemberPrototype {
+    /** The name matching the alias in the stack definition. */
+    name: string;
+    /** The member input names to use for the deployable architecture stack definition. */
+    inputs?: StackDefinitionMemberInputPrototype[];
+  }
+
+  /** The configuration reference. */
+  export interface StackDefinitionMetadataConfiguration {
+    /** The unique ID. */
+    id: string;
+    /** A URL. */
+    href: string;
+    /** The definition of the config reference. */
+    definition: ConfigDefinitionReference;
+  }
+
+  /** The output variables for a stack definition. */
+  export interface StackDefinitionOutputVariable {
+    /** The stack definition output name. */
+    name: string;
+    /** The value of the stack definition output. */
+    value: any;
   }
 
   /** The error message that is parsed by the Terraform log analyzer. */
@@ -3030,6 +3560,35 @@ namespace ProjectV1 {
   }
 
   /** The description of a project configuration. */
+  export interface ProjectConfigDefinitionPrototypeStackConfigDefinitionProperties
+    extends ProjectConfigDefinitionPrototype {
+    /** A project configuration description. */
+    description?: string;
+    /** The configuration name. It's unique within the account across projects and regions. */
+    name?: string;
+    /** A unique concatenation of the catalog ID and the version ID that identify the deployable architecture in the
+     *  catalog. I you're importing from an existing Schematics workspace that is not backed by cart, a `locator_id` is
+     *  required. If you're using a Schematics workspace that is backed by cart, a `locator_id` is not necessary because
+     *  the Schematics workspace has one.
+     *  > There are 3 scenarios:
+     *  > 1. If only a `locator_id` is specified, a new Schematics workspace is instantiated with that `locator_id`.
+     *  > 2. If only a schematics `workspace_crn` is specified, a `400` is returned if a `locator_id` is not found in
+     *  the existing schematics workspace.
+     *  > 3. If both a Schematics `workspace_crn` and a `locator_id` are specified, a `400` message is returned if the
+     *  specified `locator_id` does not agree with the `locator_id` in the existing Schematics workspace.
+     *  > For more information of creating a Schematics workspace, see [Creating workspaces and importing your Terraform
+     *  template](/docs/schematics?topic=schematics-sch-create-wks).
+     */
+    locator_id?: string;
+    /** The ID of the project environment. */
+    environment_id?: string;
+    /** The input variables that are used for configuration definition and environment. */
+    inputs?: JsonObject;
+    /** The member deployabe architectures that are included in your stack. */
+    members?: StackConfigMember[];
+  }
+
+  /** The description of a project configuration. */
   export interface ProjectConfigDefinitionResponseDAConfigDefinitionPropertiesResponse
     extends ProjectConfigDefinitionResponse {
     /** The profile that is required for compliance. */
@@ -3085,6 +3644,35 @@ namespace ProjectV1 {
     settings?: JsonObject;
   }
 
+  /** The description of a project configuration. */
+  export interface ProjectConfigDefinitionResponseStackConfigDefinitionProperties
+    extends ProjectConfigDefinitionResponse {
+    /** A project configuration description. */
+    description?: string;
+    /** The configuration name. It's unique within the account across projects and regions. */
+    name?: string;
+    /** A unique concatenation of the catalog ID and the version ID that identify the deployable architecture in the
+     *  catalog. I you're importing from an existing Schematics workspace that is not backed by cart, a `locator_id` is
+     *  required. If you're using a Schematics workspace that is backed by cart, a `locator_id` is not necessary because
+     *  the Schematics workspace has one.
+     *  > There are 3 scenarios:
+     *  > 1. If only a `locator_id` is specified, a new Schematics workspace is instantiated with that `locator_id`.
+     *  > 2. If only a schematics `workspace_crn` is specified, a `400` is returned if a `locator_id` is not found in
+     *  the existing schematics workspace.
+     *  > 3. If both a Schematics `workspace_crn` and a `locator_id` are specified, a `400` message is returned if the
+     *  specified `locator_id` does not agree with the `locator_id` in the existing Schematics workspace.
+     *  > For more information of creating a Schematics workspace, see [Creating workspaces and importing your Terraform
+     *  template](/docs/schematics?topic=schematics-sch-create-wks).
+     */
+    locator_id?: string;
+    /** The ID of the project environment. */
+    environment_id?: string;
+    /** The input variables that are used for configuration definition and environment. */
+    inputs?: JsonObject;
+    /** The member deployabe architectures that are included in your stack. */
+    members?: StackConfigMember[];
+  }
+
   /** The Code Risk Analyzer logs of the configuration based on Code Risk Analyzer version 2.0.4. */
   export interface ProjectConfigMetadataCodeRiskAnalyzerLogsVersion204
     extends ProjectConfigMetadataCodeRiskAnalyzerLogs {
@@ -3095,13 +3683,50 @@ namespace ProjectV1 {
     /** The schema version of Code Risk Analyzer logs of the configuration. */
     schema_version?: string;
     /** The status of the Code Risk Analyzer logs of the configuration. */
-    status?: string;
+    status?: ProjectConfigMetadataCodeRiskAnalyzerLogsVersion204.Constants.Status | string;
     /** The Code Risk Analyzer logs a summary of the configuration. */
     summary?: CodeRiskAnalyzerLogsSummary;
     /** A date and time value in the format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ to match the date and
      *  time format as specified by RFC 3339.
      */
     timestamp?: string;
+  }
+  export namespace ProjectConfigMetadataCodeRiskAnalyzerLogsVersion204 {
+    export namespace Constants {
+      /** The status of the Code Risk Analyzer logs of the configuration. */
+      export enum Status {
+        PASSED = 'passed',
+        FAILED = 'failed',
+      }
+    }
+  }
+
+  /** The payload for the stack definition export request to create a product. */
+  export interface StackDefinitionExportRequestStackDefinitionExportCatalogRequest
+    extends StackDefinitionExportRequest {
+    /** The catalog ID to publish. */
+    catalog_id: string;
+    /** The semver value of this new version of the product. */
+    target_version?: string;
+    /** The variation of this new version of the product. */
+    variation?: string;
+    /** The product label. */
+    label: string;
+    /** Tags associated with the catalog product. */
+    tags?: string[];
+  }
+
+  /** The payload for the stack definition export request to create a new product version. */
+  export interface StackDefinitionExportRequestStackDefinitionExportProductRequest
+    extends StackDefinitionExportRequest {
+    /** The catalog ID to publish. */
+    catalog_id: string;
+    /** The semver value of this new version of the product. */
+    target_version: string;
+    /** The variation of this new version of the product. */
+    variation?: string;
+    /** The product ID to publish. */
+    product_id: string;
   }
 
   /*************************
@@ -3181,87 +3806,6 @@ namespace ProjectV1 {
      */
     public async getAll(): Promise<ProjectV1.ProjectSummary[]> {
       const results: ProjectSummary[] = [];
-      while (this.hasNext()) {
-        const nextPage = await this.getNext();
-        results.push(...nextPage);
-      }
-      return results;
-    }
-  }
-
-  /**
-   * ProjectResourcesPager can be used to simplify the use of listProjectResources().
-   */
-  export class ProjectResourcesPager {
-    protected _hasNext: boolean;
-
-    protected pageContext: any;
-
-    protected client: ProjectV1;
-
-    protected params: ProjectV1.ListProjectResourcesParams;
-
-    /**
-     * Construct a ProjectResourcesPager object.
-     *
-     * @param {ProjectV1}  client - The service client instance used to invoke listProjectResources()
-     * @param {Object} params - The parameters to be passed to listProjectResources()
-     * @constructor
-     * @returns {ProjectResourcesPager}
-     */
-    constructor(client: ProjectV1, params: ProjectV1.ListProjectResourcesParams) {
-      if (params && params.start) {
-        throw new Error(`the params.start field should not be set`);
-      }
-
-      this._hasNext = true;
-      this.pageContext = { next: undefined };
-      this.client = client;
-      this.params = JSON.parse(JSON.stringify(params || {}));
-    }
-
-    /**
-     * Returns true if there are potentially more results to be retrieved by invoking getNext().
-     * @returns {boolean}
-     */
-    public hasNext(): boolean {
-      return this._hasNext;
-    }
-
-    /**
-     * Returns the next page of results by invoking listProjectResources().
-     * @returns {Promise<ProjectV1.ProjectResourceSummary[]>}
-     */
-    public async getNext(): Promise<ProjectV1.ProjectResourceSummary[]> {
-      if (!this.hasNext()) {
-        throw new Error('No more results available');
-      }
-
-      if (this.pageContext.next) {
-        this.params.start = this.pageContext.next;
-      }
-      const response = await this.client.listProjectResources(this.params);
-      const { result } = response;
-
-      let next;
-      if (result && result.next) {
-        if (result.next.href) {
-          next = getQueryParam(result.next.href, 'start');
-        }
-      }
-      this.pageContext.next = next;
-      if (!this.pageContext.next) {
-        this._hasNext = false;
-      }
-      return result.resources;
-    }
-
-    /**
-     * Returns all results by invoking listProjectResources() repeatedly until all pages of results have been retrieved.
-     * @returns {Promise<ProjectV1.ProjectResourceSummary[]>}
-     */
-    public async getAll(): Promise<ProjectV1.ProjectResourceSummary[]> {
-      const results: ProjectResourceSummary[] = [];
       while (this.hasNext()) {
         const nextPage = await this.getNext();
         results.push(...nextPage);
