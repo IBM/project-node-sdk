@@ -87,7 +87,7 @@ describe('ProjectV1', () => {
 
     // ProjectPrototypeDefinition
     const projectPrototypeDefinitionModel = {
-      name: 'acme-microservice',
+      name: 'acme-microservice1',
       description: 'A microservice to deploy on top of ACME infrastructure.',
     };
 
