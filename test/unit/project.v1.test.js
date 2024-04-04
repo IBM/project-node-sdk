@@ -667,148 +667,6 @@ describe('ProjectV1', () => {
     });
   });
 
-  describe('listProjectResources', () => {
-    describe('positive tests', () => {
-      function __listProjectResourcesTest() {
-        // Construct the params object for operation listProjectResources
-        const id = 'testString';
-        const start = 'testString';
-        const limit = 10;
-        const listProjectResourcesParams = {
-          id,
-          start,
-          limit,
-        };
-
-        const listProjectResourcesResult = projectService.listProjectResources(
-          listProjectResourcesParams
-        );
-
-        // all methods should return a Promise
-        expectToBePromise(listProjectResourcesResult);
-
-        // assert that create request was called
-        expect(createRequestMock).toHaveBeenCalledTimes(1);
-
-        const mockRequestOptions = getOptions(createRequestMock);
-
-        checkUrlAndMethod(mockRequestOptions, '/v1/projects/{id}/resources', 'GET');
-        const expectedAccept = 'application/json';
-        const expectedContentType = undefined;
-        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(mockRequestOptions.qs.start).toEqual(start);
-        expect(mockRequestOptions.qs.limit).toEqual(limit);
-        expect(mockRequestOptions.path.id).toEqual(id);
-      }
-
-      test('should pass the right params to createRequest with enable and disable retries', () => {
-        // baseline test
-        __listProjectResourcesTest();
-
-        // enable retries and test again
-        createRequestMock.mockClear();
-        projectService.enableRetries();
-        __listProjectResourcesTest();
-
-        // disable retries and test again
-        createRequestMock.mockClear();
-        projectService.disableRetries();
-        __listProjectResourcesTest();
-      });
-
-      test('should prioritize user-given headers', () => {
-        // parameters
-        const id = 'testString';
-        const userAccept = 'fake/accept';
-        const userContentType = 'fake/contentType';
-        const listProjectResourcesParams = {
-          id,
-          headers: {
-            Accept: userAccept,
-            'Content-Type': userContentType,
-          },
-        };
-
-        projectService.listProjectResources(listProjectResourcesParams);
-        checkMediaHeaders(createRequestMock, userAccept, userContentType);
-      });
-    });
-
-    describe('negative tests', () => {
-      test('should enforce required parameters', async () => {
-        let err;
-        try {
-          await projectService.listProjectResources({});
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-
-      test('should reject promise when required params are not given', async () => {
-        let err;
-        try {
-          await projectService.listProjectResources();
-        } catch (e) {
-          err = e;
-        }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-      });
-    });
-
-    describe('ProjectResourcesPager tests', () => {
-      const serviceUrl = projectServiceOptions.url;
-      const path = '/v1/projects/testString/resources';
-      const mockPagerResponse1 =
-        '{"next":{"href":"https://myhost.com/somePath?start=1"},"total_count":2,"limit":1,"resources":[{"resource_crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","resource_name":"resource_name","account_id":"account_id","location":"location","resource_type":"project_deployed","resource_status":"resource_status","resource_group_id":"resource_group_id","tags":["tags"],"service_tags":["service_tags"]}]}';
-      const mockPagerResponse2 =
-        '{"total_count":2,"limit":1,"resources":[{"resource_crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","resource_name":"resource_name","account_id":"account_id","location":"location","resource_type":"project_deployed","resource_status":"resource_status","resource_group_id":"resource_group_id","tags":["tags"],"service_tags":["service_tags"]}]}';
-
-      beforeEach(() => {
-        unmock_createRequest();
-        const scope = nock(serviceUrl)
-          .get((uri) => uri.includes(path))
-          .reply(200, mockPagerResponse1)
-          .get((uri) => uri.includes(path))
-          .reply(200, mockPagerResponse2);
-      });
-
-      afterEach(() => {
-        nock.cleanAll();
-        mock_createRequest();
-      });
-
-      test('getNext()', async () => {
-        const params = {
-          id: 'testString',
-          limit: 10,
-        };
-        const allResults = [];
-        const pager = new ProjectV1.ProjectResourcesPager(projectService, params);
-        while (pager.hasNext()) {
-          const nextPage = await pager.getNext();
-          expect(nextPage).not.toBeNull();
-          allResults.push(...nextPage);
-        }
-        expect(allResults).not.toBeNull();
-        expect(allResults).toHaveLength(2);
-      });
-
-      test('getAll()', async () => {
-        const params = {
-          id: 'testString',
-          limit: 10,
-        };
-        const pager = new ProjectV1.ProjectResourcesPager(projectService, params);
-        const allResults = await pager.getAll();
-        expect(allResults).not.toBeNull();
-        expect(allResults).toHaveLength(2);
-      });
-    });
-  });
-
   describe('createProjectEnvironment', () => {
     describe('positive tests', () => {
       // Request models needed by this operation.
@@ -2627,6 +2485,483 @@ describe('ProjectV1', () => {
         let err;
         try {
           await projectService.listConfigResources();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('createStackDefinition', () => {
+    describe('positive tests', () => {
+      // Request models needed by this operation.
+
+      // StackDefinitionInputVariable
+      const stackDefinitionInputVariableModel = {
+        name: 'region',
+        type: 'string',
+        description: 'testString',
+        default: 'us-south',
+        required: true,
+        hidden: false,
+      };
+
+      // StackDefinitionOutputVariable
+      const stackDefinitionOutputVariableModel = {
+        name: 'vpc_cluster_id',
+        value: 'cluster_id',
+      };
+
+      // StackDefinitionMemberInputPrototype
+      const stackDefinitionMemberInputPrototypeModel = {
+        name: 'region',
+      };
+
+      // StackDefinitionMemberPrototype
+      const stackDefinitionMemberPrototypeModel = {
+        name: 'foundation-deployable-architecture',
+        inputs: [stackDefinitionMemberInputPrototypeModel],
+      };
+
+      // StackDefinitionBlockPrototype
+      const stackDefinitionBlockPrototypeModel = {
+        inputs: [stackDefinitionInputVariableModel],
+        outputs: [stackDefinitionOutputVariableModel],
+        members: [stackDefinitionMemberPrototypeModel],
+      };
+
+      function __createStackDefinitionTest() {
+        // Construct the params object for operation createStackDefinition
+        const projectId = 'testString';
+        const id = 'testString';
+        const stackDefinition = stackDefinitionBlockPrototypeModel;
+        const createStackDefinitionParams = {
+          projectId,
+          id,
+          stackDefinition,
+        };
+
+        const createStackDefinitionResult = projectService.createStackDefinition(
+          createStackDefinitionParams
+        );
+
+        // all methods should return a Promise
+        expectToBePromise(createStackDefinitionResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/stack_definition',
+          'POST'
+        );
+        const expectedAccept = 'application/json';
+        const expectedContentType = 'application/json';
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.body.stack_definition).toEqual(stackDefinition);
+        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __createStackDefinitionTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __createStackDefinitionTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __createStackDefinitionTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const projectId = 'testString';
+        const id = 'testString';
+        const stackDefinition = stackDefinitionBlockPrototypeModel;
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const createStackDefinitionParams = {
+          projectId,
+          id,
+          stackDefinition,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.createStackDefinition(createStackDefinitionParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.createStackDefinition({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.createStackDefinition();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('getStackDefinition', () => {
+    describe('positive tests', () => {
+      function __getStackDefinitionTest() {
+        // Construct the params object for operation getStackDefinition
+        const projectId = 'testString';
+        const id = 'testString';
+        const getStackDefinitionParams = {
+          projectId,
+          id,
+        };
+
+        const getStackDefinitionResult =
+          projectService.getStackDefinition(getStackDefinitionParams);
+
+        // all methods should return a Promise
+        expectToBePromise(getStackDefinitionResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/stack_definition',
+          'GET'
+        );
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __getStackDefinitionTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __getStackDefinitionTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __getStackDefinitionTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const projectId = 'testString';
+        const id = 'testString';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const getStackDefinitionParams = {
+          projectId,
+          id,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.getStackDefinition(getStackDefinitionParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.getStackDefinition({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.getStackDefinition();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('updateStackDefinition', () => {
+    describe('positive tests', () => {
+      // Request models needed by this operation.
+
+      // StackDefinitionInputVariable
+      const stackDefinitionInputVariableModel = {
+        name: 'region',
+        type: 'string',
+        description: 'testString',
+        default: 'eu-gb',
+        required: true,
+        hidden: false,
+      };
+
+      // StackDefinitionOutputVariable
+      const stackDefinitionOutputVariableModel = {
+        name: 'testString',
+        value: 'testString',
+      };
+
+      // StackDefinitionMemberInputPrototype
+      const stackDefinitionMemberInputPrototypeModel = {
+        name: 'cluster_name',
+      };
+
+      // StackDefinitionMemberPrototype
+      const stackDefinitionMemberPrototypeModel = {
+        name: 'foundation-deployable-architecture',
+        inputs: [stackDefinitionMemberInputPrototypeModel],
+      };
+
+      // StackDefinitionBlockPrototype
+      const stackDefinitionBlockPrototypeModel = {
+        inputs: [stackDefinitionInputVariableModel],
+        outputs: [stackDefinitionOutputVariableModel],
+        members: [stackDefinitionMemberPrototypeModel],
+      };
+
+      function __updateStackDefinitionTest() {
+        // Construct the params object for operation updateStackDefinition
+        const projectId = 'testString';
+        const id = 'testString';
+        const stackDefinition = stackDefinitionBlockPrototypeModel;
+        const updateStackDefinitionParams = {
+          projectId,
+          id,
+          stackDefinition,
+        };
+
+        const updateStackDefinitionResult = projectService.updateStackDefinition(
+          updateStackDefinitionParams
+        );
+
+        // all methods should return a Promise
+        expectToBePromise(updateStackDefinitionResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/stack_definition',
+          'PATCH'
+        );
+        const expectedAccept = 'application/json';
+        const expectedContentType = 'application/json';
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.body.stack_definition).toEqual(stackDefinition);
+        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __updateStackDefinitionTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __updateStackDefinitionTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __updateStackDefinitionTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const projectId = 'testString';
+        const id = 'testString';
+        const stackDefinition = stackDefinitionBlockPrototypeModel;
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const updateStackDefinitionParams = {
+          projectId,
+          id,
+          stackDefinition,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.updateStackDefinition(updateStackDefinitionParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.updateStackDefinition({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.updateStackDefinition();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('exportStackDefinition', () => {
+    describe('positive tests', () => {
+      // Request models needed by this operation.
+
+      // StackDefinitionExportRequestStackDefinitionExportCatalogRequest
+      const stackDefinitionExportRequestModel = {
+        catalog_id: '01e1a9ad-534b-4ab9-996a-b8f2a8653d5c',
+        target_version: 'testString',
+        variation: 'testString',
+        label: 'Stack Deployable Architecture',
+        tags: ['testString'],
+      };
+
+      function __exportStackDefinitionTest() {
+        // Construct the params object for operation exportStackDefinition
+        const projectId = 'testString';
+        const id = 'testString';
+        const settings = stackDefinitionExportRequestModel;
+        const exportStackDefinitionParams = {
+          projectId,
+          id,
+          settings,
+        };
+
+        const exportStackDefinitionResult = projectService.exportStackDefinition(
+          exportStackDefinitionParams
+        );
+
+        // all methods should return a Promise
+        expectToBePromise(exportStackDefinitionResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(
+          mockRequestOptions,
+          '/v1/projects/{project_id}/configs/{id}/stack_definition/export',
+          'POST'
+        );
+        const expectedAccept = 'application/json';
+        const expectedContentType = 'application/json';
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.body).toEqual(settings);
+        expect(mockRequestOptions.path.project_id).toEqual(projectId);
+        expect(mockRequestOptions.path.id).toEqual(id);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __exportStackDefinitionTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        projectService.enableRetries();
+        __exportStackDefinitionTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        projectService.disableRetries();
+        __exportStackDefinitionTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const projectId = 'testString';
+        const id = 'testString';
+        const settings = stackDefinitionExportRequestModel;
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const exportStackDefinitionParams = {
+          projectId,
+          id,
+          settings,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        projectService.exportStackDefinition(exportStackDefinitionParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await projectService.exportStackDefinition({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await projectService.exportStackDefinition();
         } catch (e) {
           err = e;
         }

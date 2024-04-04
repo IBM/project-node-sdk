@@ -256,43 +256,6 @@ describe('ProjectV1_integration', () => {
     expect(res.result).toBeDefined();
   });
 
-  test('listProjectResources()', async () => {
-    const params = {
-      id: projectIdLink,
-      start: 'testString',
-      limit: 10,
-    };
-
-    const res = await projectService.listProjectResources(params);
-    expect(res).toBeDefined();
-    expect(res.status).toBe(200);
-    expect(res.result).toBeDefined();
-  });
-
-  test('listProjectResources() via ProjectResourcesPager', async () => {
-    const params = {
-      id: projectIdLink,
-      limit: 10,
-    };
-
-    const allResults = [];
-
-    // Test getNext().
-    let pager = new ProjectV1.ProjectResourcesPager(projectService, params);
-    while (pager.hasNext()) {
-      const nextPage = await pager.getNext();
-      expect(nextPage).not.toBeNull();
-      allResults.push(...nextPage);
-    }
-
-    // Test getAll().
-    pager = new ProjectV1.ProjectResourcesPager(projectService, params);
-    const allItems = await pager.getAll();
-    expect(allItems).not.toBeNull();
-    expect(allItems).toHaveLength(allResults.length);
-    console.log(`Retrieved a total of ${allResults.length} items(s) with pagination.`);
-  });
-
   test('createProjectEnvironment()', async () => {
     // Request models needed by this operation.
 
@@ -609,6 +572,140 @@ describe('ProjectV1_integration', () => {
     };
 
     const res = await projectService.listConfigResources(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(200);
+    expect(res.result).toBeDefined();
+  });
+
+  test('createStackDefinition()', async () => {
+    // Request models needed by this operation.
+
+    // StackDefinitionInputVariable
+    const stackDefinitionInputVariableModel = {
+      name: 'region',
+      type: 'string',
+      description: 'testString',
+      default: 'us-south',
+      required: true,
+      hidden: false,
+    };
+
+    // StackDefinitionOutputVariable
+    const stackDefinitionOutputVariableModel = {
+      name: 'vpc_cluster_id',
+      value: 'cluster_id',
+    };
+
+    // StackDefinitionMemberInputPrototype
+    const stackDefinitionMemberInputPrototypeModel = {
+      name: 'region',
+    };
+
+    // StackDefinitionMemberPrototype
+    const stackDefinitionMemberPrototypeModel = {
+      name: 'foundation-deployable-architecture',
+      inputs: [stackDefinitionMemberInputPrototypeModel],
+    };
+
+    // StackDefinitionBlockPrototype
+    const stackDefinitionBlockPrototypeModel = {
+      inputs: [stackDefinitionInputVariableModel],
+      outputs: [stackDefinitionOutputVariableModel],
+      members: [stackDefinitionMemberPrototypeModel],
+    };
+
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
+      stackDefinition: stackDefinitionBlockPrototypeModel,
+    };
+
+    const res = await projectService.createStackDefinition(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(201);
+    expect(res.result).toBeDefined();
+  });
+
+  test('getStackDefinition()', async () => {
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
+    };
+
+    const res = await projectService.getStackDefinition(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(200);
+    expect(res.result).toBeDefined();
+  });
+
+  test('updateStackDefinition()', async () => {
+    // Request models needed by this operation.
+
+    // StackDefinitionInputVariable
+    const stackDefinitionInputVariableModel = {
+      name: 'region',
+      type: 'string',
+      description: 'testString',
+      default: 'eu-gb',
+      required: true,
+      hidden: false,
+    };
+
+    // StackDefinitionOutputVariable
+    const stackDefinitionOutputVariableModel = {
+      name: 'testString',
+      value: 'testString',
+    };
+
+    // StackDefinitionMemberInputPrototype
+    const stackDefinitionMemberInputPrototypeModel = {
+      name: 'cluster_name',
+    };
+
+    // StackDefinitionMemberPrototype
+    const stackDefinitionMemberPrototypeModel = {
+      name: 'foundation-deployable-architecture',
+      inputs: [stackDefinitionMemberInputPrototypeModel],
+    };
+
+    // StackDefinitionBlockPrototype
+    const stackDefinitionBlockPrototypeModel = {
+      inputs: [stackDefinitionInputVariableModel],
+      outputs: [stackDefinitionOutputVariableModel],
+      members: [stackDefinitionMemberPrototypeModel],
+    };
+
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
+      stackDefinition: stackDefinitionBlockPrototypeModel,
+    };
+
+    const res = await projectService.updateStackDefinition(params);
+    expect(res).toBeDefined();
+    expect(res.status).toBe(200);
+    expect(res.result).toBeDefined();
+  });
+
+  test('exportStackDefinition()', async () => {
+    // Request models needed by this operation.
+
+    // StackDefinitionExportRequestStackDefinitionExportCatalogRequest
+    const stackDefinitionExportRequestModel = {
+      catalog_id: '01e1a9ad-534b-4ab9-996a-b8f2a8653d5c',
+      target_version: 'testString',
+      variation: 'testString',
+      label: 'Stack Deployable Architecture',
+      tags: ['testString'],
+    };
+
+    const params = {
+      projectId: projectIdLink,
+      id: configIdLink,
+      settings: stackDefinitionExportRequestModel,
+    };
+
+    const res = await projectService.exportStackDefinition(params);
     expect(res).toBeDefined();
     expect(res.status).toBe(200);
     expect(res.result).toBeDefined();

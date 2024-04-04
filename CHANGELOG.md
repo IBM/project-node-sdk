@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/IBM/project-node-sdk/compare/v1.0.5...v1.0.6) (2024-04-03)
+
+
+### Bug Fixes
+
+* new release APril ([#12](https://github.com/IBM/project-node-sdk/issues/12)) ([bda800c](https://github.com/IBM/project-node-sdk/commit/bda800c092f010c38e3724c9fcb441ac06455b80))
+
 ## [1.0.5](https://github.com/IBM/project-node-sdk/compare/v1.0.4...v1.0.5) (2024-02-07)
 
 
