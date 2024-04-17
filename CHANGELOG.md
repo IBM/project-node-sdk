@@ -1,3 +1,10 @@
+## [1.0.8](https://github.com/IBM/project-node-sdk/compare/v1.0.7...v1.0.8) (2024-04-17)
+
+
+### Bug Fixes
+
+* new test main ([#18](https://github.com/IBM/project-node-sdk/issues/18)) ([34958fe](https://github.com/IBM/project-node-sdk/commit/34958fe485296db05824c5b611aa63289c8890e2))
+
 ## [1.0.7](https://github.com/IBM/project-node-sdk/compare/v1.0.6...v1.0.7) (2024-04-04)
 
 
