@@ -55,7 +55,7 @@ describe('ProjectV1_integration', () => {
 
     // ProjectPrototypeDefinition
     const projectPrototypeDefinitionModel = {
-      name: 'acme-microservice1',
+      name: 'acme-microservice6',
       destroy_on_delete: true,
       description: 'A microservice to deploy on top of ACME infrastructure.',
       monitoring_enabled: false,
