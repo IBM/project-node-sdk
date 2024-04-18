@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/IBM/project-node-sdk/compare/v1.1.0...v1.2.0) (2024-04-18)
+
+
+### Features
+
+* new feat for release ([02fa431](https://github.com/IBM/project-node-sdk/commit/02fa43122531e026c909e32244bd1e2b500c2433))
+
 # [1.1.0](https://github.com/IBM/project-node-sdk/compare/v1.0.9...v1.1.0) (2024-04-18)
 
 
