@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/IBM/project-node-sdk/compare/v1.0.9...v1.1.0) (2024-04-18)
+
+
+### Features
+
+* test damiano ([#23](https://github.com/IBM/project-node-sdk/issues/23)) ([65bc497](https://github.com/IBM/project-node-sdk/commit/65bc49707e282687659ebd932175d1585a1c1bd9))
+
 ## [1.0.8](https://github.com/IBM/project-node-sdk/compare/v1.0.7...v1.0.8) (2024-04-17)
 
 
