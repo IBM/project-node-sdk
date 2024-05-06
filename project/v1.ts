@@ -2460,6 +2460,18 @@ namespace ProjectV1 {
     }
   }
 
+  /** The stack config parent of which this configuration is a member of. */
+  export interface MemberOfDefinition {
+    /** The unique ID. */
+    id: string;
+    /** The definition summary of the stack configuration. */
+    definition: StackConfigDefinitionSummary;
+    /** The version of the stack configuration. */
+    version: number;
+    /** A URL. */
+    href: string;
+  }
+
   /** OutputValue. */
   export interface OutputValue {
     /** The variable name. */
@@ -2652,10 +2664,16 @@ namespace ProjectV1 {
     state: ProjectConfig.Constants.State | string;
     /** The flag that indicates whether a configuration update is available. */
     update_available?: boolean;
-    /** The template reference. */
-    template?: ProjectObjectReference;
+    /** The stack definition identifier. */
+    template_id?: string;
+    /** The stack config parent of which this configuration is a member of. */
+    member_of?: MemberOfDefinition;
     /** A URL. */
     href: string;
+    /** The configuration type. */
+    deployment_model?: ProjectConfig.Constants.DeploymentModel | string;
+    /** Computed state code clarifying the prerequisites for validation for the configuration. */
+    state_code?: ProjectConfig.Constants.StateCode | string;
     definition: ProjectConfigDefinitionResponse;
     /** A summary of a project configuration version. */
     approved_version?: ProjectConfigVersionSummary;
@@ -2683,6 +2701,20 @@ namespace ProjectV1 {
         VALIDATING_FAILED = 'validating_failed',
         APPLIED = 'applied',
         APPLY_FAILED = 'apply_failed',
+      }
+      /** The configuration type. */
+      export enum DeploymentModel {
+        PROJECT_DEPLOYED = 'project_deployed',
+        USER_DEPLOYED = 'user_deployed',
+        STACK = 'stack',
+      }
+      /** Computed state code clarifying the prerequisites for validation for the configuration. */
+      export enum StateCode {
+        AWAITING_INPUT = 'awaiting_input',
+        AWAITING_PREREQUISITE = 'awaiting_prerequisite',
+        AWAITING_VALIDATION = 'awaiting_validation',
+        AWAITING_MEMBER_DEPLOYMENT = 'awaiting_member_deployment',
+        AWAITING_STACK_SETUP = 'awaiting_stack_setup',
       }
     }
   }
@@ -2987,10 +3019,16 @@ namespace ProjectV1 {
     state: ProjectConfigVersion.Constants.State | string;
     /** The flag that indicates whether a configuration update is available. */
     update_available?: boolean;
-    /** The template reference. */
-    template?: ProjectObjectReference;
+    /** The stack definition identifier. */
+    template_id?: string;
+    /** The stack config parent of which this configuration is a member of. */
+    member_of?: MemberOfDefinition;
     /** A URL. */
     href: string;
+    /** The configuration type. */
+    deployment_model?: ProjectConfigVersion.Constants.DeploymentModel | string;
+    /** Computed state code clarifying the prerequisites for validation for the configuration. */
+    state_code?: ProjectConfigVersion.Constants.StateCode | string;
     definition: ProjectConfigDefinitionResponse;
   }
   export namespace ProjectConfigVersion {
@@ -3014,6 +3052,20 @@ namespace ProjectV1 {
         VALIDATING_FAILED = 'validating_failed',
         APPLIED = 'applied',
         APPLY_FAILED = 'apply_failed',
+      }
+      /** The configuration type. */
+      export enum DeploymentModel {
+        PROJECT_DEPLOYED = 'project_deployed',
+        USER_DEPLOYED = 'user_deployed',
+        STACK = 'stack',
+      }
+      /** Computed state code clarifying the prerequisites for validation for the configuration. */
+      export enum StateCode {
+        AWAITING_INPUT = 'awaiting_input',
+        AWAITING_PREREQUISITE = 'awaiting_prerequisite',
+        AWAITING_VALIDATION = 'awaiting_validation',
+        AWAITING_MEMBER_DEPLOYMENT = 'awaiting_member_deployment',
+        AWAITING_STACK_SETUP = 'awaiting_stack_setup',
       }
     }
   }
@@ -3044,6 +3096,8 @@ namespace ProjectV1 {
     definition: ProjectConfigVersionDefinitionSummary;
     /** The state of the configuration. */
     state: ProjectConfigVersionSummary.Constants.State | string;
+    /** Computed state code clarifying the prerequisites for validation for the configuration. */
+    state_code?: ProjectConfigVersionSummary.Constants.StateCode | string;
     /** The version number of the configuration. */
     version: number;
     /** A URL. */
@@ -3070,6 +3124,14 @@ namespace ProjectV1 {
         VALIDATING_FAILED = 'validating_failed',
         APPLIED = 'applied',
         APPLY_FAILED = 'apply_failed',
+      }
+      /** Computed state code clarifying the prerequisites for validation for the configuration. */
+      export enum StateCode {
+        AWAITING_INPUT = 'awaiting_input',
+        AWAITING_PREREQUISITE = 'awaiting_prerequisite',
+        AWAITING_VALIDATION = 'awaiting_validation',
+        AWAITING_MEMBER_DEPLOYMENT = 'awaiting_member_deployment',
+        AWAITING_STACK_SETUP = 'awaiting_stack_setup',
       }
     }
   }
@@ -3130,14 +3192,6 @@ namespace ProjectV1 {
     description: string;
     /** The name of the environment. It's unique within the account across projects and regions. */
     name: string;
-  }
-
-  /** ProjectObjectReference. */
-  export interface ProjectObjectReference {
-    /** The unique ID. */
-    id: string;
-    /** A URL. */
-    href: string;
   }
 
   /** The definition of the project. */
@@ -3268,6 +3322,14 @@ namespace ProjectV1 {
     path?: string;
     /** The short description for this script. */
     short_description?: string;
+  }
+
+  /** The definition summary of the stack configuration. */
+  export interface StackConfigDefinitionSummary {
+    /** The configuration name. It's unique within the account across projects and regions. */
+    name: string;
+    /** The member deployabe architectures that are included in your stack. */
+    members: StackConfigMember[];
   }
 
   /** A member deployable architecture that is included in your stack. */
@@ -3503,6 +3565,43 @@ namespace ProjectV1 {
     settings?: JsonObject;
   }
 
+  /** The name and description of a project configuration. */
+  export interface ProjectConfigDefinitionPatchStackConfigDefinitionPropertiesPatch
+    extends ProjectConfigDefinitionPatch {
+    /** The profile that is required for compliance. */
+    compliance_profile?: ProjectComplianceProfile;
+    /** A unique concatenation of the catalog ID and the version ID that identify the deployable architecture in the
+     *  catalog. I you're importing from an existing Schematics workspace that is not backed by cart, a `locator_id` is
+     *  required. If you're using a Schematics workspace that is backed by cart, a `locator_id` is not necessary because
+     *  the Schematics workspace has one.
+     *  > There are 3 scenarios:
+     *  > 1. If only a `locator_id` is specified, a new Schematics workspace is instantiated with that `locator_id`.
+     *  > 2. If only a schematics `workspace_crn` is specified, a `400` is returned if a `locator_id` is not found in
+     *  the existing schematics workspace.
+     *  > 3. If both a Schematics `workspace_crn` and a `locator_id` are specified, a `400` message is returned if the
+     *  specified `locator_id` does not agree with the `locator_id` in the existing Schematics workspace.
+     *  > For more information of creating a Schematics workspace, see [Creating workspaces and importing your Terraform
+     *  template](/docs/schematics?topic=schematics-sch-create-wks).
+     */
+    locator_id?: string;
+    /** The member deployabe architectures that are included in your stack. */
+    members?: StackConfigMember[];
+    /** A project configuration description. */
+    description?: string;
+    /** The configuration name. It's unique within the account across projects and regions. */
+    name?: string;
+    /** The ID of the project environment. */
+    environment_id?: string;
+    /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
+    authorizations?: ProjectConfigAuth;
+    /** The input variables that are used for configuration definition and environment. */
+    inputs?: JsonObject;
+    /** The Schematics environment variables to use to deploy the configuration. Settings are only available if they
+     *  are specified when the configuration is initially created.
+     */
+    settings?: JsonObject;
+  }
+
   /** The description of a project configuration. */
   export interface ProjectConfigDefinitionPrototypeDAConfigDefinitionPropertiesPrototype
     extends ProjectConfigDefinitionPrototype {
@@ -3562,10 +3661,8 @@ namespace ProjectV1 {
   /** The description of a project configuration. */
   export interface ProjectConfigDefinitionPrototypeStackConfigDefinitionProperties
     extends ProjectConfigDefinitionPrototype {
-    /** A project configuration description. */
-    description?: string;
-    /** The configuration name. It's unique within the account across projects and regions. */
-    name?: string;
+    /** The profile that is required for compliance. */
+    compliance_profile?: ProjectComplianceProfile;
     /** A unique concatenation of the catalog ID and the version ID that identify the deployable architecture in the
      *  catalog. I you're importing from an existing Schematics workspace that is not backed by cart, a `locator_id` is
      *  required. If you're using a Schematics workspace that is backed by cart, a `locator_id` is not necessary because
@@ -3580,12 +3677,22 @@ namespace ProjectV1 {
      *  template](/docs/schematics?topic=schematics-sch-create-wks).
      */
     locator_id?: string;
-    /** The ID of the project environment. */
-    environment_id?: string;
-    /** The input variables that are used for configuration definition and environment. */
-    inputs?: JsonObject;
     /** The member deployabe architectures that are included in your stack. */
     members?: StackConfigMember[];
+    /** A project configuration description. */
+    description?: string;
+    /** The configuration name. It's unique within the account across projects and regions. */
+    name: string;
+    /** The ID of the project environment. */
+    environment_id?: string;
+    /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
+    authorizations?: ProjectConfigAuth;
+    /** The input variables that are used for configuration definition and environment. */
+    inputs?: JsonObject;
+    /** The Schematics environment variables to use to deploy the configuration. Settings are only available if they
+     *  are specified when the configuration is initially created.
+     */
+    settings?: JsonObject;
   }
 
   /** The description of a project configuration. */
@@ -3647,10 +3754,8 @@ namespace ProjectV1 {
   /** The description of a project configuration. */
   export interface ProjectConfigDefinitionResponseStackConfigDefinitionProperties
     extends ProjectConfigDefinitionResponse {
-    /** A project configuration description. */
-    description?: string;
-    /** The configuration name. It's unique within the account across projects and regions. */
-    name?: string;
+    /** The profile that is required for compliance. */
+    compliance_profile?: ProjectComplianceProfile;
     /** A unique concatenation of the catalog ID and the version ID that identify the deployable architecture in the
      *  catalog. I you're importing from an existing Schematics workspace that is not backed by cart, a `locator_id` is
      *  required. If you're using a Schematics workspace that is backed by cart, a `locator_id` is not necessary because
@@ -3665,12 +3770,22 @@ namespace ProjectV1 {
      *  template](/docs/schematics?topic=schematics-sch-create-wks).
      */
     locator_id?: string;
-    /** The ID of the project environment. */
-    environment_id?: string;
-    /** The input variables that are used for configuration definition and environment. */
-    inputs?: JsonObject;
     /** The member deployabe architectures that are included in your stack. */
     members?: StackConfigMember[];
+    /** A project configuration description. */
+    description?: string;
+    /** The configuration name. It's unique within the account across projects and regions. */
+    name: string;
+    /** The ID of the project environment. */
+    environment_id?: string;
+    /** The authorization details. You can authorize by using a trusted profile or an API key in Secrets Manager. */
+    authorizations?: ProjectConfigAuth;
+    /** The input variables that are used for configuration definition and environment. */
+    inputs?: JsonObject;
+    /** The Schematics environment variables to use to deploy the configuration. Settings are only available if they
+     *  are specified when the configuration is initially created.
+     */
+    settings?: JsonObject;
   }
 
   /** The Code Risk Analyzer logs of the configuration based on Code Risk Analyzer version 2.0.4. */
