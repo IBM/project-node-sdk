@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/IBM/project-node-sdk/compare/v1.2.0...v1.2.1) (2024-05-06)
+
+
+### Bug Fixes
+
+* new May release (DO NOT MERGE) ([#24](https://github.com/IBM/project-node-sdk/issues/24)) ([a6a1c4d](https://github.com/IBM/project-node-sdk/commit/a6a1c4d4ddd5d474d2e2bd4074019440a859d066))
+
 # [1.2.0](https://github.com/IBM/project-node-sdk/compare/v1.1.0...v1.2.0) (2024-04-18)
 
 
