@@ -87,7 +87,7 @@ describe('ProjectV1', () => {
 
     // ProjectPrototypeDefinition
     const projectPrototypeDefinitionModel = {
-      name: 'acme-microservice2',
+      name: 'acme-microservice',
       description: 'A microservice to deploy on top of ACME infrastructure.',
     };
 
@@ -792,22 +792,10 @@ describe('ProjectV1', () => {
       value: 'cluster_id',
     };
 
-    // StackDefinitionMemberInputPrototype
-    const stackDefinitionMemberInputPrototypeModel = {
-      name: 'region',
-    };
-
-    // StackDefinitionMemberPrototype
-    const stackDefinitionMemberPrototypeModel = {
-      name: 'foundation-deployable-architecture',
-      inputs: [stackDefinitionMemberInputPrototypeModel],
-    };
-
     // StackDefinitionBlockPrototype
     const stackDefinitionBlockPrototypeModel = {
       inputs: [stackDefinitionInputVariableModel],
       outputs: [stackDefinitionOutputVariableModel],
-      members: [stackDefinitionMemberPrototypeModel],
     };
 
     const params = {
@@ -880,21 +868,9 @@ describe('ProjectV1', () => {
       hidden: false,
     };
 
-    // StackDefinitionMemberInputPrototype
-    const stackDefinitionMemberInputPrototypeModel = {
-      name: 'cluster_name',
-    };
-
-    // StackDefinitionMemberPrototype
-    const stackDefinitionMemberPrototypeModel = {
-      name: 'foundation-deployable-architecture',
-      inputs: [stackDefinitionMemberInputPrototypeModel],
-    };
-
     // StackDefinitionBlockPrototype
     const stackDefinitionBlockPrototypeModel = {
       inputs: [stackDefinitionInputVariableModel],
-      members: [stackDefinitionMemberPrototypeModel],
     };
 
     const params = {
