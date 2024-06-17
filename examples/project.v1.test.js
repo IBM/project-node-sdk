@@ -792,22 +792,10 @@ describe('ProjectV1', () => {
       value: 'cluster_id',
     };
 
-    // StackDefinitionMemberInputPrototype
-    const stackDefinitionMemberInputPrototypeModel = {
-      name: 'region',
-    };
-
-    // StackDefinitionMemberPrototype
-    const stackDefinitionMemberPrototypeModel = {
-      name: 'foundation-deployable-architecture',
-      inputs: [stackDefinitionMemberInputPrototypeModel],
-    };
-
     // StackDefinitionBlockPrototype
     const stackDefinitionBlockPrototypeModel = {
       inputs: [stackDefinitionInputVariableModel],
       outputs: [stackDefinitionOutputVariableModel],
-      members: [stackDefinitionMemberPrototypeModel],
     };
 
     const params = {
@@ -880,21 +868,9 @@ describe('ProjectV1', () => {
       hidden: false,
     };
 
-    // StackDefinitionMemberInputPrototype
-    const stackDefinitionMemberInputPrototypeModel = {
-      name: 'cluster_name',
-    };
-
-    // StackDefinitionMemberPrototype
-    const stackDefinitionMemberPrototypeModel = {
-      name: 'foundation-deployable-architecture',
-      inputs: [stackDefinitionMemberInputPrototypeModel],
-    };
-
     // StackDefinitionBlockPrototype
     const stackDefinitionBlockPrototypeModel = {
       inputs: [stackDefinitionInputVariableModel],
-      members: [stackDefinitionMemberPrototypeModel],
     };
 
     const params = {

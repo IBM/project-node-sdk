@@ -58,6 +58,7 @@ describe('ProjectV1_integration', () => {
       name: 'acme-microservice',
       destroy_on_delete: true,
       description: 'A microservice to deploy on top of ACME infrastructure.',
+      auto_deploy: false,
       monitoring_enabled: false,
     };
 
@@ -65,7 +66,7 @@ describe('ProjectV1_integration', () => {
     const projectComplianceProfileModel = {
       id: 'testString',
       instance_id: 'testString',
-      instance_location: 'testString',
+      instance_location: 'us-south',
       attachment_id: 'testString',
       profile_name: 'testString',
     };
@@ -138,7 +139,7 @@ describe('ProjectV1_integration', () => {
     const projectComplianceProfileModel = {
       id: 'testString',
       instance_id: 'testString',
-      instance_location: 'testString',
+      instance_location: 'us-south',
       attachment_id: 'testString',
       profile_name: 'testString',
     };
@@ -241,6 +242,7 @@ describe('ProjectV1_integration', () => {
     const projectPatchDefinitionBlockModel = {
       name: 'acme-microservice',
       destroy_on_delete: true,
+      auto_deploy: true,
       description: 'A microservice to deploy on top of ACME infrastructure.',
       monitoring_enabled: true,
     };
@@ -440,7 +442,7 @@ describe('ProjectV1_integration', () => {
     const projectComplianceProfileModel = {
       id: 'testString',
       instance_id: 'testString',
-      instance_location: 'testString',
+      instance_location: 'us-south',
       attachment_id: 'testString',
       profile_name: 'testString',
     };
@@ -596,22 +598,10 @@ describe('ProjectV1_integration', () => {
       value: 'cluster_id',
     };
 
-    // StackDefinitionMemberInputPrototype
-    const stackDefinitionMemberInputPrototypeModel = {
-      name: 'region',
-    };
-
-    // StackDefinitionMemberPrototype
-    const stackDefinitionMemberPrototypeModel = {
-      name: 'foundation-deployable-architecture',
-      inputs: [stackDefinitionMemberInputPrototypeModel],
-    };
-
     // StackDefinitionBlockPrototype
     const stackDefinitionBlockPrototypeModel = {
       inputs: [stackDefinitionInputVariableModel],
       outputs: [stackDefinitionOutputVariableModel],
-      members: [stackDefinitionMemberPrototypeModel],
     };
 
     const params = {
@@ -657,22 +647,10 @@ describe('ProjectV1_integration', () => {
       value: 'testString',
     };
 
-    // StackDefinitionMemberInputPrototype
-    const stackDefinitionMemberInputPrototypeModel = {
-      name: 'cluster_name',
-    };
-
-    // StackDefinitionMemberPrototype
-    const stackDefinitionMemberPrototypeModel = {
-      name: 'foundation-deployable-architecture',
-      inputs: [stackDefinitionMemberInputPrototypeModel],
-    };
-
     // StackDefinitionBlockPrototype
     const stackDefinitionBlockPrototypeModel = {
       inputs: [stackDefinitionInputVariableModel],
       outputs: [stackDefinitionOutputVariableModel],
-      members: [stackDefinitionMemberPrototypeModel],
     };
 
     const params = {

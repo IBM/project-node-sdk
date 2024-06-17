@@ -129,6 +129,7 @@ describe('ProjectV1', () => {
         name: 'acme-microservice',
         destroy_on_delete: true,
         description: 'A microservice to deploy on top of ACME infrastructure.',
+        auto_deploy: false,
         monitoring_enabled: false,
       };
 
@@ -136,7 +137,7 @@ describe('ProjectV1', () => {
       const projectComplianceProfileModel = {
         id: 'testString',
         instance_id: 'testString',
-        instance_location: 'testString',
+        instance_location: 'us-south',
         attachment_id: 'testString',
         profile_name: 'testString',
       };
@@ -355,9 +356,9 @@ describe('ProjectV1', () => {
       const serviceUrl = projectServiceOptions.url;
       const path = '/v1/projects';
       const mockPagerResponse1 =
-        '{"next":{"href":"https://myhost.com/somePath?token=1"},"projects":[{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_error":false,"id":"id","location":"location","resource_group_id":"resource_group_id","state":"ready","href":"href","definition":{"name":"name","destroy_on_delete":false,"description":"description","monitoring_enabled":false}}],"total_count":2,"limit":1}';
+        '{"next":{"href":"https://myhost.com/somePath?token=1"},"projects":[{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_error":false,"id":"id","location":"location","resource_group_id":"resource_group_id","state":"ready","href":"href","definition":{"name":"name","destroy_on_delete":false,"description":"description"}}],"total_count":2,"limit":1}';
       const mockPagerResponse2 =
-        '{"projects":[{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_error":false,"id":"id","location":"location","resource_group_id":"resource_group_id","state":"ready","href":"href","definition":{"name":"name","destroy_on_delete":false,"description":"description","monitoring_enabled":false}}],"total_count":2,"limit":1}';
+        '{"projects":[{"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::","created_at":"2019-01-01T12:00:00.000Z","cumulative_needs_attention_view":[{"event":"event","event_id":"event_id","config_id":"config_id","config_version":14}],"cumulative_needs_attention_view_error":false,"id":"id","location":"location","resource_group_id":"resource_group_id","state":"ready","href":"href","definition":{"name":"name","destroy_on_delete":false,"description":"description"}}],"total_count":2,"limit":1}';
 
       beforeEach(() => {
         unmock_createRequest();
@@ -492,6 +493,7 @@ describe('ProjectV1', () => {
       const projectPatchDefinitionBlockModel = {
         name: 'acme-microservice',
         destroy_on_delete: true,
+        auto_deploy: true,
         description: 'A microservice to deploy on top of ACME infrastructure.',
         monitoring_enabled: true,
       };
@@ -880,9 +882,9 @@ describe('ProjectV1', () => {
       const serviceUrl = projectServiceOptions.url;
       const path = '/v1/projects/testString/environments';
       const mockPagerResponse1 =
-        '{"next":{"href":"https://myhost.com/somePath?token=1"},"environments":[{"id":"id","project":{"id":"id","href":"href","definition":{"name":"name"},"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::"},"created_at":"2019-01-01T12:00:00.000Z","target_account":"target_account","modified_at":"2019-01-01T12:00:00.000Z","href":"href","definition":{"description":"description","name":"name","authorizations":{"trusted_profile_id":"trusted_profile_id","method":"api_key","api_key":"api_key"},"inputs":{"anyKey":"anyValue"},"compliance_profile":{"id":"id","instance_id":"instance_id","instance_location":"instance_location","attachment_id":"attachment_id","profile_name":"profile_name"}}}],"total_count":2,"limit":1}';
+        '{"next":{"href":"https://myhost.com/somePath?token=1"},"environments":[{"id":"id","project":{"id":"id","href":"href","definition":{"name":"name"},"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::"},"created_at":"2019-01-01T12:00:00.000Z","target_account":"target_account","modified_at":"2019-01-01T12:00:00.000Z","href":"href","definition":{"description":"description","name":"name","authorizations":{"trusted_profile_id":"trusted_profile_id","method":"api_key","api_key":"api_key"},"inputs":{"anyKey":"anyValue"},"compliance_profile":{"id":"id","instance_id":"instance_id","instance_location":"us-south","attachment_id":"attachment_id","profile_name":"profile_name"}}}],"total_count":2,"limit":1}';
       const mockPagerResponse2 =
-        '{"environments":[{"id":"id","project":{"id":"id","href":"href","definition":{"name":"name"},"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::"},"created_at":"2019-01-01T12:00:00.000Z","target_account":"target_account","modified_at":"2019-01-01T12:00:00.000Z","href":"href","definition":{"description":"description","name":"name","authorizations":{"trusted_profile_id":"trusted_profile_id","method":"api_key","api_key":"api_key"},"inputs":{"anyKey":"anyValue"},"compliance_profile":{"id":"id","instance_id":"instance_id","instance_location":"instance_location","attachment_id":"attachment_id","profile_name":"profile_name"}}}],"total_count":2,"limit":1}';
+        '{"environments":[{"id":"id","project":{"id":"id","href":"href","definition":{"name":"name"},"crn":"crn:v1:staging:public:project:us-south:a/4e1c48fcf8ac33c0a2441e4139f189ae:bf40ad13-b107-446a-8286-c6d576183bb1::"},"created_at":"2019-01-01T12:00:00.000Z","target_account":"target_account","modified_at":"2019-01-01T12:00:00.000Z","href":"href","definition":{"description":"description","name":"name","authorizations":{"trusted_profile_id":"trusted_profile_id","method":"api_key","api_key":"api_key"},"inputs":{"anyKey":"anyValue"},"compliance_profile":{"id":"id","instance_id":"instance_id","instance_location":"us-south","attachment_id":"attachment_id","profile_name":"profile_name"}}}],"total_count":2,"limit":1}';
 
       beforeEach(() => {
         unmock_createRequest();
@@ -1248,7 +1250,7 @@ describe('ProjectV1', () => {
       const projectComplianceProfileModel = {
         id: 'testString',
         instance_id: 'testString',
-        instance_location: 'testString',
+        instance_location: 'us-south',
         attachment_id: 'testString',
         profile_name: 'testString',
       };
@@ -1612,7 +1614,7 @@ describe('ProjectV1', () => {
       const projectComplianceProfileModel = {
         id: 'testString',
         instance_id: 'testString',
-        instance_location: 'testString',
+        instance_location: 'us-south',
         attachment_id: 'testString',
         profile_name: 'testString',
       };
@@ -2514,22 +2516,10 @@ describe('ProjectV1', () => {
         value: 'cluster_id',
       };
 
-      // StackDefinitionMemberInputPrototype
-      const stackDefinitionMemberInputPrototypeModel = {
-        name: 'region',
-      };
-
-      // StackDefinitionMemberPrototype
-      const stackDefinitionMemberPrototypeModel = {
-        name: 'foundation-deployable-architecture',
-        inputs: [stackDefinitionMemberInputPrototypeModel],
-      };
-
       // StackDefinitionBlockPrototype
       const stackDefinitionBlockPrototypeModel = {
         inputs: [stackDefinitionInputVariableModel],
         outputs: [stackDefinitionOutputVariableModel],
-        members: [stackDefinitionMemberPrototypeModel],
       };
 
       function __createStackDefinitionTest() {
@@ -2744,22 +2734,10 @@ describe('ProjectV1', () => {
         value: 'testString',
       };
 
-      // StackDefinitionMemberInputPrototype
-      const stackDefinitionMemberInputPrototypeModel = {
-        name: 'cluster_name',
-      };
-
-      // StackDefinitionMemberPrototype
-      const stackDefinitionMemberPrototypeModel = {
-        name: 'foundation-deployable-architecture',
-        inputs: [stackDefinitionMemberInputPrototypeModel],
-      };
-
       // StackDefinitionBlockPrototype
       const stackDefinitionBlockPrototypeModel = {
         inputs: [stackDefinitionInputVariableModel],
         outputs: [stackDefinitionOutputVariableModel],
-        members: [stackDefinitionMemberPrototypeModel],
       };
 
       function __updateStackDefinitionTest() {

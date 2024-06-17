@@ -1759,7 +1759,7 @@ namespace ProjectV1 {
     /** The definition of the project. */
     definition: ProjectPrototypeDefinition;
     /** The IBM Cloud location where a resource is deployed. */
-    location: string;
+    location: CreateProjectConstants.Location | string;
     /** The resource group name where the project's data and tools are created. */
     resourceGroup: string;
     /** The project configurations. These configurations are included in the response of creating a project only if
@@ -1771,6 +1771,18 @@ namespace ProjectV1 {
      */
     environments?: EnvironmentPrototype[];
     headers?: OutgoingHttpHeaders;
+  }
+
+  /** Constants for the `createProject` operation. */
+  export namespace CreateProjectConstants {
+    /** The IBM Cloud location where a resource is deployed. */
+    export enum Location {
+      US_SOUTH = 'us-south',
+      US_EAST = 'us-east',
+      EU_GB = 'eu-gb',
+      EU_DE = 'eu-de',
+      CA_TOR = 'ca-tor',
+    }
   }
 
   /** Parameters for the `listProjects` operation. */
@@ -2611,11 +2623,23 @@ namespace ProjectV1 {
     /** A unique ID for the instance of a compliance profile. */
     instance_id?: string;
     /** The location of the compliance instance. */
-    instance_location?: string;
+    instance_location?: ProjectComplianceProfile.Constants.InstanceLocation | string;
     /** A unique ID for the attachment to a compliance profile. */
     attachment_id?: string;
     /** The name of the compliance profile. */
     profile_name?: string;
+  }
+  export namespace ProjectComplianceProfile {
+    export namespace Constants {
+      /** The location of the compliance instance. */
+      export enum InstanceLocation {
+        US_SOUTH = 'us-south',
+        US_EAST = 'us-east',
+        EU_GB = 'eu-gb',
+        EU_DE = 'eu-de',
+        CA_TOR = 'ca-tor',
+      }
+    }
   }
 
   /** The standard schema of a project configuration. */
@@ -3152,6 +3176,8 @@ namespace ProjectV1 {
      *  project without providing a description.
      */
     description: string;
+    /** A boolean flag to enable auto deploy. */
+    auto_deploy: boolean;
     /** A boolean flag to enable automatic drift detection. Use this field to run a daily check to compare your
      *  configurations to your deployed resources to detect any difference.
      */
@@ -3162,6 +3188,18 @@ namespace ProjectV1 {
   export interface ProjectDefinitionReference {
     /** The name of the project. */
     name: string;
+  }
+
+  /** The definition of the project. */
+  export interface ProjectDefinitionSummary {
+    /** The name of the project.  It's unique within the account across regions. */
+    name: string;
+    /** The policy that indicates whether the resources are destroyed or not when a project is deleted. */
+    destroy_on_delete: boolean;
+    /** A brief explanation of the project's use in the configuration of a deployable architecture. You can create a
+     *  project without providing a description.
+     */
+    description: string;
   }
 
   /** The ID of the deleted project. */
@@ -3200,6 +3238,8 @@ namespace ProjectV1 {
     name?: string;
     /** The policy that indicates whether the resources are destroyed or not when a project is deleted. */
     destroy_on_delete?: boolean;
+    /** A boolean flag to enable auto deploy. */
+    auto_deploy?: boolean;
     /** A brief explanation of the project's use in the configuration of a deployable architecture. You can create a
      *  project without providing a description.
      */
@@ -3220,6 +3260,8 @@ namespace ProjectV1 {
      *  project without providing a description.
      */
     description?: string;
+    /** A boolean flag to enable auto deploy. */
+    auto_deploy?: boolean;
     /** A boolean flag to enable automatic drift detection. Use this field to run a daily check to compare your
      *  configurations to your deployed resources to detect any difference.
      */
@@ -3265,7 +3307,7 @@ namespace ProjectV1 {
     /** A URL. */
     href: string;
     /** The definition of the project. */
-    definition: ProjectDefinitionProperties;
+    definition: ProjectDefinitionSummary;
   }
   export namespace ProjectSummary {
     export namespace Constants {
@@ -3391,8 +3433,6 @@ namespace ProjectV1 {
     inputs?: StackDefinitionInputVariable[];
     /** The outputs associated with this stack definition. */
     outputs?: StackDefinitionOutputVariable[];
-    /** Defines the member deployable architectures that are included in your stack. */
-    members?: StackDefinitionMemberPrototype[];
   }
 
   /** The payload for the stack definition export request. */
@@ -3449,30 +3489,16 @@ namespace ProjectV1 {
     name: string;
     /** The version locator of the member deployable architecture. */
     version_locator: string;
-    /** The member input names to use for the stack definition. */
+    /** The member inputs to use for the stack definition. */
     inputs?: StackDefinitionMemberInput[];
   }
 
-  /** The member input definition. */
+  /** StackDefinitionMemberInput. */
   export interface StackDefinitionMemberInput {
     /** The member input name to use. */
     name: string;
     /** The value of the stack definition output. */
     value: any;
-  }
-
-  /** The member input definition. */
-  export interface StackDefinitionMemberInputPrototype {
-    /** The member input name to use. */
-    name: string;
-  }
-
-  /** Defines the input values from member deployable architectures that are included in the catalog entry when the stack is exported to a private catalog. */
-  export interface StackDefinitionMemberPrototype {
-    /** The name matching the alias in the stack definition. */
-    name: string;
-    /** The member input names to use for the deployable architecture stack definition. */
-    inputs?: StackDefinitionMemberInputPrototype[];
   }
 
   /** The configuration reference. */
